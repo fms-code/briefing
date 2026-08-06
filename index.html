@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anamnese de Marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Cinza calibrado 18% — fundo neutro da fotografia clínica */
+  --porcelana:#EDEDEB;
+  --papel:#F7F7F6;
+  --cartao:#FFFFFF;
+  --linha:#D8D8D4;
+  --tinta:#16161A;
+  --tinta-media:#5A5A62;
+  --tinta-fraca:#8E8E96;
+  /* Violeta de caneta demarcadora cirúrgica */
+  --marcador:#5B3FA8;
+  --marcador-claro:#EDE7FA;
+  --serif:'Bodoni Moda',Georgia,serif;
+  --sans:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--porcelana);
+  color:var(--tinta);
+  font-family:var(--sans);
+  font-weight:400;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- ESTRUTURA ---------- */
+.folha{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  max-width:1440px;
+  margin:0 auto;
+  min-height:100vh;
+}
+
+/* ---------- PAINEL DE PRONTUÁRIO ---------- */
+.prontuario{
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:56px 40px;
+  border-right:1px solid var(--linha);
+  display:flex;
+  flex-direction:column;
+  background:var(--porcelana);
+}
+
+.marca{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--tinta-fraca);
+  margin-bottom:32px;
+}
+
+.prontuario h1{
+  font-family:var(--serif);
+  font-size:38px;
+  font-weight:500;
+  line-height:1.05;
+  letter-spacing:-.01em;
+  margin-bottom:14px;
+}
+.prontuario h1 em{
+  font-style:italic;
+  color:var(--marcador);
+}
+
+.prontuario .nota{
+  font-size:13px;
+  line-height:1.65;
+  color:var(--tinta-media);
+  font-weight:300;
+  margin-bottom:36px;
+  max-width:30ch;
+}
+
+/* índice */
+.indice{
+  list-style:none;
+  border-top:1px solid var(--linha);
+  padding-top:20px;
+  flex:1;
+  overflow-y:auto;
+}
+.indice::-webkit-scrollbar{width:0}
+
+.indice li{margin-bottom:2px}
+
+.indice a{
+  display:flex;
+  gap:12px;
+  align-items:baseline;
+  padding:7px 0;
+  text-decoration:none;
+  color:var(--tinta-media);
+  font-size:13px;
+  font-weight:400;
+  transition:color .25s ease;
+}
+.indice a:hover{color:var(--tinta)}
+
+.indice a .num{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--tinta-fraca);
+  transition:color .25s ease;
+}
+
+.indice a.ativo{color:var(--tinta);font-weight:600}
+.indice a.ativo .num{color:var(--marcador)}
+
+/* progresso */
+.progresso{
+  border-top:1px solid var(--linha);
+  padding-top:22px;
+  margin-top:20px;
+}
+.progresso-topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:10px;
+}
+.progresso-rotulo{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--tinta-fraca);
+}
+.progresso-valor{
+  font-family:var(--serif);
+  font-size:26px;
+  font-weight:500;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.trilho{
+  height:2px;
+  background:var(--linha);
+  overflow:hidden;
+}
+.preenchido{
+  height:100%;
+  width:0%;
+  background:var(--marcador);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------- CORPO DO FORMULÁRIO ---------- */
+.corpo{
+  padding:56px 72px 120px;
+  background:var(--papel);
+  max-width:820px;
+}
+
+.cabecalho-mobile{display:none}
+
+section{
+  padding:44px 0;
+  border-bottom:1px solid var(--linha);
+  scroll-margin-top:24px;
+}
+section:last-of-type{border-bottom:none}
+
+.secao-topo{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:8px;
+}
+.secao-num{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--marcador);
+  letter-spacing:.06em;
+}
+.secao-topo h2{
+  font-family:var(--serif);
+  font-size:29px;
+  font-weight:500;
+  letter-spacing:-.01em;
+  line-height:1.15;
+}
+.secao-sub{
+  font-size:14px;
+  color:var(--tinta-media);
+  font-weight:300;
+  margin-left:38px;
+  margin-bottom:34px;
+  max-width:58ch;
+}
+
+/* ---------- CAMPOS ---------- */
+.campo{margin-bottom:30px}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+
+label,.rotulo{
+  display:block;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.005em;
+  margin-bottom:5px;
+}
+.obrigatorio{color:var(--marcador);font-weight:400}
+
+.ajuda{
+  display:block;
+  font-size:12.5px;
+  color:var(--tinta-fraca);
+  font-weight:300;
+  line-height:1.55;
+  margin-bottom:11px;
+  max-width:56ch;
+}
+
+/* input com traço de caneta demarcadora */
+.tracado{position:relative;line-height:0}
+
+.tracado input,.tracado textarea{display:block}
+
+input[type=text],input[type=email],input[type=tel],textarea{
+  width:100%;
+  border:none;
+  border-bottom:1px solid var(--linha);
+  background:transparent;
+  padding:9px 2px;
+  font-family:var(--sans);
+  font-size:15px;
+  font-weight:400;
+  color:var(--tinta);
+  transition:border-color .3s ease;
+}
+input::placeholder,textarea::placeholder{color:#BEBEC4;font-weight:300}
+input:focus,textarea:focus{outline:none;border-bottom-color:transparent}
+
+textarea{resize:vertical;min-height:88px;line-height:1.65}
+input[type=text],input[type=email],input[type=tel]{line-height:1.4}
+
+/* o traço violeta que se desenha sob o campo em foco */
+.tracado::after{
+  content:'';
+  position:absolute;
+  left:0;bottom:0;
+  height:2px;
+  width:100%;
+  background:var(--marcador);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+.tracado:focus-within::after{transform:scaleX(1)}
+
+/* validação por campo */
+.tracado.invalido input{border-bottom-color:#B3261E}
+.tracado.invalido::after{background:#B3261E;transform:scaleX(1)}
+
+.aviso{
+  display:none;
+  font-family:var(--sans);
+  font-size:12px;
+  line-height:1.5;
+  color:#B3261E;
+  margin-top:7px;
+  font-weight:400;
+}
+.aviso.visivel{display:block}
+
+/* ---------- DOMÍNIO ---------- */
+.opcoes-dominio{display:flex;flex-direction:column;gap:14px}
+
+.linha-dominio{
+  display:grid;
+  grid-template-columns:26px 1fr;
+  align-items:center;
+  gap:12px;
+}
+.linha-dominio .ordem{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--tinta-fraca);
+  letter-spacing:.06em;
+  transition:color .3s ease;
+}
+.linha-dominio:focus-within .ordem{color:var(--marcador)}
+
+/* ---------- ESCOLHAS ---------- */
+.opcoes{display:flex;flex-wrap:wrap;gap:9px}
+
+.opcao input{position:absolute;opacity:0;width:0;height:0}
+
+.opcao span{
+  display:inline-block;
+  padding:9px 17px;
+  border:1px solid var(--linha);
+  border-radius:999px;
+  font-size:13.5px;
+  font-weight:400;
+  color:var(--tinta-media);
+  cursor:pointer;
+  background:var(--cartao);
+  transition:all .22s ease;
+  user-select:none;
+}
+.opcao span:hover{border-color:var(--tinta-fraca);color:var(--tinta)}
+
+.opcao input:checked + span{
+  background:var(--tinta);
+  border-color:var(--tinta);
+  color:var(--papel);
+  font-weight:500;
+}
+.opcao input:focus-visible + span{
+  outline:2px solid var(--marcador);
+  outline-offset:2px;
+}
+
+/* lista de recursos — formato prescrição */
+.prescricao{
+  border:1px solid var(--linha);
+  background:var(--cartao);
+}
+.item-presc{
+  display:flex;
+  gap:15px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--linha);
+  cursor:pointer;
+  transition:background .2s ease;
+  align-items:flex-start;
+}
+.item-presc:last-child{border-bottom:none}
+.item-presc:hover{background:#FAFAF9}
+
+.item-presc input{position:absolute;opacity:0;width:0;height:0}
+
+.caixa{
+  flex-shrink:0;
+  width:17px;height:17px;
+  border:1px solid var(--tinta-fraca);
+  margin-top:2px;
+  position:relative;
+  transition:all .2s ease;
+}
+.item-presc input:checked ~ .caixa{
+  background:var(--marcador);
+  border-color:var(--marcador);
+}
+.item-presc input:checked ~ .caixa::after{
+  content:'';
+  position:absolute;
+  left:5px;top:1px;
+  width:5px;height:10px;
+  border:solid #fff;
+  border-width:0 1.5px 1.5px 0;
+  transform:rotate(45deg);
+}
+.item-presc input:focus-visible ~ .caixa{outline:2px solid var(--marcador);outline-offset:2px}
+
+.presc-texto strong{
+  display:block;
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:2px;
+}
+.presc-texto span{
+  font-size:12.5px;
+  color:var(--tinta-fraca);
+  font-weight:300;
+  line-height:1.5;
+}
+
+/* ---------- FOTOTIPO / PALETA ---------- */
+.fototipo{display:flex;flex-wrap:wrap;gap:11px}
+
+.tom input{position:absolute;opacity:0;width:0;height:0}
+.tom span{
+  display:block;
+  width:56px;height:72px;
+  cursor:pointer;
+  position:relative;
+  border:1px solid rgba(0,0,0,.08);
+  transition:transform .22s cubic-bezier(.22,1,.36,1);
+}
+.tom span:hover{transform:translateY(-4px)}
+.tom input:checked + span{
+  transform:translateY(-4px);
+  box-shadow:0 0 0 1.5px var(--papel),0 0 0 3px var(--tinta);
+}
+.tom input:checked + span::after{
+  content:'';
+  position:absolute;
+  left:50%;bottom:-13px;
+  width:4px;height:4px;
+  background:var(--tinta);
+  border-radius:50%;
+  transform:translateX(-50%);
+}
+.tom input:focus-visible + span{outline:2px solid var(--marcador);outline-offset:3px}
+
+.tom-legenda{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--tinta-fraca);
+  margin-top:16px;
+}
+
+/* ---------- ENVIO ---------- */
+.rodape-form{
+  padding-top:44px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.enviar{
+  border:none;
+  background:var(--tinta);
+  color:var(--papel);
+  font-family:var(--sans);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.01em;
+  padding:16px 38px;
+  cursor:pointer;
+  transition:background .25s ease;
+}
+.enviar:hover{background:var(--marcador)}
+.enviar:focus-visible{outline:2px solid var(--marcador);outline-offset:3px}
+
+.limpar{
+  border:none;
+  background:none;
+  font-family:var(--sans);
+  font-size:13.5px;
+  color:var(--tinta-fraca);
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  padding:16px 6px;
+}
+.limpar:hover{color:var(--tinta)}
+
+.enviar:disabled{background:var(--tinta-fraca);cursor:default}
+
+.erro-envio{
+  display:none;
+  font-size:13px;
+  color:var(--marcador);
+  font-weight:400;
+  line-height:1.55;
+  margin-top:18px;
+  padding-left:15px;
+  border-left:2px solid var(--marcador);
+  max-width:50ch;
+}
+
+.sigilo{
+  font-size:12px;
+  color:var(--tinta-fraca);
+  font-weight:300;
+  margin-top:22px;
+  padding-left:15px;
+  border-left:1px solid var(--linha);
+  max-width:50ch;
+}
+
+/* ---------- CONFIRMAÇÃO ---------- */
+.confirmacao{
+  display:none;
+  padding:52px 0;
+  text-align:left;
+}
+.confirmacao.visivel{display:block}
+.confirmacao .selo{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--marcador);
+  margin-bottom:14px;
+}
+.confirmacao h2{
+  font-family:var(--serif);
+  font-size:36px;
+  font-weight:500;
+  margin-bottom:12px;
+}
+.confirmacao p{
+  color:var(--tinta-media);
+  font-weight:300;
+  max-width:46ch;
+}
+
+/* ---------- REVELAÇÃO NO SCROLL ---------- */
+.revelar{
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);
+}
+.revelar.visto{opacity:1;transform:none}
+
+/* ---------- RESPONSIVO ---------- */
+@media(max-width:940px){
+  .folha{grid-template-columns:1fr}
+  .prontuario{display:none}
+  .cabecalho-mobile{
+    display:block;
+    padding:40px 26px 30px;
+    border-bottom:1px solid var(--linha);
+    background:var(--porcelana);
+  }
+  .cabecalho-mobile .marca{margin-bottom:18px}
+  .cabecalho-mobile h1{
+    font-family:var(--serif);
+    font-size:32px;
+    font-weight:500;
+    line-height:1.08;
+    margin-bottom:12px;
+  }
+  .cabecalho-mobile h1 em{font-style:italic;color:var(--marcador)}
+  .cabecalho-mobile .nota{
+    font-size:13.5px;
+    color:var(--tinta-media);
+    font-weight:300;
+  }
+  .barra-mobile{
+    position:sticky;top:0;z-index:10;
+    background:var(--porcelana);
+    border-bottom:1px solid var(--linha);
+    padding:11px 26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .barra-mobile .progresso-rotulo{font-size:9px}
+  .barra-mobile .progresso-valor{font-size:17px}
+  .corpo{padding:8px 26px 90px;max-width:none}
+  .dupla{grid-template-columns:1fr;gap:0}
+  .secao-topo h2{font-size:25px}
+  .secao-sub{margin-left:0}
+  .secao-topo{margin-bottom:6px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .revelar{opacity:1;transform:none}
+}
+
+@media print{
+  .prontuario,.rodape-form,.barra-mobile{display:none}
+  body{background:#fff}
+  .corpo{padding:0;max-width:none}
+  .revelar{opacity:1;transform:none}
+  section{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="folha">
+
+  <!-- PAINEL DE PRONTUÁRIO -->
+  <aside class="prontuario">
+    <div class="marca">Ficha de projeto · 2026</div>
+    <h1>Anamnese<br>de <em>marca</em></h1>
+    <p class="nota">O mesmo cuidado que você aplica na avaliação de um paciente, aplicado à sua presença digital.</p>
+
+    <nav>
+      <ul class="indice" id="indice">
+        <li><a href="#s1"><span class="num">01</span>Identificação</a></li>
+        <li><a href="#s2"><span class="num">02</span>Queixa principal</a></li>
+        <li><a href="#s3"><span class="num">03</span>Procedimentos</a></li>
+        <li><a href="#s4"><span class="num">04</span>Fototipo da marca</a></li>
+        <li><a href="#s5"><span class="num">05</span>Documentação</a></li>
+        <li><a href="#s6"><span class="num">06</span>Recursos clínicos</a></li>
+        <li><a href="#s7"><span class="num">07</span>Canais de contato</a></li>
+        <li><a href="#s8"><span class="num">08</span>Conduta e prazo</a></li>
+      </ul>
+    </nav>
+
+    <div class="progresso">
+      <div class="progresso-topo">
+        <span class="progresso-rotulo">Preenchido</span>
+        <span class="progresso-valor" id="pct">0%</span>
+      </div>
+      <div class="trilho"><div class="preenchido" id="barra"></div></div>
+    </div>
+  </aside>
+
+  <!-- FORMULÁRIO -->
+  <main class="corpo">
+
+    <div class="cabecalho-mobile">
+      <div class="marca">Ficha de projeto · 2026</div>
+      <h1>Anamnese de <em>marca</em></h1>
+      <p class="nota">O mesmo cuidado que você aplica na avaliação de um paciente, aplicado à sua presença digital.</p>
+    </div>
+
+    <div class="barra-mobile">
+      <span class="progresso-rotulo">Preenchido</span>
+      <span class="progresso-valor" id="pctMobile">0%</span>
+    </div>
+
+    <form id="ficha" name="anamnese" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <input type="hidden" name="form-name" value="anamnese">
+      <p style="display:none"><label>Não preencha: <input name="bot-field"></label></p>
+
+      <!-- 01 -->
+      <section id="s1" class="revelar">
+        <div class="secao-topo"><span class="secao-num">01</span><h2>Identificação</h2></div>
+        <p class="secao-sub">Os dados que vão aparecer no site e como falo com você durante o projeto.</p>
+
+        <div class="dupla">
+          <div class="campo"><label>Nome profissional <span class="obrigatorio">*</span></label>
+            <span class="ajuda">Como você quer ser chamada no site: nome completo, "Dra." ou só o primeiro nome.</span>
+            <div class="tracado"><input type="text" name="nome" required></div>
+          </div>
+          <div class="campo"><label>Especialidade <span class="obrigatorio">*</span></label>
+            <span class="ajuda">Ex.: harmonização facial, micropigmentação, dermatologia estética.</span>
+            <div class="tracado"><input type="text" name="especialidade" required></div>
+          </div>
+        </div>
+
+        <div class="dupla">
+          <div class="campo"><label>Registro profissional</label>
+            <span class="ajuda">CRM, CRO, CRBM ou equivalente. Aparece no rodapé por exigência de conselho.</span>
+            <div class="tracado"><input type="text" name="registro" placeholder="CRM/RJ 000000"></div>
+          </div>
+          <div class="campo"><label>Cidade e estado <span class="obrigatorio">*</span></label>
+            <span class="ajuda">Define a busca local no Google.</span>
+            <div class="tracado"><input type="text" name="cidade" placeholder="Niterói, RJ" required></div>
+          </div>
+        </div>
+
+        <div class="dupla">
+          <div class="campo"><label>E-mail <span class="obrigatorio">*</span></label>
+            <div class="tracado"><input type="email" name="email" data-tipo="email" placeholder="seuemail@dominio.com" inputmode="email" autocomplete="email" required></div>
+          </div>
+          <div class="campo"><label>WhatsApp <span class="obrigatorio">*</span></label>
+            <div class="tracado"><input type="tel" name="whatsapp" data-tipo="telefone" placeholder="(21) 99999-9999" inputmode="numeric" maxlength="15" required></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section id="s2" class="revelar">
+        <div class="secao-topo"><span class="secao-num">02</span><h2>Queixa principal</h2></div>
+        <p class="secao-sub">O que não está funcionando hoje e onde você quer chegar. É a parte que mais influencia o resultado.</p>
+
+        <div class="campo"><label>Descreva seu trabalho em duas frases <span class="obrigatorio">*</span></label>
+          <span class="ajuda">Escreva como você explicaria para uma paciente nova, sem termos técnicos.</span>
+          <div class="tracado"><textarea name="descricao" required></textarea></div>
+        </div>
+
+        <div class="campo"><label>Por que uma paciente escolhe você e não a profissional ao lado? <span class="obrigatorio">*</span></label>
+          <span class="ajuda">Técnica exclusiva, tempo de formação, tipo de resultado, atendimento. Seja concreta.</span>
+          <div class="tracado"><textarea name="diferencial" required></textarea></div>
+        </div>
+
+        <div class="campo"><label>O que o site precisa resolver <span class="obrigatorio">*</span></label>
+          <span class="ajuda">Ex.: "recebo muita pergunta de preço no direct e perco tempo" ou "quero atrair paciente de ticket mais alto".</span>
+          <div class="tracado"><textarea name="objetivo" required></textarea></div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Como sua marca deve soar</span>
+          <span class="ajuda">Escolha até duas. Isso define o texto e o ritmo visual do site inteiro.</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="checkbox" name="tom" value="clinica"><span>Clínica e precisa</span></label>
+            <label class="opcao"><input type="checkbox" name="tom" value="acolhedora"><span>Acolhedora e próxima</span></label>
+            <label class="opcao"><input type="checkbox" name="tom" value="discreta"><span>Discreta e sofisticada</span></label>
+            <label class="opcao"><input type="checkbox" name="tom" value="autoral"><span>Autoral e criativa</span></label>
+            <label class="opcao"><input type="checkbox" name="tom" value="cientifica"><span>Científica e didática</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><label>Sites ou perfis que você admira</label>
+          <span class="ajuda">De qualquer área. Escreva o link e, em uma linha, o que te atraiu nele.</span>
+          <div class="tracado"><textarea name="referencias" placeholder="exemplo.com — gostei do jeito que as fotos aparecem"></textarea></div>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section id="s3" class="revelar">
+        <div class="secao-topo"><span class="secao-num">03</span><h2>Procedimentos</h2></div>
+        <p class="secao-sub">O que entra no site e como o valor é apresentado.</p>
+
+        <div class="campo"><label>Procedimentos que você quer destacar <span class="obrigatorio">*</span></label>
+          <span class="ajuda">Um por linha, na ordem de importância. Os três primeiros ganham mais espaço na página.</span>
+          <div class="tracado"><textarea name="procedimentos" style="min-height:120px" required></textarea></div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Exibição de valores</span>
+          <span class="ajuda">Mostrar preço filtra curioso e reduz mensagem no direct. Ocultar preserva a negociação na consulta.</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="preco" value="visivel"><span>Preço visível</span></label>
+            <label class="opcao"><input type="radio" name="preco" value="apartir"><span>A partir de</span></label>
+            <label class="opcao"><input type="radio" name="preco" value="consulta"><span>Sob consulta</span></label>
+            <label class="opcao"><input type="radio" name="preco" value="decidir"><span>Decidir depois</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><label>Faixa de valores, se quiser adiantar</label>
+          <span class="ajuda">Fica só entre nós enquanto você decide. Nada vai ao ar sem sua aprovação.</span>
+          <div class="tracado"><textarea name="valores" placeholder="Toxina botulínica — R$ 000"></textarea></div>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section id="s4" class="revelar">
+        <div class="secao-topo"><span class="secao-num">04</span><h2>Fototipo da marca</h2></div>
+        <p class="secao-sub">A pele do site. Escolha as cores que combinam com o que você já usa no consultório e nas redes.</p>
+
+        <div class="campo"><span class="rotulo">Cores que representam você</span>
+          <span class="ajuda">Selecione de duas a quatro. Uso a primeira como base e as demais como apoio.</span>
+          <div class="fototipo">
+            <label class="tom"><input type="checkbox" name="cor" value="areia"><span style="background:#E3D5C4"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="argila"><span style="background:#C08B72"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="borgonha"><span style="background:#6E2233"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="rosa"><span style="background:#D9A0A8"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="ameixa"><span style="background:#5B3FA8"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="petroleo"><span style="background:#1F4A4E"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="oliva"><span style="background:#6F7A52"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="grafite"><span style="background:#2C2C31"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="marfim"><span style="background:#F1EDE4"></span></label>
+            <label class="tom"><input type="checkbox" name="cor" value="dourado"><span style="background:#B99050"></span></label>
+          </div>
+          <p class="tom-legenda">Areia · Argila · Borgonha · Rosé · Ameixa · Petróleo · Oliva · Grafite · Marfim · Dourado</p>
+        </div>
+
+        <div class="campo"><label>Nenhuma dessas? Descreva a cor que você tem em mente</label>
+          <span class="ajuda">Vale o nome, o código hexadecimal do seu manual de marca ou uma referência concreta: "o verde da minha fachada", "o mesmo tom do meu cartão".</span>
+          <div class="tracado"><input type="text" name="cor_livre" placeholder="#7A9E7E, verde-sálvia, o azul do meu jaleco"></div>
+        </div>
+
+        <div class="campo"><label>Alguma cor que você não quer ver no site</label>
+          <span class="ajuda">Tão útil quanto a anterior. Se há um tom associado a uma concorrente próxima, é bom eu saber antes.</span>
+          <div class="tracado"><input type="text" name="cor_vetada" placeholder="Opcional"></div>
+        </div>
+
+        <div class="campo" style="margin-top:34px"><span class="rotulo">Situação da identidade visual</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="logo" value="pronta"><span>Tenho logo e manual</span></label>
+            <label class="opcao"><input type="radio" name="logo" value="apenaslogo"><span>Tenho só a logo</span></label>
+            <label class="opcao"><input type="radio" name="logo" value="refazer"><span>Tenho, mas quero refazer</span></label>
+            <label class="opcao"><input type="radio" name="logo" value="nenhuma"><span>Ainda não tenho</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><label>Onde estão os arquivos da sua marca</label>
+          <span class="ajuda">Link do Drive, Dropbox ou WeTransfer. Prefiro PNG com fundo transparente ou o vetor original.</span>
+          <div class="tracado"><input type="text" name="arquivos_marca" data-tipo="url" placeholder="drive.google.com/..." inputmode="url" autocapitalize="off" spellcheck="false"></div>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section id="s5" class="revelar">
+        <div class="secao-topo"><span class="secao-num">05</span><h2>Documentação fotográfica</h2></div>
+        <p class="secao-sub">Foto boa vale mais que qualquer efeito de design. Aqui eu avalio o que já existe.</p>
+
+        <div class="campo"><span class="rotulo">Acervo de antes e depois</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="acervo" value="amplo"><span>Mais de 10 casos</span></label>
+            <label class="opcao"><input type="radio" name="acervo" value="medio"><span>Entre 4 e 10</span></label>
+            <label class="opcao"><input type="radio" name="acervo" value="poucos"><span>Menos de 4</span></label>
+            <label class="opcao"><input type="radio" name="acervo" value="nenhum"><span>Ainda vou registrar</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Autorização de imagem das pacientes</span>
+          <span class="ajuda">Sem termo assinado eu não publico rosto — nesse caso uso enquadramento parcial ou recorte da região tratada. O modelo do termo deve vir do seu advogado ou do seu conselho de classe, que costuma disponibilizar um padrão.</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="autorizacao" value="todas"><span>Tenho de todas</span></label>
+            <label class="opcao"><input type="radio" name="autorizacao" value="algumas"><span>De algumas</span></label>
+            <label class="opcao"><input type="radio" name="autorizacao" value="nenhuma"><span>Não tenho</span></label>
+            <label class="opcao"><input type="radio" name="autorizacao" value="providenciar"><span>Vou providenciar</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Sua presença nas fotos</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="presenca" value="protagonista"><span>Apareço bastante</span></label>
+            <label class="opcao"><input type="radio" name="presenca" value="pontual"><span>Uma foto de apresentação</span></label>
+            <label class="opcao"><input type="radio" name="presenca" value="maos"><span>Só em atendimento</span></label>
+            <label class="opcao"><input type="radio" name="presenca" value="ausente"><span>Prefiro não aparecer</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><label>Onde estão as fotos</label>
+          <span class="ajuda">Link da pasta ou o @ do perfil de onde posso puxar. Peça sempre o arquivo original, não o print.</span>
+          <div class="tracado"><input type="text" name="fotos_link" placeholder="@seuperfil ou link da pasta" autocapitalize="off" spellcheck="false"></div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Textos sobre você</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="texto" value="pronto"><span>Já tenho escritos</span></label>
+            <label class="opcao"><input type="radio" name="texto" value="rascunho"><span>Tenho rascunho</span></label>
+            <label class="opcao"><input type="radio" name="texto" value="semtexto"><span>Ainda não tenho</span></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section id="s6" class="revelar">
+        <div class="secao-topo"><span class="secao-num">06</span><h2>Recursos clínicos</h2></div>
+        <p class="secao-sub">Marque o que faz sentido para a sua rotina. Nem tudo precisa entrar na primeira versão.</p>
+
+        <div class="prescricao">
+          <label class="item-presc"><input type="checkbox" name="recursos" value="galeria"><span class="caixa"></span>
+            <span class="presc-texto"><strong>Galeria de antes e depois</strong><span>Comparação lado a lado, com organização por procedimento.</span></span></label>
+
+          <label class="item-presc"><input type="checkbox" name="recursos" value="depoimentos"><span class="caixa"></span>
+            <span class="presc-texto"><strong>Depoimentos de pacientes</strong><span>Prova social escrita, o que mais converte quando não se pode mostrar rosto.</span></span></label>
+
+          <label class="item-presc"><input type="checkbox" name="recursos" value="metricas"><span class="caixa"></span>
+            <span class="presc-texto"><strong>Relatório de visitas</strong><span>Quantas pessoas entraram, de onde vieram e o que clicaram.</span></span></label>
+
+          <label class="item-presc"><input type="checkbox" name="recursos" value="email"><span class="caixa"></span>
+            <span class="presc-texto"><strong>E-mail automático de boas-vindas</strong><span>Quem preenche o formulário recebe uma resposta imediata com orientações de pré-procedimento.</span></span></label>
+
+          <label class="item-presc"><input type="checkbox" name="recursos" value="cadastro"><span class="caixa"></span>
+            <span class="presc-texto"><strong>Cadastro de interessadas</strong><span>Lista organizada de quem pediu contato, com histórico e situação de cada uma.</span></span></label>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section id="s7" class="revelar">
+        <div class="secao-topo"><span class="secao-num">07</span><h2>Canais de contato</h2></div>
+        <p class="secao-sub">Para onde o site direciona quem quer marcar.</p>
+
+        <div class="dupla">
+          <div class="campo"><label>Instagram</label>
+            <div class="tracado"><input type="text" name="instagram" data-tipo="arroba" placeholder="@seuperfil" autocapitalize="off" spellcheck="false"></div>
+          </div>
+          <div class="campo"><label>TikTok</label>
+            <div class="tracado"><input type="text" name="tiktok" data-tipo="arroba" placeholder="@seuperfil" autocapitalize="off" spellcheck="false"></div>
+          </div>
+        </div>
+
+        <div class="dupla">
+          <div class="campo"><label>WhatsApp de atendimento</label>
+            <span class="ajuda">Se for diferente do número do topo desta ficha.</span>
+            <div class="tracado"><input type="tel" name="whatsapp_atendimento" data-tipo="telefone" placeholder="(21) 99999-9999" inputmode="numeric" maxlength="15"></div>
+          </div>
+          <div class="campo"><label>E-mail comercial</label>
+            <div class="tracado"><input type="email" name="email_comercial" data-tipo="email" placeholder="contato@dominio.com" inputmode="email"></div>
+          </div>
+        </div>
+
+        <div class="campo"><label>Endereço do consultório</label>
+          <span class="ajuda">Deixe em branco se atende só por agendamento e prefere não divulgar o local.</span>
+          <div class="tracado"><input type="text" name="endereco"></div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Situação do domínio</span>
+          <span class="ajuda">Domínio é o endereço que a pessoa digita para chegar até você, como o <em>instagram.com</em> ou o <em>globo.com</em>. Ele é alugado por ano, custa em torno de R$ 40 e fica registrado no seu nome — mesmo que eu cuide de toda a parte técnica, ele é seu. Se você nunca registrou nenhum, marque a segunda opção.</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="dominio_status" value="registrado"><span>Já registrei</span></label>
+            <label class="opcao"><input type="radio" name="dominio_status" value="registrar"><span>Preciso registrar</span></label>
+            <label class="opcao"><input type="radio" name="dominio_status" value="trocar"><span>Tenho um, mas quero trocar</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><span class="rotulo">Endereço do site <span class="obrigatorio">*</span></span>
+          <span class="ajuda">Sugira três opções em ordem de preferência, terminando em .com.br. O endereço que você mais quer costuma já estar registrado por outra pessoa, e ter alternativas evita uma semana de idas e vindas. Verifico a disponibilidade das três e te retorno.</span>
+          <div class="opcoes-dominio">
+            <div class="linha-dominio">
+              <span class="ordem">1ª</span>
+              <div class="tracado"><input type="text" name="dominio_1" data-tipo="dominio" placeholder="seunome.com.br" inputmode="url" autocapitalize="off" spellcheck="false" required></div>
+            </div>
+            <div class="linha-dominio">
+              <span class="ordem">2ª</span>
+              <div class="tracado"><input type="text" name="dominio_2" data-tipo="dominio" placeholder="seunomeharmonizacao.com.br" inputmode="url" autocapitalize="off" spellcheck="false"></div>
+            </div>
+            <div class="linha-dominio">
+              <span class="ordem">3ª</span>
+              <div class="tracado"><input type="text" name="dominio_3" data-tipo="dominio" placeholder="clinicaseunome.com.br" inputmode="url" autocapitalize="off" spellcheck="false"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 -->
+      <section id="s8" class="revelar">
+        <div class="secao-topo"><span class="secao-num">08</span><h2>Conduta e prazo</h2></div>
+        <p class="secao-sub">Por último, o combinado de tempo e qualquer coisa que eu deva saber.</p>
+
+        <div class="campo"><span class="rotulo">Quando você precisa do site no ar</span>
+          <div class="opcoes">
+            <label class="opcao"><input type="radio" name="prazo" value="urgente"><span>Esta semana</span></label>
+            <label class="opcao"><input type="radio" name="prazo" value="quinzena"><span>Até quinze dias</span></label>
+            <label class="opcao"><input type="radio" name="prazo" value="mes"><span>Dentro de um mês</span></label>
+            <label class="opcao"><input type="radio" name="prazo" value="tranquilo"><span>Sem data fixa</span></label>
+          </div>
+        </div>
+
+        <div class="campo"><label>Há alguma data que não pode passar?</label>
+          <span class="ajuda">Congresso, inauguração, campanha sazonal, lançamento de protocolo.</span>
+          <div class="tracado"><input type="text" name="data_limite"></div>
+        </div>
+
+        <div class="campo"><label>Mais alguma observação</label>
+          <span class="ajuda">Receios, experiências ruins com site anterior, exigências de conselho, o que for.</span>
+          <div class="tracado"><textarea name="observacoes"></textarea></div>
+        </div>
+
+        <div class="rodape-form">
+          <button type="submit" class="enviar">Enviar ficha</button>
+          <button type="reset" class="limpar">Limpar respostas</button>
+        </div>
+
+        <p class="erro-envio" id="erro"></p>
+
+        <p class="sigilo">As informações desta ficha são usadas apenas na construção do seu site e não são compartilhadas com terceiros.</p>
+      </section>
+
+      <div class="confirmacao" id="confirmacao">
+        <p class="selo">Ficha recebida</p>
+        <h2>Obrigado.</h2>
+        <p>Vou ler com atenção e retorno em até um dia útil com a leitura do caso e a proposta de estrutura do site.</p>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<script>
+(function(){
+  const form = document.getElementById('ficha');
+  const barra = document.getElementById('barra');
+  const pct = document.getElementById('pct');
+  const pctMobile = document.getElementById('pctMobile');
+  const erro = document.getElementById('erro');
+
+  /* progresso: campos de texto preenchidos + grupos de escolha respondidos */
+  const textos = [...form.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea')];
+  const grupos = [...new Set([...form.querySelectorAll('input[type=radio],input[type=checkbox]')].map(i=>i.name))];
+  const total = textos.length + grupos.length;
+
+  function calcular(){
+    let feitos = textos.filter(c=>c.value.trim()!=='').length;
+    feitos += grupos.filter(n=>form.querySelector(`[name="${n}"]:checked`)).length;
+    const p = Math.round(feitos/total*100);
+    barra.style.width = p+'%';
+    pct.textContent = p+'%';
+    pctMobile.textContent = p+'%';
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('reset', ()=>setTimeout(calcular,0));
+  calcular();
+
+  /* índice acompanha a seção visível */
+  const links = [...document.querySelectorAll('.indice a')];
+  const secoes = [...document.querySelectorAll('section[id]')];
+
+  const espiao = new IntersectionObserver(entradas=>{
+    entradas.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.toggle('ativo', l.getAttribute('href')==='#'+e.target.id));
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  secoes.forEach(s=>espiao.observe(s));
+
+  /* revelação suave */
+  const revelador = new IntersectionObserver(entradas=>{
+    entradas.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('visto'); revelador.unobserve(e.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.revelar').forEach(el=>revelador.observe(el));
+
+  /* ---------- MÁSCARA E VALIDAÇÃO ---------- */
+  const regras = {
+    telefone:{
+      testar:v=>/^\(\d{2}\) \d{4,5}-\d{4}$/.test(v),
+      recado:'Informe DDD e número, como (21) 99999-9999.'
+    },
+    email:{
+      testar:v=>/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v),
+      recado:'Confira o endereço — falta o @ ou o final do domínio.'
+    },
+    dominio:{
+      testar:v=>/^[a-z0-9][a-z0-9-]*(\.[a-z0-9-]+)+$/i.test(v),
+      recado:'Escreva só o endereço, como seunome.com.br — sem www nem https.'
+    },
+    url:{
+      testar:v=>/^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)+\/?\S*$/i.test(v),
+      recado:'Cole o link completo da pasta.'
+    },
+    arroba:{ testar:()=>true, recado:'' }
+  };
+
+  function mascararTelefone(v){
+    const d = v.replace(/\D/g,'').slice(0,11);
+    if(d.length <= 2)  return d.length ? '('+d : '';
+    if(d.length <= 6)  return '('+d.slice(0,2)+') '+d.slice(2);
+    if(d.length <= 10) return '('+d.slice(0,2)+') '+d.slice(2,6)+'-'+d.slice(6);
+    return '('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7);
+  }
+
+  function avisoDe(campo){
+    let el = campo.closest('.campo').querySelector('.aviso');
+    if(!el){
+      el = document.createElement('p');
+      el.className = 'aviso';
+      campo.closest('.tracado').after(el);
+    }
+    return el;
+  }
+
+  function validar(campo){
+    const tipo = campo.dataset.tipo;
+    const tracado = campo.closest('.tracado');
+    const aviso = avisoDe(campo);
+    const valor = campo.value.trim();
+
+    tracado.classList.remove('invalido');
+    aviso.classList.remove('visivel');
+
+    if(!valor) return !campo.hasAttribute('required');
+    if(!tipo || !regras[tipo]) return true;
+    if(regras[tipo].testar(valor)) return true;
+
+    tracado.classList.add('invalido');
+    aviso.textContent = regras[tipo].recado;
+    aviso.classList.add('visivel');
+    return false;
+  }
+
+  form.querySelectorAll('[data-tipo]').forEach(campo=>{
+    const tipo = campo.dataset.tipo;
+
+    if(tipo === 'telefone'){
+      campo.addEventListener('input', ()=>{ campo.value = mascararTelefone(campo.value); });
+    }
+
+    if(tipo === 'arroba'){
+      campo.addEventListener('blur', ()=>{
+        let v = campo.value.trim().replace(/^@+/,'').replace(/\s+/g,'');
+        campo.value = v ? '@'+v : '';
+      });
+    }
+
+    if(tipo === 'dominio'){
+      campo.addEventListener('blur', ()=>{
+        campo.value = campo.value.trim().toLowerCase()
+          .replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'');
+        validar(campo);
+      });
+    }
+
+    campo.addEventListener('blur', ()=>{ if(tipo!=='dominio') validar(campo); });
+    campo.addEventListener('input', ()=>{
+      if(campo.closest('.tracado').classList.contains('invalido')) validar(campo);
+    });
+  });
+
+  /* envio */
+  form.addEventListener('submit', ev=>{
+    ev.preventDefault();
+    const faltando = [...form.querySelectorAll('[required]')].filter(c=>!c.value.trim());
+    if(faltando.length){
+      faltando[0].closest('section').scrollIntoView({behavior:'smooth',block:'start'});
+      faltando[0].focus({preventScroll:true});
+      return;
+    }
+
+    const malformados = [...form.querySelectorAll('[data-tipo]')].filter(c=>!validar(c));
+    if(malformados.length){
+      malformados[0].closest('section').scrollIntoView({behavior:'smooth',block:'start'});
+      malformados[0].focus({preventScroll:true});
+      return;
+    }
+    const botao = form.querySelector('.enviar');
+    botao.disabled = true;
+    botao.textContent = 'Enviando...';
+
+    /* checkboxes múltiplos viram uma linha só, legível no painel */
+    const dados = new FormData(form);
+    ['tom','cor','recursos'].forEach(campo=>{
+      const marcados = dados.getAll(campo);
+      dados.delete(campo);
+      if(marcados.length) dados.append(campo, marcados.join(', '));
+    });
+
+    fetch('/', {
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(dados).toString()
+    })
+    .then(resposta=>{
+      if(!resposta.ok) throw new Error('HTTP '+resposta.status);
+      form.querySelectorAll('section').forEach(s=>s.style.display='none');
+      document.getElementById('confirmacao').classList.add('visivel');
+      window.scrollTo({top:0,behavior:'smooth'});
+    })
+    .catch(e=>{
+      console.error('Falha no envio:', e);
+      botao.disabled = false;
+      botao.textContent = 'Enviar ficha';
+      erro.textContent = 'O envio não completou. Verifique a conexão e tente de novo, ou me chame no WhatsApp que eu pego os dados por lá.';
+      erro.style.display = 'block';
+    });
+  });
+})();
+</script>
+</body>
+</html>
