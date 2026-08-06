@@ -1,6 +1,18 @@
 [build]
   publish = "."
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# O publish é a raiz do repo, então a pasta das functions também vai para o CDN.
+# Não há segredo no código (as chaves vêm do ambiente), mas não há motivo para servi-lo.
+[[redirects]]
+  from = "/netlify/*"
+  to = "/index.html"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
