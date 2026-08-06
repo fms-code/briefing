@@ -36,21 +36,57 @@ em{font-style:italic;color:var(--terracota)}
 
 .indice{list-style:none;margin:0;padding:0}
 .indice li{margin-bottom:3px}
-.indice button{width:100%;background:none;border:0;padding:11px 0;text-align:left;font-family:var(--sans);font-size:15px;font-weight:300;color:var(--tinta-media);cursor:pointer;display:flex;align-items:baseline;gap:13px;transition:.25s;letter-spacing:.01em}
-.indice button .n{font-family:var(--serif);font-size:11px;color:var(--tinta-fraca);transition:.25s}
-.indice button:hover{color:var(--tinta);padding-left:7px}
-.indice button[aria-current="true"]{color:var(--terracota);font-weight:400}
-.indice button[aria-current="true"] .n{color:var(--terracota)}
-.indice button[aria-current="true"]::after{content:'';flex:1;height:1px;background:var(--argila);margin-left:4px;align-self:center}
-.indice .notas button{color:var(--tinta-fraca);font-size:12px;border-top:1px dashed var(--areia);margin-top:16px;padding-top:16px}
+.indice label{width:100%;padding:11px 0;text-align:left;font-size:15px;color:var(--tinta-media);cursor:pointer;display:flex;align-items:baseline;gap:13px;transition:.25s;letter-spacing:.01em}
+.indice label .n{font-family:var(--serif);font-size:11px;color:var(--tinta-fraca);transition:.25s}
+.indice label:hover{color:var(--tinta);padding-left:7px}
+.indice .notas label{color:var(--tinta-fraca);font-size:12px;border-top:1px dashed var(--areia);margin-top:16px;padding-top:16px}
+
+/* item ativo do índice */
+#c-inicio:checked~.trilho label[for="c-inicio"],
+#c-procedimentos:checked~.trilho label[for="c-procedimentos"],
+#c-atendimento:checked~.trilho label[for="c-atendimento"],
+#c-resultados:checked~.trilho label[for="c-resultados"],
+#c-contato:checked~.trilho label[for="c-contato"],
+#c-notas:checked~.trilho label[for="c-notas"]{color:var(--terracota)}
+
+#c-inicio:checked~.trilho label[for="c-inicio"] .n,
+#c-procedimentos:checked~.trilho label[for="c-procedimentos"] .n,
+#c-atendimento:checked~.trilho label[for="c-atendimento"] .n,
+#c-resultados:checked~.trilho label[for="c-resultados"] .n,
+#c-contato:checked~.trilho label[for="c-contato"] .n{color:var(--terracota)}
+
+#c-inicio:checked~.trilho label[for="c-inicio"]::after,
+#c-procedimentos:checked~.trilho label[for="c-procedimentos"]::after,
+#c-atendimento:checked~.trilho label[for="c-atendimento"]::after,
+#c-resultados:checked~.trilho label[for="c-resultados"]::after,
+#c-contato:checked~.trilho label[for="c-contato"]::after{content:'';flex:1;height:1px;background:var(--argila);margin-left:4px;align-self:center}
+
+/* o teclado navega pelos rádios; o anel precisa aparecer no rótulo */
+#c-inicio:focus-visible~.trilho label[for="c-inicio"],
+#c-procedimentos:focus-visible~.trilho label[for="c-procedimentos"],
+#c-atendimento:focus-visible~.trilho label[for="c-atendimento"],
+#c-resultados:focus-visible~.trilho label[for="c-resultados"],
+#c-contato:focus-visible~.trilho label[for="c-contato"],
+#c-notas:focus-visible~.trilho label[for="c-notas"]{outline:2px solid var(--argila);outline-offset:4px}
 
 .rodape-trilho{font-size:11.5px;color:var(--tinta-fraca);line-height:1.8}
 .rodape-trilho a{color:var(--tinta-media);text-decoration:none;border-bottom:1px solid var(--areia)}
 
 /* ---------- palco ---------- */
-.palco{position:relative;overflow-y:auto;overflow-x:hidden}
-.cena{display:none;min-height:100%;padding:66px 72px;position:relative}
-.cena.ativa{display:block;animation:entrar .55s cubic-bezier(.2,.7,.3,1)}
+/* A troca de cena é CSS puro: cada rádio comanda a sua seção pelo seletor
+   irmão. Sem script, funciona em qualquer visualizador — inclusive nos que
+   bloqueiam JS. Cada cena rola por conta própria e guarda a posição, então
+   quem volta a uma seção reencontra onde parou. */
+.seletor{position:absolute;width:1px;height:1px;opacity:0}
+.palco{position:relative;overflow:hidden}
+.cena{display:none;height:100%;overflow-y:auto;overflow-x:hidden;padding:66px 72px;position:relative}
+
+#c-inicio:checked~.palco #inicio,
+#c-procedimentos:checked~.palco #procedimentos,
+#c-atendimento:checked~.palco #atendimento,
+#c-resultados:checked~.palco #resultados,
+#c-contato:checked~.palco #contato,
+#c-notas:checked~.palco #notas{display:block;animation:entrar .55s cubic-bezier(.2,.7,.3,1)}
 @keyframes entrar{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
 /* numeral gigante ao fundo */
@@ -138,13 +174,30 @@ em{font-style:italic;color:var(--terracota)}
   .assinatura{margin-bottom:20px}
   .indice{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
   .indice li{margin:0;flex:0 0 auto}
-  .indice button{padding:9px 15px;border:1px solid var(--areia);border-radius:999px;font-size:13px;white-space:nowrap}
-  .indice button[aria-current="true"]{background:var(--tinta);color:var(--marfim);border-color:var(--tinta)}
-  .indice button[aria-current="true"] .n{color:var(--areia)}
-  .indice button[aria-current="true"]::after{display:none}
-  .indice button:hover{padding-left:15px}
-  .indice .notas button{border-top:1px solid var(--areia);margin-top:0;padding-top:9px}
-  .cena{padding:38px 24px}
+  .indice label{padding:9px 15px;border:1px solid var(--areia);border-radius:999px;font-size:13px;white-space:nowrap}
+  .indice label:hover{padding-left:15px}
+  .indice .notas label{border-top:1px solid var(--areia);margin-top:0;padding-top:9px}
+
+  #c-inicio:checked~.trilho label[for="c-inicio"],
+  #c-procedimentos:checked~.trilho label[for="c-procedimentos"],
+  #c-atendimento:checked~.trilho label[for="c-atendimento"],
+  #c-resultados:checked~.trilho label[for="c-resultados"],
+  #c-contato:checked~.trilho label[for="c-contato"],
+  #c-notas:checked~.trilho label[for="c-notas"]{background:var(--tinta);color:var(--marfim);border-color:var(--tinta)}
+
+  #c-inicio:checked~.trilho label[for="c-inicio"] .n,
+  #c-procedimentos:checked~.trilho label[for="c-procedimentos"] .n,
+  #c-atendimento:checked~.trilho label[for="c-atendimento"] .n,
+  #c-resultados:checked~.trilho label[for="c-resultados"] .n,
+  #c-contato:checked~.trilho label[for="c-contato"] .n{color:var(--areia)}
+
+  #c-inicio:checked~.trilho label[for="c-inicio"]::after,
+  #c-procedimentos:checked~.trilho label[for="c-procedimentos"]::after,
+  #c-atendimento:checked~.trilho label[for="c-atendimento"]::after,
+  #c-resultados:checked~.trilho label[for="c-resultados"]::after,
+  #c-contato:checked~.trilho label[for="c-contato"]::after{display:none}
+
+  .cena{padding:38px 24px;height:auto;overflow:visible}
   .marca-dagua{font-size:150px;top:-10px;right:6px}
 }
 </style>
@@ -155,17 +208,24 @@ em{font-style:italic;color:var(--terracota)}
 
 <div class="tela">
 
+  <input class="seletor" type="radio" name="cena" id="c-inicio" checked>
+  <input class="seletor" type="radio" name="cena" id="c-procedimentos">
+  <input class="seletor" type="radio" name="cena" id="c-atendimento">
+  <input class="seletor" type="radio" name="cena" id="c-resultados">
+  <input class="seletor" type="radio" name="cena" id="c-contato">
+  <input class="seletor" type="radio" name="cena" id="c-notas">
+
   <aside class="trilho">
     <div class="assinatura">Marina<br>Pinheiro<span>Harmonização Orofacial</span></div>
 
     <nav>
       <ul class="indice">
-        <li><button data-cena="inicio" aria-current="true"><span class="n">01</span> Início</button></li>
-        <li><button data-cena="procedimentos"><span class="n">02</span> Procedimentos</button></li>
-        <li><button data-cena="atendimento"><span class="n">03</span> Atendimento</button></li>
-        <li><button data-cena="resultados"><span class="n">04</span> Resultados</button></li>
-        <li><button data-cena="contato"><span class="n">05</span> Contato</button></li>
-        <li class="notas"><button data-cena="notas">Notas do protótipo</button></li>
+        <li><label for="c-inicio"><span class="n">01</span> Início</label></li>
+        <li><label for="c-procedimentos"><span class="n">02</span> Procedimentos</label></li>
+        <li><label for="c-atendimento"><span class="n">03</span> Atendimento</label></li>
+        <li><label for="c-resultados"><span class="n">04</span> Resultados</label></li>
+        <li><label for="c-contato"><span class="n">05</span> Contato</label></li>
+        <li class="notas"><label for="c-notas">Notas do protótipo</label></li>
       </ul>
     </nav>
 
@@ -179,7 +239,7 @@ em{font-style:italic;color:var(--terracota)}
   <main class="palco">
 
     <!-- 01 -->
-    <section class="cena ativa" id="inicio">
+    <section class="cena" id="inicio">
       <div class="capa">
         <div class="capa-texto">
           <p class="chapeu">Harmonização Orofacial · Niterói</p>
@@ -187,7 +247,7 @@ em{font-style:italic;color:var(--terracota)}
           <p class="frase">Você na sua melhor versão para viver a melhor fase da sua vida.</p>
           <div class="acoes">
             <a class="botao cheio" href="https://wa.me/5521982403542" target="_blank" rel="noopener">Agendar avaliação</a>
-            <button class="botao vazio" data-cena="procedimentos">Ver procedimentos</button>
+            <label class="botao vazio" for="c-procedimentos">Ver procedimentos</label>
           </div>
           <div class="credencial-linha">
             <span>Especialista, Mestre e Doutora pela UFF</span>
@@ -280,6 +340,7 @@ em{font-style:italic;color:var(--terracota)}
       <h2 style="font-size:clamp(28px,4vw,46px);max-width:20ch">Notas do protótipo</h2>
       <ul class="notas-corpo" style="margin-top:34px">
         <li><strong>Navegação por seção, não rolagem.</strong> Cada item do índice troca a cena no palco. O site vira cinco telas curtas em vez de uma página longa — quem chega pelo Instagram encontra o que quer em um clique, sem rolar por tudo.</li>
+        <li><strong>A troca é CSS puro, sem JavaScript.</strong> Rádios ocultos comandam as cenas por seletor irmão. Funciona em qualquer visualizador, inclusive nos que bloqueiam script, e não quebra se o JS falhar no celular da paciente.</li>
         <li><strong>A ousadia está na tipografia.</strong> "Insegurança" aparece vazada, só contorno, e "em autoestima" em itálico cheio — a própria frase dela encena a transformação que ela vende. O numeral gigante ao fundo de cada seção é marca d'água editorial, não enfeite.</li>
         <li><strong>O que não mudou:</strong> paleta areia, argila e marfim, sem nada fora dessa família — ela vetou colorido. Nenhum valor em lugar nenhum: ela marcou "sob consulta". A headline e a linha de apoio continuam as frases dela, sem retoque.</li>
         <li><strong>Textos:</strong> as descrições dos procedimentos e das etapas são redação minha e precisam da revisão dela antes de publicar — são afirmação clínica, e quem assina é ela.</li>
@@ -290,26 +351,6 @@ em{font-style:italic;color:var(--terracota)}
 
   </main>
 </div>
-
-<script>
-(function(){
-  const cenas = document.querySelectorAll('.cena');
-  const botoes = document.querySelectorAll('.indice button');
-  const palco = document.querySelector('.palco');
-
-  function abrir(id){
-    cenas.forEach(c => c.classList.toggle('ativa', c.id === id));
-    botoes.forEach(b => b.setAttribute('aria-current', String(b.dataset.cena === id)));
-    palco.scrollTop = 0;
-    if (window.matchMedia('(max-width:820px)').matches) window.scrollTo({top:0, behavior:'smooth'});
-  }
-
-  /* o índice e qualquer botão solto com data-cena navegam igual */
-  document.querySelectorAll('[data-cena]').forEach(el => {
-    el.addEventListener('click', () => abrir(el.dataset.cena));
-  });
-})();
-</script>
 
 </body>
 </html>
