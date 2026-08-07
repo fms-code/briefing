@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposta comercial — desenvolvimento de site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* mesmo sistema da anamnese de marca */
+  --porcelana:#EDEDEB;
+  --papel:#F7F7F6;
+  --cartao:#FFFFFF;
+  --linha:#D8D8D4;
+  --tinta:#16161A;
+  --tinta-media:#5A5A62;
+  --tinta-fraca:#8E8E96;
+  --marcador:#5B3FA8;
+  --marcador-claro:#EDE7FA;
+  --serif:'Bodoni Moda',Georgia,serif;
+  --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--porcelana);color:var(--tinta);font-family:var(--sans);font-weight:300;line-height:1.62;font-size:15px;-webkit-font-smoothing:antialiased}
+.folha{max-width:860px;margin:0 auto;background:var(--cartao);padding:64px 62px 76px;border:1px solid var(--linha)}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.14}
+p{margin-bottom:12px}
+strong{font-weight:600}
+
+/* ---------- cabeçalho ---------- */
+.topo{border-bottom:1px solid var(--linha);padding-bottom:30px;margin-bottom:34px}
+.selo{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--marcador);margin-bottom:16px}
+h1{font-size:44px;margin-bottom:10px}
+h1 em{font-style:italic}
+.linha-fina{color:var(--tinta-media);font-size:16px;max-width:52ch}
+
+/* ---------- ficha do cliente ---------- */
+.ficha{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha);margin-bottom:44px}
+.ficha div{background:var(--cartao);padding:16px 20px}
+.ficha dt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-fraca);margin-bottom:6px}
+.ficha dd{font-size:15.5px}
+.vago{background:#FBF6DF;padding:1px 7px;border-bottom:1px solid #E3D28A}
+
+/* ---------- seções ---------- */
+section{margin-bottom:46px}
+.secao-topo{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--linha);padding-bottom:10px;margin-bottom:8px}
+.secao-num{font-family:var(--mono);font-size:12px;color:var(--marcador);letter-spacing:.06em}
+.secao-topo h2{font-size:25px}
+.secao-sub{color:var(--tinta-media);font-size:14.5px;margin:12px 0 22px;max-width:62ch}
+
+ul{list-style:none;margin-bottom:14px}
+li{position:relative;padding-left:20px;margin-bottom:8px}
+li::before{content:'';position:absolute;left:2px;top:.72em;width:6px;height:1px;background:var(--marcador)}
+
+.caixa{background:var(--papel);border-left:2px solid var(--marcador);padding:20px 24px;margin:18px 0}
+.caixa ul{margin:0}
+.caixa li:last-child{margin-bottom:0}
+
+/* ---------- planos ---------- */
+.plano{border:1px solid var(--linha);padding:30px 32px;margin-bottom:20px;position:relative}
+.plano.recomendado{border-color:var(--marcador);background:linear-gradient(180deg,var(--marcador-claro) 0,transparent 90px)}
+.plano-etiqueta{position:absolute;top:-9px;right:26px;background:var(--marcador);color:#fff;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:4px 12px}
+.plano-topo{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.plano h3{font-size:26px}
+.plano .valor{font-family:var(--mono);font-size:23px;font-weight:500;color:var(--tinta);white-space:nowrap}
+.plano .para{color:var(--tinta-fraca);font-size:14px;font-style:italic;margin-bottom:18px}
+.plano ul{margin-bottom:16px}
+.plano li{font-size:14.5px}
+.plano .prazo{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-media);border-top:1px solid var(--linha);padding-top:14px}
+
+/* ---------- etapas ---------- */
+.etapa{display:flex;gap:20px;margin-bottom:22px;align-items:flex-start}
+.etapa-num{flex:0 0 40px;height:40px;border:1px solid var(--marcador);color:var(--marcador);display:grid;place-items:center;font-family:var(--mono);font-size:13px}
+.etapa h3{font-size:18px;margin-bottom:3px}
+.etapa p{color:var(--tinta-media);font-size:14.5px;margin:0}
+
+/* ---------- tabelas ---------- */
+table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:16px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--linha)}
+th{background:var(--papel);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-media);font-weight:400}
+td:first-child{font-weight:500}
+.sim{color:var(--marcador);font-weight:600}
+.nao{color:var(--tinta-fraca)}
+
+/* ---------- assinatura ---------- */
+.assinaturas{display:grid;grid-template-columns:1fr 1fr;gap:44px;margin-top:52px}
+.assina{border-top:1px solid var(--tinta);padding-top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-media)}
+
+.fecho{background:var(--tinta);color:var(--porcelana);padding:26px 30px;margin-top:44px}
+.fecho strong{color:#fff}
+
+@media(max-width:720px){
+  .folha{padding:40px 24px 54px}
+  h1{font-size:33px}
+  .ficha{grid-template-columns:1fr}
+  .plano{padding:24px 22px}
+}
+@media print{
+  body{background:#fff;font-size:10.5pt}
+  .folha{max-width:100%;padding:0;border:0}
+  section{page-break-inside:avoid}
+  .plano{page-break-inside:avoid}
+  .fecho{background:#fff;color:var(--tinta);border:1px solid var(--linha)}
+  .fecho strong{color:var(--tinta)}
+}
+</style>
+</head>
+<body>
+<div class="folha">
+
+  <div class="topo">
+    <div class="selo">Proposta comercial</div>
+    <h1>Presença digital<br>para <em>consultório</em></h1>
+    <p class="linha-fina">Desenvolvimento de site profissional para quem atende em estética e saúde.</p>
+  </div>
+
+  <dl class="ficha">
+    <div><dt>Cliente</dt><dd><span class="vago">[NOME DO CLIENTE]</span></dd></div>
+    <div><dt>Especialidade</dt><dd><span class="vago">[ESPECIALIDADE]</span></dd></div>
+    <div><dt>Data da proposta</dt><dd id="data"><span class="vago">[DATA]</span></dd></div>
+    <div><dt>Validade</dt><dd>30 dias</dd></div>
+  </dl>
+
+  <!-- 01 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">01</span><h2>O diagnóstico</h2></div>
+    <p class="secao-sub">Onde a maioria dos consultórios trava quando decide ter um site.</p>
+    <div class="caixa">
+      <ul>
+        <li>Linktree e agregadores genéricos não transmitem a credibilidade de quem passou anos se especializando.</li>
+        <li>Plataformas no-code exigem tempo e conhecimento técnico que você não deveria precisar ter.</li>
+        <li>Agências cobram entre R$ 5.000 e R$ 8.000 e entregam em meses.</li>
+        <li>O paciente de ticket mais alto percebe detalhe — inclusive quando o site parece amador.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">02</span><h2>A conduta</h2></div>
+    <p class="secao-sub">O que eu proponho, em uma frase.</p>
+    <div class="caixa">
+      <p style="margin:0"><strong>Um site feito sob medida a partir da sua anamnese de marca, adaptado ao celular, escrito para converter paciente — e no ar em dias, não em meses.</strong></p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">03</span><h2>Planos</h2></div>
+    <p class="secao-sub">Três níveis. O que muda entre eles é o que entra no site, não a qualidade do desenho.</p>
+
+    <div class="plano">
+      <div class="plano-topo"><h3>Essencial</h3><span class="valor">R$ 1.500</span></div>
+      <p class="para">Para quem quer uma entrada rápida e profissional.</p>
+      <ul>
+        <li>Site responsivo de página única, com todas as seções</li>
+        <li>Personalização de cores e aplicação da sua marca</li>
+        <li>Botão de WhatsApp e bloco de contato</li>
+        <li>Links para as suas redes sociais</li>
+        <li>Publicação com certificado de segurança (HTTPS)</li>
+        <li>Hospedagem inclusa por 1 ano</li>
+        <li>30 dias de suporte</li>
+      </ul>
+      <div class="prazo">Prazo · 5 a 7 dias úteis</div>
+    </div>
+
+    <div class="plano recomendado">
+      <span class="plano-etiqueta">Mais contratado</span>
+      <div class="plano-topo"><h3>Clínico</h3><span class="valor">R$ 2.800</span></div>
+      <p class="para">Para quem tem casos para mostrar e quer prova social trabalhando.</p>
+      <ul>
+        <li>Tudo do Essencial, mais:</li>
+        <li>Galeria de antes e depois, organizada por procedimento</li>
+        <li>Seção de depoimentos de pacientes</li>
+        <li>Design autoral construído a partir da sua anamnese</li>
+        <li>Cards de procedimentos com descrição</li>
+        <li>Domínio próprio registrado e configurado</li>
+        <li>Otimização básica para busca e Google Meu Negócio</li>
+        <li>60 dias de suporte</li>
+      </ul>
+      <div class="prazo">Prazo · 10 a 14 dias úteis</div>
+    </div>
+
+    <div class="plano">
+      <div class="plano-topo"><h3>Completo</h3><span class="valor">R$ 4.500</span></div>
+      <p class="para">Para quem quer o site captando e organizando paciente sozinho.</p>
+      <ul>
+        <li>Tudo do Clínico, mais:</li>
+        <li>Redação de todos os textos do site</li>
+        <li>Cadastro de interessadas, com os dados chegando no seu e-mail</li>
+        <li>E-mail automático de boas-vindas com orientações de pré-procedimento</li>
+        <li>Relatório mensal de visitas: quantas pessoas entraram, de onde vieram e o que clicaram</li>
+        <li>Integração com sistema de agendamento</li>
+        <li>1 hora de consultoria sobre uso e manutenção</li>
+        <li>90 dias de suporte prioritário</li>
+      </ul>
+      <div class="prazo">Prazo · 15 a 21 dias úteis</div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">04</span><h2>Comparativo</h2></div>
+    <table>
+      <tr><th>Recurso</th><th>Essencial</th><th>Clínico</th><th>Completo</th></tr>
+      <tr><td>Site responsivo e publicado</td><td class="sim">•</td><td class="sim">•</td><td class="sim">•</td></tr>
+      <tr><td>WhatsApp e redes sociais</td><td class="sim">•</td><td class="sim">•</td><td class="sim">•</td></tr>
+      <tr><td>Galeria de antes e depois</td><td class="nao">—</td><td class="sim">•</td><td class="sim">•</td></tr>
+      <tr><td>Depoimentos de pacientes</td><td class="nao">—</td><td class="sim">•</td><td class="sim">•</td></tr>
+      <tr><td>Domínio próprio</td><td class="nao">—</td><td class="sim">•</td><td class="sim">•</td></tr>
+      <tr><td>Redação dos textos</td><td class="nao">—</td><td class="nao">—</td><td class="sim">•</td></tr>
+      <tr><td>Cadastro e e-mail automático</td><td class="nao">—</td><td class="nao">—</td><td class="sim">•</td></tr>
+      <tr><td>Relatório de visitas</td><td class="nao">—</td><td class="nao">—</td><td class="sim">•</td></tr>
+    </table>
+  </section>
+
+  <!-- 05 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">05</span><h2>Como funciona</h2></div>
+    <p class="secao-sub">O prazo começa a contar quando o material chega, não na assinatura.</p>
+
+    <div class="etapa">
+      <div class="etapa-num">01</div>
+      <div><h3>Anamnese e material</h3><p>Você preenche a anamnese de marca e envia fotos, textos e arquivos da sua identidade visual.</p></div>
+    </div>
+    <div class="etapa">
+      <div class="etapa-num">02</div>
+      <div><h3>Direção visual</h3><p>Apresento propostas de layout construídas a partir das suas respostas. Você escolhe o caminho.</p></div>
+    </div>
+    <div class="etapa">
+      <div class="etapa-num">03</div>
+      <div><h3>Construção</h3><p>Desenvolvo o site conforme o plano contratado, com você acompanhando o andamento.</p></div>
+    </div>
+    <div class="etapa">
+      <div class="etapa-num">04</div>
+      <div><h3>Revisão</h3><p>Até 2 rodadas de ajustes inclusas. Rodadas adicionais são orçadas à parte, a R$ 150 por hora.</p></div>
+    </div>
+    <div class="etapa">
+      <div class="etapa-num">05</div>
+      <div><h3>Publicação</h3><p>Site no ar no seu domínio, com certificado de segurança e orientação de uso.</p></div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">06</span><h2>Investimento</h2></div>
+    <p><strong>Plano escolhido:</strong> <span class="vago">[PREENCHER]</span> &nbsp;·&nbsp; <strong>Valor:</strong> <span class="vago">R$ [PREENCHER]</span></p>
+    <div class="caixa">
+      <ul>
+        <li><strong>À vista:</strong> 5% de desconto</li>
+        <li><strong>Parcelado:</strong> 50% na assinatura do contrato e 50% na publicação do site</li>
+        <li><strong>Cartão:</strong> em até 3x sem juros</li>
+      </ul>
+    </div>
+    <p style="color:var(--tinta-media);font-size:14px">Manutenção mensal opcional de <span class="vago">R$ [VALOR]</span>, cobrindo hospedagem, segurança, backup e alterações de conteúdo. Pode ser contratada depois.</p>
+  </section>
+
+  <!-- 07 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">07</span><h2>Condições</h2></div>
+    <ul>
+      <li>O site funciona nas versões atuais dos principais navegadores, no computador e no celular.</li>
+      <li>O código e o layout passam a ser seus após a quitação integral.</li>
+      <li>O domínio é registrado em seu nome, e a titularidade é sua desde o registro.</li>
+      <li>Suporte técnico conforme o plano, para correção de falhas e ajustes menores.</li>
+      <li>Hospedagem inclusa no primeiro ano; a renovação posterior custa R$ 120 por ano.</li>
+      <li>Rodadas de revisão além das 2 inclusas: R$ 150 por hora.</li>
+      <li>Você é responsável pelo conteúdo publicado e pelas autorizações de imagem das pacientes, conforme as normas do seu conselho profissional.</li>
+      <li>Não há garantia de resultado comercial, número de pacientes ou posicionamento em buscadores — isso depende da sua estratégia como um todo.</li>
+      <li>Em caso de cancelamento após o início dos trabalhos, é devida multa de 30% sobre o valor do plano.</li>
+      <li>Uso do trabalho em portfólio é opcional e pode ser vetado por você a qualquer momento.</li>
+    </ul>
+  </section>
+
+  <!-- 08 -->
+  <section>
+    <div class="secao-topo"><span class="secao-num">08</span><h2>Aceite</h2></div>
+    <p class="secao-sub">Declaro estar de acordo com os termos e condições desta proposta.</p>
+    <div class="assinaturas">
+      <div><div class="assina">Assinatura do cliente</div></div>
+      <div><div class="assina">Data</div></div>
+    </div>
+  </section>
+
+  <div class="fecho">
+    <strong>Próximo passo.</strong> Confirme o plano escolhido pelo WhatsApp e eu envio o contrato. Assim que o material chegar, o prazo começa a contar.
+  </div>
+
+</div>
+
+<script>
+  /* preenche a data de hoje; se o script não rodar, o campo segue como campo a preencher */
+  var d = document.getElementById('data');
+  if (d) d.textContent = new Date().toLocaleDateString('pt-BR');
+</script>
+</body>
+</html>
