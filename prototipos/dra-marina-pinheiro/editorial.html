@@ -170,10 +170,11 @@ em{font-style:italic;color:var(--terracota)}
 .notas-corpo li{margin-bottom:14px}
 .notas-corpo strong{color:var(--tinta)}
 
-/* CTA fixo — retângulo com filete, para acompanhar a secura do editorial */
-.zap{position:fixed;right:26px;bottom:26px;z-index:90;background:var(--tinta);color:var(--marfim);text-decoration:none;padding:15px 26px;font-size:11.5px;letter-spacing:.19em;text-transform:uppercase;border-left:3px solid var(--terracota);box-shadow:0 10px 30px rgba(34,30,27,.22);transition:.25s}
-.zap:hover{background:var(--terracota);border-left-color:var(--tinta)}
-@media(max-width:820px){.zap{right:16px;bottom:16px;padding:13px 20px;font-size:10.5px}}
+/* CTA fixo — só a marca, em traço fino, na paleta dela */
+.zap{position:fixed;right:28px;bottom:28px;z-index:90;width:54px;height:54px;display:grid;place-items:center;background:var(--marfim);border:1px solid var(--argila);color:var(--terracota);text-decoration:none;box-shadow:0 8px 26px rgba(34,30,27,.10);transition:.28s}
+.zap:hover{background:var(--terracota);border-color:var(--terracota);color:var(--marfim);transform:translateY(-3px);box-shadow:0 12px 30px rgba(34,30,27,.20)}
+.zap svg{width:23px;height:23px;display:block}
+@media(max-width:820px){.zap{right:16px;bottom:16px;width:48px;height:48px}.zap svg{width:21px;height:21px}}
 
 /* ---------- mobile: trilho vira topo ---------- */
 @media(max-width:820px){
@@ -363,7 +364,112 @@ em{font-style:italic;color:var(--terracota)}
   </main>
 </div>
 
-<a class="zap" href="https://wa.me/5521982403542" target="_blank" rel="noopener">Falar no WhatsApp</a>
+<a class="zap" href="https://instagram.com/dramarinapinheiro" target="_blank" rel="noopener" aria-label="Instagram da Dra. Marina Pinheiro">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="5.2"/>
+    <circle cx="12" cy="12" r="4.1"/>
+    <circle cx="17.3" cy="6.7" r="1.05" fill="currentColor" stroke="none"/>
+  </svg>
+</a>
+
+
+<!-- Modo de edição: só liga com #editar no fim do endereço. Sem isso, é inerte.
+     Serve para trocar foto na hora, sem instalar nada. -->
+<script>
+(function(){
+  var ligado = false;
+  /* trocar só o hash não recarrega a página, então também escutamos hashchange:
+     dá para ligar o modo de edição com a página já aberta */
+  window.addEventListener('hashchange', tentar);
+  tentar();
+  function tentar(){
+    if (ligado || !location.hash.includes('editar')) return;
+    ligado = true; ligar();
+  }
+  function ligar(){
+
+  var LADO = 1100;                 // limite do lado maior das fotos de caso e prints
+  var RETRATO = { l: 760, a: 1013 }; // retrato entra recortado em 3:4
+
+  function processar(arquivo, slot, pronto){
+    var leitor = new FileReader();
+    leitor.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var c = document.createElement('canvas'), x = c.getContext('2d');
+        if (slot === 'principal') {
+          c.width = RETRATO.l; c.height = RETRATO.a;
+          var alvo = c.width / c.height, real = img.width / img.height, sl, sa, sx, sy;
+          if (real > alvo) { sa = img.height; sl = sa * alvo; sx = (img.width - sl) / 2; sy = 0; }
+          else             { sl = img.width;  sa = sl / alvo; sx = 0; sy = (img.height - sa) * 0.15; }
+          x.drawImage(img, sx, sy, sl, sa, 0, 0, c.width, c.height);
+        } else {
+          var e = Math.min(1, LADO / Math.max(img.width, img.height));
+          c.width = Math.round(img.width * e); c.height = Math.round(img.height * e);
+          x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+          x.drawImage(img, 0, 0, c.width, c.height);
+        }
+        pronto(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(arquivo);
+  }
+
+  var alvos = document.querySelectorAll('[data-slot]');
+  alvos.forEach(function(img){
+    img.style.outline = '2px dashed #A2704F';
+    img.style.outlineOffset = '-2px';
+    img.style.cursor = 'pointer';
+    img.title = 'Clique para trocar esta foto (' + img.dataset.slot + ')';
+    img.addEventListener('click', function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      var entrada = document.createElement('input');
+      entrada.type = 'file'; entrada.accept = 'image/*';
+      entrada.onchange = function(){
+        if (!entrada.files[0]) return;
+        processar(entrada.files[0], img.dataset.slot, function(uri){
+          /* troca em todos os pontos que usam o mesmo slot */
+          document.querySelectorAll('[data-slot="' + img.dataset.slot + '"]').forEach(function(el){ el.src = uri; });
+          aviso(img.dataset.slot + ' trocado');
+        });
+      };
+      entrada.click();
+    });
+  });
+
+  function aviso(texto){
+    rotulo.textContent = texto + ' · lembre de baixar';
+    clearTimeout(aviso.t);
+    aviso.t = setTimeout(function(){ rotulo.textContent = alvos.length + ' fotos editáveis'; }, 2600);
+  }
+
+  function baixar(){
+    var clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[data-editor]').forEach(function(e){ e.remove(); });
+    clone.querySelectorAll('[data-slot]').forEach(function(i){ i.removeAttribute('style'); i.removeAttribute('title'); });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], { type: 'text/html;charset=utf-8' }));
+    a.download = (location.pathname.split('/').pop() || 'prototipo.html');
+    a.click();
+  }
+
+  var barra = document.createElement('div');
+  barra.setAttribute('data-editor', '');
+  barra.style.cssText = 'position:fixed;left:18px;bottom:18px;z-index:9999;display:flex;align-items:center;gap:14px;' +
+    'background:#221E1B;color:#F1EDE4;padding:12px 16px;font:400 12px/1.3 -apple-system,Segoe UI,Arial,sans-serif;' +
+    'box-shadow:0 10px 30px rgba(0,0,0,.3);border-left:3px solid #A2704F';
+  var rotulo = document.createElement('span');
+  rotulo.textContent = alvos.length + ' fotos editáveis';
+  var botao = document.createElement('button');
+  botao.textContent = 'Baixar HTML';
+  botao.style.cssText = 'background:#A2704F;color:#fff;border:0;padding:9px 15px;font:inherit;cursor:pointer';
+  botao.onclick = baixar;
+  barra.appendChild(rotulo); barra.appendChild(botao);
+  document.body.appendChild(barra);
+  }
+})();
+</script>
 
 </body>
 </html>
