@@ -20,3 +20,12 @@
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=31536000"
+
+# Protótipos contêm fotos de pacientes usadas só para apresentação interna.
+# Publicá-las neste domínio republicaria imagem de terceiro sem autorização.
+# Para liberar um protótipo deliberadamente, remova este bloco.
+[[redirects]]
+  from = "/prototipos/*"
+  to = "/index.html"
+  status = 404
+  force = true
