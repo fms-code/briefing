@@ -3,158 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fabiano Martins — Sites para consultórios de estética e saúde</title>
-<meta name="description" content="Sites para profissionais de estética e saúde, construídos a partir de uma anamnese de marca. O mesmo cuidado da avaliação clínica, aplicado à presença digital.">
+<title>Fabiano Martins — Sites para consultórios e o sistema Cerne</title>
+<meta name="description" content="Sites para profissionais de harmonização orofacial e saúde, construídos a partir de uma anamnese de marca. E o Cerne, sistema de gestão para clínicas.">
 <link rel="canonical" href="https://fabianomartins.app.br/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://fabianomartins.app.br/">
-<meta property="og:title" content="Fabiano Martins — Sites para consultórios de estética e saúde">
+<meta property="og:title" content="Fabiano Martins — Sites para consultórios e o sistema Cerne">
 <meta property="og:description" content="O mesmo cuidado que você aplica na avaliação de um paciente, aplicado à sua presença digital.">
 <meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#141319">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --porcelana:#EDEDEB;
-  --papel:#F7F7F6;
-  --cartao:#FFFFFF;
-  --linha:#D8D8D4;
-  --tinta:#16161A;
-  --tinta-media:#5A5A62;
-  --tinta-fraca:#8E8E96;
-  --marcador:#5B3FA8;
-  --marcador-claro:#EDE7FA;
+  /* escuro quente — o cinza puxa levemente para o violeta do marcador */
+  --fundo:#141319;
+  --fundo-2:#1A1922;
+  --cartao:#1F1E28;
+  --cartao-alto:#26242F;
+  --linha:#2E2C39;
+  --linha-forte:#3D3A4B;
+  --texto:#EFEDF2;
+  --texto-medio:#A9A3B6;
+  --texto-fraco:#7B7589;
+  --marcador:#9B7CF0;
+  --marcador-forte:#B49BFF;
+  --marcador-fundo:rgba(155,124,240,.11);
+
   --serif:'Bodoni Moda',Georgia,serif;
   --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+
+  /* Squircle: os raios horizontal e vertical são diferentes, então a curva
+     do canto é elíptica em vez de circular. Não é retângulo nem pílula. */
+  --curva-p:20px 20px 20px 20px / 26px 26px 26px 26px;
+  --curva-m:34px 34px 34px 34px / 44px 44px 44px 44px;
+  --curva-g:56px 56px 56px 56px / 74px 74px 74px 74px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--papel);color:var(--tinta);font-family:var(--sans);font-weight:300;line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.12;letter-spacing:-.01em}
+body{background:var(--fundo);color:var(--texto);font-family:var(--sans);font-weight:300;line-height:1.68;font-size:16px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.14;letter-spacing:-.01em}
 a{color:inherit}
-.envelope{max-width:1000px;margin:0 auto;padding:0 26px}
+img{max-width:100%;display:block}
+.envelope{max-width:1040px;margin:0 auto;padding:0 26px}
 
 /* ---------- topo ---------- */
-header{position:sticky;top:0;z-index:20;background:rgba(247,247,246,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
-.topo{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0}
+header{position:sticky;top:0;z-index:30;background:rgba(20,19,25,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--linha)}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0}
 .marca{font-family:var(--serif);font-size:19px}
-.marca small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-fraca);margin-top:5px}
-nav{display:flex;gap:26px;font-size:14px}
-nav a{color:var(--tinta-media);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent}
-nav a:hover{color:var(--tinta);border-color:var(--marcador)}
-@media(max-width:800px){nav{display:none}}
+.marca small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--texto-fraco);margin-top:5px}
+nav{display:flex;gap:6px;align-items:center}
+nav a{color:var(--texto-medio);text-decoration:none;font-size:14px;padding:9px 16px;border-radius:var(--curva-p);transition:.22s}
+nav a:hover{color:var(--texto);background:var(--cartao)}
+@media(max-width:900px){nav a:not(.nav-cta){display:none}}
 
 /* ---------- botões ---------- */
-.botao{display:inline-block;padding:15px 30px;font-size:14.5px;letter-spacing:.03em;text-decoration:none;border:1px solid var(--tinta);transition:.22s}
-.botao.cheio{background:var(--marcador);border-color:var(--marcador);color:#fff}
-.botao.cheio:hover{background:#4A3290;border-color:#4A3290}
-.botao.vazio:hover{background:var(--tinta);color:var(--papel)}
+.botao{display:inline-block;padding:16px 32px;font-size:14.5px;letter-spacing:.02em;text-decoration:none;border:1px solid transparent;border-radius:var(--curva-p);transition:.24s;cursor:pointer}
+.botao.cheio{background:var(--marcador);color:#15121F;font-weight:500}
+.botao.cheio:hover{background:var(--marcador-forte);transform:translateY(-2px)}
+.botao.vazio{border-color:var(--linha-forte);color:var(--texto)}
+.botao.vazio:hover{border-color:var(--marcador);background:var(--marcador-fundo);transform:translateY(-2px)}
+.nav-cta{background:var(--marcador)!important;color:#15121F!important;font-weight:500}
+.nav-cta:hover{background:var(--marcador-forte)!important}
 
 /* ---------- capa ---------- */
-.capa{padding:96px 0 84px}
-.chapeu{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--marcador);margin-bottom:22px}
-.capa h1{font-size:clamp(38px,5.6vw,62px);max-width:16ch}
-.capa h1 em{font-style:italic}
-.capa .lede{margin-top:26px;font-size:19px;color:var(--tinta-media);max-width:46ch;line-height:1.6}
-.capa .acoes{margin-top:40px;display:flex;gap:14px;flex-wrap:wrap}
-.capa .sob{margin-top:26px;font-size:13.5px;color:var(--tinta-fraca)}
-@media(max-width:800px){.capa{padding:60px 0 54px}}
+.capa{padding:100px 0 86px;position:relative}
+.brilho{position:absolute;width:620px;height:520px;top:-160px;right:-180px;background:radial-gradient(closest-side,rgba(155,124,240,.18),transparent);pointer-events:none;z-index:0}
+.capa>*:not(.brilho){position:relative;z-index:1}
+.chapeu{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--marcador);background:var(--marcador-fundo);border-radius:var(--curva-p);padding:8px 18px;margin-bottom:26px}
+.capa h1{font-size:clamp(38px,5.8vw,66px);max-width:15ch}
+.capa h1 em{font-style:italic;color:var(--marcador-forte)}
+.capa .lede{margin-top:26px;font-size:19px;color:var(--texto-medio);max-width:46ch}
+.acoes{margin-top:40px;display:flex;gap:14px;flex-wrap:wrap}
+.sob{margin-top:26px;font-size:13.5px;color:var(--texto-fraco)}
+@media(max-width:800px){.capa{padding:62px 0 56px}}
 
 /* ---------- seções ---------- */
-section{padding:80px 0;border-top:1px solid var(--linha)}
+section{padding:82px 0}
+.faixa{background:var(--fundo-2)}
 .secao-topo{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
 .secao-num{font-family:var(--mono);font-size:12px;color:var(--marcador)}
-.secao-topo h2{font-size:clamp(26px,3.4vw,36px)}
-.secao-topo h2 em{font-style:italic}
-.secao-sub{color:var(--tinta-media);max-width:58ch;margin-bottom:44px}
+.secao-topo h2{font-size:clamp(27px,3.5vw,38px)}
+.secao-topo h2 em{font-style:italic;color:var(--marcador-forte)}
+.secao-sub{color:var(--texto-medio);max-width:60ch;margin-bottom:44px}
 
-/* ---------- cerne ---------- */
-.cerne{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha)}
-.cerne article{background:var(--cartao);padding:34px 30px}
-.cerne .marca-num{font-family:var(--mono);font-size:11px;color:var(--marcador);letter-spacing:.1em}
-.cerne h3{font-size:20px;margin:16px 0 12px}
-.cerne p{font-size:15px;color:var(--tinta-media)}
-@media(max-width:800px){.cerne{grid-template-columns:1fr}}
+/* ---------- método ---------- */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.bloco{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-m);padding:34px 30px}
+.bloco .n{font-family:var(--mono);font-size:11px;color:var(--marcador);letter-spacing:.1em}
+.bloco h3{font-size:20px;margin:16px 0 12px}
+.bloco p{font-size:15px;color:var(--texto-medio)}
+@media(max-width:900px){.trio{grid-template-columns:1fr}}
 
-.citacao{margin-top:44px;border-left:2px solid var(--marcador);padding:6px 0 6px 26px;font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);line-height:1.45;max-width:44ch}
+.citacao{margin-top:42px;border-left:2px solid var(--marcador);padding:8px 0 8px 26px;font-family:var(--serif);font-size:clamp(20px,2.6vw,27px);line-height:1.45;max-width:46ch;color:var(--texto)}
 
 /* ---------- entregas ---------- */
-.entregas{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 46px}
-.entrega{border-top:1px solid var(--linha);padding-top:20px}
+.entregas{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.entrega{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-m);padding:26px 28px;transition:.25s}
+.entrega:hover{border-color:var(--linha-forte);transform:translateY(-3px)}
 .entrega h3{font-size:19px;margin-bottom:9px}
-.entrega p{font-size:15px;color:var(--tinta-media)}
-@media(max-width:800px){.entregas{grid-template-columns:1fr;gap:26px}}
+.entrega p{font-size:15px;color:var(--texto-medio)}
+@media(max-width:800px){.entregas{grid-template-columns:1fr}}
 
 /* ---------- processo ---------- */
-.etapa{display:grid;grid-template-columns:56px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--linha)}
+.etapa{display:grid;grid-template-columns:64px 1fr;gap:22px;padding:26px 0;border-bottom:1px solid var(--linha)}
 .etapa:first-of-type{border-top:1px solid var(--linha)}
-.etapa .n{font-family:var(--mono);font-size:12px;color:var(--marcador);padding-top:5px}
+.etapa .n{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--marcador);color:var(--marcador);border-radius:var(--curva-p);font-family:var(--mono);font-size:12px}
 .etapa h3{font-size:20px;margin-bottom:7px}
-.etapa p{font-size:15px;color:var(--tinta-media);max-width:58ch}
-@media(max-width:800px){.etapa{grid-template-columns:38px 1fr;gap:14px}}
+.etapa p{font-size:15px;color:var(--texto-medio);max-width:60ch}
+@media(max-width:800px){.etapa{grid-template-columns:1fr;gap:12px}}
 
 /* ---------- planos ---------- */
 .planos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.plano{background:var(--cartao);border:1px solid var(--linha);padding:30px 26px;display:flex;flex-direction:column}
-.plano.destaque{border-color:var(--marcador);position:relative}
-.plano .fita{position:absolute;top:-9px;left:24px;background:var(--marcador);color:#fff;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:4px 11px}
-.plano h3{font-size:23px;margin-bottom:6px}
-.plano .para{font-size:13.5px;color:var(--tinta-fraca);font-style:italic;margin-bottom:20px;min-height:3.2em}
-.plano .cheio{font-family:var(--mono);font-size:14px;color:var(--tinta-fraca);text-decoration:line-through}
-.plano .valor{font-family:var(--mono);font-size:27px;font-weight:500;margin:2px 0 4px}
-.plano .cond{font-size:12px;color:var(--marcador);margin-bottom:20px}
+.plano{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-m);padding:32px 28px;display:flex;flex-direction:column;position:relative}
+.plano.destaque{border-color:var(--marcador);background:linear-gradient(180deg,var(--marcador-fundo),var(--cartao) 180px)}
+.plano .fita{position:absolute;top:-11px;left:26px;background:var(--marcador);color:#15121F;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 13px;border-radius:var(--curva-p);font-weight:500}
+.plano h3{font-size:24px;margin-bottom:6px}
+.plano .para{font-size:13.5px;color:var(--texto-fraco);font-style:italic;margin-bottom:22px;min-height:3.4em}
+.plano .cheio{font-family:var(--mono);font-size:14px;color:var(--texto-fraco);text-decoration:line-through}
+.plano .valor{font-family:var(--mono);font-size:28px;font-weight:500;margin:2px 0 4px;color:var(--texto)}
+.plano .cond{font-size:12px;color:var(--marcador);margin-bottom:22px}
 .plano ul{list-style:none;font-size:14.5px;flex:1}
-.plano li{position:relative;padding-left:18px;margin-bottom:9px;color:var(--tinta-media)}
-.plano li::before{content:'';position:absolute;left:0;top:.72em;width:6px;height:1px;background:var(--marcador)}
-.plano .prazo{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-fraca);border-top:1px solid var(--linha);margin-top:20px;padding-top:14px}
-@media(max-width:900px){.planos{grid-template-columns:1fr}.plano .para{min-height:0}}
-.aviso-planos{margin-top:26px;font-size:13.5px;color:var(--tinta-fraca)}
+.plano li{position:relative;padding-left:18px;margin-bottom:9px;color:var(--texto-medio)}
+.plano li::before{content:'';position:absolute;left:0;top:.75em;width:6px;height:1px;background:var(--marcador)}
+.plano .prazo{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-fraco);border-top:1px solid var(--linha);margin-top:22px;padding-top:15px}
+@media(max-width:1000px){.planos{grid-template-columns:1fr}.plano .para{min-height:0}}
+.aviso-planos{margin-top:26px;font-size:13.5px;color:var(--texto-fraco)}
 
 /* ---------- trabalhos ---------- */
-.trabalhos{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.caso{background:var(--cartao);border:1px solid var(--linha)}
-.caso .tela{aspect-ratio:4/3;background:repeating-linear-gradient(45deg,transparent,transparent 11px,rgba(91,63,168,.045) 11px,rgba(91,63,168,.045) 22px);border-bottom:1px solid var(--linha);display:grid;place-items:center;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--marcador);padding:18px}
-.caso .corpo{padding:20px 22px}
-.caso h3{font-size:18px;margin-bottom:6px}
-.caso p{font-size:14px;color:var(--tinta-media)}
+.trabalhos{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.caso{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-m);padding:32px 30px;display:flex;flex-direction:column;transition:.25s}
+.caso:hover{border-color:var(--linha-forte);transform:translateY(-3px)}
+.caso .tipo{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--marcador);margin-bottom:16px}
+.caso h3{font-size:23px;margin-bottom:10px}
+.caso p{font-size:15px;color:var(--texto-medio);flex:1}
+.caso .tags{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 18px}
+.caso .tag{font-size:12px;color:var(--texto-fraco);border:1px solid var(--linha);border-radius:var(--curva-p);padding:5px 13px}
+.caso .link{font-size:14px;color:var(--marcador);text-decoration:none;border-bottom:1px solid transparent;align-self:flex-start}
+.caso .link:hover{border-color:var(--marcador)}
+.caso.vago{border-style:dashed;justify-content:center;text-align:center;color:var(--texto-fraco);min-height:210px}
 @media(max-width:800px){.trabalhos{grid-template-columns:1fr}}
 
-/* ---------- fecho ---------- */
-.fecho{background:var(--tinta);color:var(--porcelana);border-top:0}
-.fecho h2{color:#fff}
-.fecho .secao-num{color:#A98BE8}
-.fecho .secao-sub{color:#B4ADA6}
-.fecho .botao{border-color:var(--porcelana);color:var(--porcelana)}
-.fecho .botao.cheio{background:var(--marcador);border-color:var(--marcador);color:#fff}
-.fecho .botao.vazio:hover{background:var(--porcelana);color:var(--tinta)}
-.contatos{margin-top:38px;display:flex;gap:30px;flex-wrap:wrap;font-size:14.5px;color:#B4ADA6}
-.contatos a{color:var(--porcelana)}
+/* ---------- cerne ---------- */
+.cerne-cartao{background:linear-gradient(135deg,var(--cartao-alto),var(--cartao));border:1px solid var(--linha-forte);border-radius:var(--curva-g);padding:52px 48px;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+.cerne-cartao h3{font-size:clamp(26px,3.2vw,34px);margin-bottom:16px}
+.cerne-cartao h3 em{font-style:italic;color:var(--marcador-forte)}
+.cerne-cartao p{color:var(--texto-medio);margin-bottom:16px}
+.cerne-lista{list-style:none;font-size:15px}
+.cerne-lista li{position:relative;padding-left:20px;margin-bottom:11px;color:var(--texto-medio)}
+.cerne-lista li::before{content:'';position:absolute;left:0;top:.78em;width:7px;height:1px;background:var(--marcador)}
+@media(max-width:900px){.cerne-cartao{grid-template-columns:1fr;padding:38px 26px;gap:28px}}
 
-footer{padding:34px 0;font-size:13px;color:var(--tinta-fraca);border-top:1px solid var(--linha)}
+/* ---------- fecho ---------- */
+.fecho .envelope{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-g);padding:56px 48px;max-width:1040px}
+.contatos{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.contato{background:var(--fundo-2);border:1px solid var(--linha);border-radius:var(--curva-m);padding:22px 24px}
+.contato dt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-fraco);margin-bottom:8px}
+.contato dd{font-size:15.5px}
+.contato a{color:var(--texto);text-decoration:none;border-bottom:1px solid var(--linha-forte)}
+.contato a:hover{color:var(--marcador-forte);border-color:var(--marcador)}
+@media(max-width:800px){.fecho .envelope{padding:36px 24px}.contatos{grid-template-columns:1fr}}
+
+footer{padding:38px 0;font-size:13px;color:var(--texto-fraco);border-top:1px solid var(--linha);margin-top:70px}
 .rodape{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
-footer a{color:var(--tinta-media);text-decoration:none}
+footer a{color:var(--texto-medio);text-decoration:none}
+
+/* ---------- whatsapp fixo ---------- */
+.zap{position:fixed;right:24px;bottom:24px;z-index:60;width:58px;height:58px;display:grid;place-items:center;background:var(--marcador);color:#15121F;border-radius:var(--curva-p);box-shadow:0 10px 30px rgba(0,0,0,.45);transition:.25s}
+.zap:hover{background:var(--marcador-forte);transform:translateY(-3px)}
+.zap svg{width:26px;height:26px}
+@media(max-width:800px){.zap{right:16px;bottom:16px;width:52px;height:52px}.zap svg{width:23px;height:23px}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="envelope topo">
-    <div class="marca">Fabiano Martins<small>Sites para consultórios</small></div>
+    <div class="marca">Fabiano Martins<small>Sites e sistemas para clínicas</small></div>
     <nav>
       <a href="#metodo">Método</a>
       <a href="#entregas">O que entrego</a>
       <a href="#planos">Planos</a>
       <a href="#trabalhos">Trabalhos</a>
-      <a href="#contato">Contato</a>
+      <a href="#cerne">Cerne</a>
+      <a class="nav-cta" href="/briefing/">Começar</a>
     </nav>
   </div>
 </header>
 
 <div class="envelope">
   <div class="capa">
-    <p class="chapeu">Estética · Odontologia · Saúde</p>
+    <div class="brilho"></div>
+    <p class="chapeu">Harmonização orofacial · Odontologia · Saúde</p>
     <h1>O site que a sua formação já <em>merecia</em></h1>
     <p class="lede">O mesmo cuidado que você aplica na avaliação de um paciente, aplicado à sua presença digital.</p>
     <div class="acoes">
@@ -166,24 +208,24 @@ footer a{color:var(--tinta-media);text-decoration:none}
 </div>
 
 <!-- 01 -->
-<section id="metodo">
+<section id="metodo" class="faixa">
   <div class="envelope">
-    <div class="secao-topo"><span class="secao-num">01</span><h2>O <em>cerne</em></h2></div>
+    <div class="secao-topo"><span class="secao-num">01</span><h2>O <em>método</em></h2></div>
     <p class="secao-sub">Site de consultório não falha por falta de tecnologia. Falha por falta de diagnóstico — alguém escolhe um modelo pronto antes de entender o que a profissional faz, para quem, e por que a paciente escolheria justamente ela.</p>
 
-    <div class="cerne">
-      <article>
-        <span class="marca-num">01</span>
+    <div class="trio">
+      <article class="bloco">
+        <span class="n">01</span>
         <h3>Anamnese antes do desenho</h3>
-        <p>Nenhuma linha é escrita antes de eu entender a sua queixa principal, o seu diferencial e o paciente que você quer atrair. O formulário é longo de propósito.</p>
+        <p>Nenhuma linha é escrita antes de eu entender a sua queixa principal, o seu diferencial e a paciente que você quer atrair. O formulário é longo de propósito.</p>
       </article>
-      <article>
-        <span class="marca-num">02</span>
+      <article class="bloco">
+        <span class="n">02</span>
         <h3>Direção autoral, não modelo</h3>
-        <p>Você recebe propostas visuais construídas a partir das suas respostas — não um tema comprado com a sua logo aplicada em cima.</p>
+        <p>Você recebe propostas visuais construídas a partir das suas respostas — não um tema comprado com a sua logo aplicada por cima.</p>
       </article>
-      <article>
-        <span class="marca-num">03</span>
+      <article class="bloco">
+        <span class="n">03</span>
         <h3>Conduta e acompanhamento</h3>
         <p>Escopo escrito, prazo que só corre quando o material chega, rodadas de revisão definidas e garantia técnica após a publicação.</p>
       </article>
@@ -200,36 +242,18 @@ footer a{color:var(--tinta-media);text-decoration:none}
     <p class="secao-sub">Tudo pensado para o que faz diferença em consultório: prova, confiança e um caminho curto até o WhatsApp.</p>
 
     <div class="entregas">
-      <div class="entrega">
-        <h3>Site sob medida</h3>
-        <p>Layout construído a partir da sua anamnese, adaptado ao celular — que é de onde vem a maior parte das suas pacientes.</p>
-      </div>
-      <div class="entrega">
-        <h3>Galeria de antes e depois</h3>
-        <p>Organizada por procedimento, respeitando as normas de publicidade do seu conselho profissional.</p>
-      </div>
-      <div class="entrega">
-        <h3>Depoimentos de pacientes</h3>
-        <p>Prova social é o que mais converte quando não se pode mostrar rosto.</p>
-      </div>
-      <div class="entrega">
-        <h3>Contato direto</h3>
-        <p>WhatsApp em destaque em toda a página. Menos cliques entre a paciente interessada e a sua agenda.</p>
-      </div>
-      <div class="entrega">
-        <h3>Textos escritos</h3>
-        <p>Se você não tem os textos, eu escrevo — e você revisa e aprova antes de qualquer coisa ir ao ar.</p>
-      </div>
-      <div class="entrega">
-        <h3>Domínio e publicação</h3>
-        <p>Domínio registrado em seu nome, site no ar com certificado de segurança e hospedagem configurada.</p>
-      </div>
+      <div class="entrega"><h3>Site sob medida</h3><p>Layout construído a partir da sua anamnese, adaptado ao celular — de onde vem a maior parte das suas pacientes.</p></div>
+      <div class="entrega"><h3>Galeria de antes e depois</h3><p>Organizada por procedimento, respeitando as normas de publicidade do seu conselho profissional.</p></div>
+      <div class="entrega"><h3>Depoimentos de pacientes</h3><p>Prova social é o que mais converte quando não se pode mostrar rosto.</p></div>
+      <div class="entrega"><h3>Contato direto</h3><p>WhatsApp em destaque na página inteira. Menos cliques entre a paciente interessada e a sua agenda.</p></div>
+      <div class="entrega"><h3>Textos escritos</h3><p>Se você não tem os textos, eu escrevo — e você revisa e aprova antes de qualquer coisa ir ao ar.</p></div>
+      <div class="entrega"><h3>Domínio e publicação</h3><p>Domínio registrado em seu nome, site no ar com certificado de segurança e hospedagem configurada.</p></div>
     </div>
   </div>
 </section>
 
 <!-- 03 -->
-<section id="processo">
+<section id="processo" class="faixa">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">03</span><h2>Como <em>funciona</em></h2></div>
     <p class="secao-sub">Cinco etapas. O prazo começa a contar quando o material chega, não na assinatura.</p>
@@ -308,53 +332,90 @@ footer a{color:var(--tinta-media);text-decoration:none}
 </section>
 
 <!-- 05 -->
-<!-- TRABALHOS: substitua cada .tela por <img src="..." alt="..."> quando houver caso
-     publicável, com autorização escrita da profissional. Não use imagem de paciente. -->
-<section id="trabalhos">
+<!-- Ao publicar um novo caso, troque o cartão .vago por um .caso com o mesmo formato.
+     Nunca use imagem de paciente sem autorização escrita da profissional. -->
+<section id="trabalhos" class="faixa">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">05</span><h2>Trabalhos</h2></div>
-    <p class="secao-sub">Projetos publicados, com autorização das profissionais.</p>
+    <p class="secao-sub">O que eu já construí e está no ar.</p>
 
     <div class="trabalhos">
       <article class="caso">
-        <div class="tela">Caso 01<br>— a publicar —</div>
-        <div class="corpo"><h3>Nome da profissional</h3><p>Especialidade · cidade</p></div>
+        <div class="tipo">Site institucional</div>
+        <h3>SM Clinics</h3>
+        <p>Presença digital de clínica, do domínio à publicação: estrutura, identidade aplicada e caminho direto para o contato.</p>
+        <div class="tags"><span class="tag">Site</span><span class="tag">Domínio</span><span class="tag">Publicação</span></div>
+        <a class="link" href="https://www.smclinics.com.br" target="_blank" rel="noopener">smclinics.com.br ↗</a>
       </article>
+
       <article class="caso">
-        <div class="tela">Caso 02<br>— a publicar —</div>
-        <div class="corpo"><h3>Nome da profissional</h3><p>Especialidade · cidade</p></div>
-      </article>
-      <article class="caso">
-        <div class="tela">Caso 03<br>— a publicar —</div>
-        <div class="corpo"><h3>Nome da profissional</h3><p>Especialidade · cidade</p></div>
+        <div class="tipo">Produto próprio</div>
+        <h3>Cerne</h3>
+        <p>Sistema de gestão para clínicas, de autoria própria — do desenho da interface ao funcionamento no dia a dia do consultório.</p>
+        <div class="tags"><span class="tag">Sistema</span><span class="tag">Gestão</span><span class="tag">Autoral</span></div>
+        <a class="link" href="https://www.cernefinanceiro.com.br" target="_blank" rel="noopener">cernefinanceiro.com.br ↗</a>
       </article>
     </div>
   </div>
 </section>
 
 <!-- 06 -->
+<section id="cerne">
+  <div class="envelope">
+    <div class="secao-topo"><span class="secao-num">06</span><h2>Cerne, o sistema de <em>gestão</em></h2></div>
+    <p class="secao-sub">O site traz a paciente até a porta. O que acontece depois — agenda, financeiro, histórico — é outro problema, e é o que o Cerne resolve.</p>
+
+    <div class="cerne-cartao">
+      <div>
+        <h3>Gestão de clínica, <em>feita por quem atende clínica</em></h3>
+        <p>O Cerne nasceu da mesma leitura que orienta os sites que eu faço: consultório não precisa de mais ferramenta, precisa de menos atrito entre atender e administrar.</p>
+        <p>É um produto separado, com contratação própria — e quem fecha site comigo tem a implantação acompanhada por mim.</p>
+        <div class="acoes" style="margin-top:26px">
+          <a class="botao cheio" href="https://www.cernefinanceiro.com.br" target="_blank" rel="noopener">Conhecer o Cerne</a>
+        </div>
+      </div>
+      <ul class="cerne-lista">
+        <li>Controle financeiro do consultório</li>
+        <li>Organização de agenda e atendimentos</li>
+        <li>Histórico por paciente</li>
+        <li>Feito para a rotina de clínica pequena e média</li>
+        <li>Suporte direto com quem desenvolveu</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
 <section id="contato" class="fecho">
   <div class="envelope">
-    <div class="secao-topo"><span class="secao-num">06</span><h2>Começar</h2></div>
+    <div class="secao-topo"><span class="secao-num">07</span><h2>Começar</h2></div>
     <p class="secao-sub">O primeiro passo não é uma reunião de vendas. É a anamnese — dez minutos que definem todo o resto.</p>
-    <div class="acoes" style="display:flex;gap:14px;flex-wrap:wrap">
+    <div class="acoes">
       <a class="botao cheio" href="/briefing/">Preencher a anamnese de marca</a>
-      <a class="botao vazio" href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <a class="botao vazio" href="https://wa.me/5521974778612" target="_blank" rel="noopener">Falar no WhatsApp</a>
     </div>
-    <div class="contatos">
-      <span>WhatsApp · <a href="https://wa.me/55SEUNUMERO" target="_blank" rel="noopener">(00) 00000-0000</a></span>
-      <span>E-mail · <a href="mailto:seu@email.com">seu@email.com</a></span>
-      <span>Instagram · <a href="https://instagram.com/SEUPERFIL" target="_blank" rel="noopener">@seuperfil</a></span>
-    </div>
+
+    <dl class="contatos">
+      <div class="contato"><dt>WhatsApp</dt><dd><a href="https://wa.me/5521974778612" target="_blank" rel="noopener">(21) 97477-8612</a></dd></div>
+      <div class="contato"><dt>E-mail</dt><dd><a href="mailto:fmscode89@gmail.com">fmscode89@gmail.com</a></dd></div>
+      <div class="contato"><dt>Instagram</dt><dd><a href="https://www.instagram.com/entrecafeseprojetos/" target="_blank" rel="noopener">@entrecafeseprojetos</a></dd></div>
+    </dl>
   </div>
 </section>
 
 <footer>
   <div class="envelope rodape">
-    <span>Fabiano Martins · Sites para consultórios de estética e saúde</span>
-    <span><a href="/briefing/">Anamnese de marca</a></span>
+    <span>Fabiano Martins · Sites para consultórios e o sistema Cerne</span>
+    <span><a href="/briefing/">Anamnese de marca</a> · <a href="https://www.cernefinanceiro.com.br" target="_blank" rel="noopener">Cerne</a></span>
   </div>
 </footer>
+
+<a class="zap" href="https://wa.me/5521974778612" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.89-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42-.08-.12-.28-.2-.57-.34"/>
+    <path d="M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.22-3.74.99 1-3.65-.24-.38a9.86 9.86 0 0 1-1.51-5.26C2.16 6.44 6.6 2 12.05 2c2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.89-9.88 9.89m8.41-18.3A11.8 11.8 0 0 0 12.05.1C5.55.1.26 5.39.26 11.89c0 2.08.54 4.11 1.58 5.9L.16 23.9l6.25-1.64a11.83 11.83 0 0 0 5.64 1.44h.01c6.5 0 11.79-5.29 11.79-11.79 0-3.15-1.23-6.11-3.46-8.34"/>
+  </svg>
+</a>
 
 </body>
 </html>
