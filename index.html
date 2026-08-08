@@ -122,15 +122,17 @@ section{padding:82px 0}
 .plano .fita{position:absolute;top:-11px;left:26px;background:var(--marcador);color:#15121F;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 13px;border-radius:var(--curva-p);font-weight:500}
 .plano h3{font-size:24px;margin-bottom:6px}
 .plano .para{font-size:13.5px;color:var(--texto-fraco);font-style:italic;margin-bottom:22px;min-height:3.4em}
-.plano .cheio{font-family:var(--mono);font-size:14px;color:var(--texto-fraco);text-decoration:line-through}
-.plano .valor{font-family:var(--mono);font-size:28px;font-weight:500;margin:2px 0 4px;color:var(--texto)}
-.plano .cond{font-size:12px;color:var(--marcador);margin-bottom:22px}
+.plano .valor{font-family:var(--serif);font-size:27px;margin:2px 0 6px;color:var(--texto)}
+.plano .cond{font-size:13px;color:var(--texto-fraco);margin-bottom:22px}
 .plano ul{list-style:none;font-size:14.5px;flex:1}
 .plano li{position:relative;padding-left:18px;margin-bottom:9px;color:var(--texto-medio)}
 .plano li::before{content:'';position:absolute;left:0;top:.75em;width:6px;height:1px;background:var(--marcador)}
 .plano .prazo{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto-fraco);border-top:1px solid var(--linha);margin-top:22px;padding-top:15px}
 @media(max-width:1000px){.planos{grid-template-columns:1fr}.plano .para{min-height:0}}
-.aviso-planos{margin-top:26px;font-size:13.5px;color:var(--texto-fraco)}
+.condicoes{margin-top:26px;background:var(--marcador-fundo);border:1px solid var(--marcador);border-radius:var(--curva-m);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.condicoes .texto{max-width:56ch}
+.condicoes b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--marcador);margin-bottom:7px;font-weight:500}
+.condicoes p{font-size:15px;color:var(--texto-medio)}
 
 /* ---------- trabalhos ---------- */
 .trabalhos{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
@@ -276,9 +278,8 @@ footer a{color:var(--texto-medio);text-decoration:none}
       <article class="plano">
         <h3>Essencial</h3>
         <p class="para">Para quem quer uma entrada rápida e profissional.</p>
-        <span class="cheio">R$ 1.500</span>
-        <div class="valor">R$ 750</div>
-        <p class="cond">Condição de lançamento até 31/08/2026</p>
+        <div class="valor">Sob consulta</div>
+        <p class="cond">Orçamento enviado após a primeira conversa</p>
         <ul>
           <li>Página única com todas as seções</li>
           <li>Cores e marca aplicadas</li>
@@ -294,9 +295,8 @@ footer a{color:var(--texto-medio);text-decoration:none}
         <span class="fita">Mais contratado</span>
         <h3>Clínico</h3>
         <p class="para">Para quem tem casos para mostrar e quer prova social trabalhando.</p>
-        <span class="cheio">R$ 2.800</span>
-        <div class="valor">R$ 1.400</div>
-        <p class="cond">Condição de lançamento até 31/08/2026</p>
+        <div class="valor">Sob consulta</div>
+        <p class="cond">Orçamento enviado após a primeira conversa</p>
         <ul>
           <li>Tudo do Essencial, mais:</li>
           <li>Galeria de antes e depois</li>
@@ -312,9 +312,8 @@ footer a{color:var(--texto-medio);text-decoration:none}
       <article class="plano">
         <h3>Completo</h3>
         <p class="para">Para quem quer o site captando e organizando paciente sozinho.</p>
-        <span class="cheio">R$ 4.500</span>
-        <div class="valor">R$ 2.250</div>
-        <p class="cond">Condição de lançamento até 31/08/2026</p>
+        <div class="valor">Sob consulta</div>
+        <p class="cond">Orçamento enviado após a primeira conversa</p>
         <ul>
           <li>Tudo do Clínico, mais:</li>
           <li>Redação de todos os textos</li>
@@ -327,7 +326,13 @@ footer a{color:var(--texto-medio);text-decoration:none}
         <div class="prazo">15 a 21 dias úteis</div>
       </article>
     </div>
-    <p class="aviso-planos">Manutenção mensal opcional. Condição de lançamento não cumulativa com o desconto de pagamento à vista.</p>
+    <div class="condicoes">
+      <div class="texto">
+        <b>Condições especiais até 31/08/2026</b>
+        <p>Projetos fechados até esta data entram com condição de lançamento. O valor do seu depende do que o site precisa fazer — por isso eu envio depois da nossa primeira conversa.</p>
+      </div>
+      <a class="botao cheio" href="https://wa.me/5521974778612" target="_blank" rel="noopener">Conversar sobre o meu caso</a>
+    </div>
   </div>
 </section>
 
