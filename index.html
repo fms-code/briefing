@@ -19,8 +19,8 @@
   5. CORES E FORMAS ... bloco :root no topo do CSS. Mudar --marcador troca o
                         acento da página inteira. As --curva-* controlam o
                         arredondamento de tudo.
-  6. QUEM SOU ......... seção 07. Troque a foto e reescreva os trechos com
-                        class="preencher" (aparecem destacados em violeta).
+  6. QUEM SOU ......... seção 07. Falta só a foto: troque a
+                        div.quem-retrato.vazio por <img src="sua-foto.jpg" ...>.
   7. TEXTOS ........... cada seção tem um comentário ═══ NN · NOME ═══ no HTML.
 
   Nada aqui depende de JavaScript: a página funciona com script desligado.
@@ -208,8 +208,6 @@ section{padding:82px 0}
 .quem p{color:var(--texto-medio);margin-bottom:15px}
 .quem .assinatura{margin-top:26px;font-family:var(--serif);font-size:20px;color:var(--texto)}
 .quem .assinatura small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-fraco);margin-top:8px}
-/* trechos que só o Fabiano pode escrever — apague o destaque ao preencher */
-.preencher{background:var(--marcador-fundo);border-bottom:1px solid var(--marcador);padding:1px 6px}
 @media(max-width:900px){.quem{grid-template-columns:1fr;gap:28px}.quem-retrato{max-width:300px}}
 
 /* ---------- fecho ---------- */
@@ -403,9 +401,9 @@ footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align
 
     <div class="trabalhos">
       <article class="caso">
-        <div class="tipo">Site institucional</div>
+        <div class="tipo">Site institucional · clínica da qual sou sócio</div>
         <h3>SM Clinics</h3>
-        <p>Presença digital de clínica, do domínio à publicação: estrutura, identidade aplicada e caminho direto para o contato.</p>
+        <p>A presença digital da nossa própria clínica, do domínio à publicação. O primeiro lugar onde eu testo o que proponho a você.</p>
         <div class="tags"><span class="tag">Site</span><span class="tag">Domínio</span><span class="tag">Publicação</span></div>
         <a class="link" href="https://www.smclinics.com.br" target="_blank" rel="noopener">smclinics.com.br ↗</a>
       </article>
@@ -448,22 +446,22 @@ footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align
 </section>
 
 <!-- ═══════════════ 07 · QUEM SOU ═══════════════
-     Troque a div.quem-retrato.vazio por <img src="sua-foto.jpg" alt="Fabiano Martins">
-     e reescreva os trechos marcados com class="preencher". -->
+     Falta só a foto: troque a div.quem-retrato.vazio por
+     <img src="sua-foto.jpg" alt="Fabiano Martins">. O CSS já recorta. -->
 <section id="quem" class="faixa">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">07</span><h2>Quem <em>sou</em></h2></div>
-    <p class="secao-sub">Quem vai atender você é quem escreve o código. Não há intermediário, atendimento comercial nem equipe rotativa.</p>
+    <p class="secao-sub">Quem conversa com você é quem faz o seu site. Não há intermediário, atendimento comercial nem equipe rotativa.</p>
 
     <div class="quem">
       <div class="quem-retrato vazio">Sua foto<br>— a inserir —</div>
       <div>
-        <h3>Eu construo a presença digital de quem <em>cuida de gente</em></h3>
-        <p>Sou desenvolvedor e trabalho com consultórios de estética e saúde. Não faço site de tudo para todos: escolhi um nicho porque entender o problema de uma harmonizadora facial é diferente de entender o de uma loja, e essa diferença aparece no resultado.</p>
-        <p><span class="preencher">[Conte aqui a sua trajetória em duas ou três frases: de onde você veio, há quanto tempo desenvolve e o que te trouxe para esse nicho.]</span></p>
-        <p>Além dos sites, desenvolvi o <strong>Cerne</strong>, sistema de gestão para clínicas. Foi ele que me ensinou a rotina real de um consultório — agenda cheia, retorno para confirmar, paciente que some, dinheiro que entra em três formas diferentes. Esse conhecimento volta para cada site que eu faço.</p>
-        <p>Trabalho com poucos projetos por vez, de propósito. Você fala comigo do primeiro contato à publicação.</p>
-        <div class="assinatura">Fabiano Martins<small>Desenvolvedor · autor do sistema Cerne</small></div>
+        <h3>Estou dos <em>dois lados</em> do balcão</h3>
+        <p>Sou analista de TI desde 2012, com mais de 14 anos em tecnologia e passagem por grandes projetos e empresas.</p>
+        <p>Também sou sócio de uma clínica de estética, a <strong>SM Clinic</strong>, ao lado da minha esposa. É de lá que vem o que nenhum fornecedor de fora enxerga: agenda cheia, retorno para confirmar, paciente que some na véspera, dinheiro entrando de três formas diferentes no mesmo dia.</p>
+        <p>Uso a experiência dos dois mundos para construir a tecnologia que eu mesmo gostaria de ter na minha clínica. Foi assim que nasceu o <strong>Cerne</strong>, e é assim que eu penso cada site que faço.</p>
+        <p>Atendo poucos projetos por vez, de propósito. Você fala comigo do primeiro contato à publicação.</p>
+        <div class="assinatura">Fabiano Martins<small>Analista de TI desde 2012 · sócio da SM Clinic · autor do Cerne</small></div>
       </div>
     </div>
   </div>
