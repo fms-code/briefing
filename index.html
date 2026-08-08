@@ -1,4 +1,28 @@
 <!DOCTYPE html>
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  LANDING — fabianomartins.app.br
+  ══════════════════════════════════════════════════════════════════════
+
+  ONDE MEXER, por ordem do que mais muda:
+
+  1. CONTATOS ......... busque por  CONTATO:  (5 ocorrências)
+                        WhatsApp aparece em 4 links + 1 texto visível.
+                        Trocar o número: substituir 5521974778612 em todo o arquivo.
+  2. PLANOS ........... seção 04 no HTML. Cada plano é um <article class="plano">.
+                        Para mudar itens, edite a <ul>. Para destacar outro plano,
+                        mova a classe "destaque" e o <span class="fita">.
+  3. CONDIÇÕES ........ bloco <div class="condicoes"> logo depois dos planos.
+                        É o único lugar com a data 31/08/2026.
+  4. TRABALHOS ........ seção 05. Cada caso é um <article class="caso">.
+                        Copie um bloco inteiro para acrescentar outro.
+  5. CORES E FORMAS ... bloco :root no topo do CSS. Mudar --marcador troca o
+                        acento da página inteira. As --curva-* controlam o
+                        arredondamento de tudo.
+  6. TEXTOS ........... cada seção tem um comentário ═══ NN · NOME ═══ no HTML.
+
+  Nada aqui depende de JavaScript: a página funciona com script desligado.
+-->
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -43,6 +67,8 @@
   --curva-g:56px 56px 56px 56px / 74px 74px 74px 74px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+/* o halo da capa é maior que a tela e sangraria para fora no celular */
+html,body{overflow-x:hidden}
 body{background:var(--fundo);color:var(--texto);font-family:var(--sans);font-weight:300;line-height:1.68;font-size:16px;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.14;letter-spacing:-.01em}
 a{color:inherit}
@@ -57,7 +83,14 @@ header{position:sticky;top:0;z-index:30;background:rgba(20,19,25,.86);backdrop-f
 nav{display:flex;gap:6px;align-items:center}
 nav a{color:var(--texto-medio);text-decoration:none;font-size:14px;padding:9px 16px;border-radius:var(--curva-p);transition:.22s}
 nav a:hover{color:var(--texto);background:var(--cartao)}
-@media(max-width:900px){nav a:not(.nav-cta){display:none}}
+@media(max-width:900px){
+  /* o cabeçalho deixa de ser fixo para não comer 100px de tela pequena */
+  header{position:static}
+  .topo{flex-direction:column;align-items:stretch;gap:14px;padding:16px 26px}
+  nav{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -26px;padding:0 26px 2px}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:0 0 auto;min-height:44px;display:flex;align-items:center;border:1px solid var(--linha);white-space:nowrap}
+}
 
 /* ---------- botões ---------- */
 .botao{display:inline-block;padding:16px 32px;font-size:14.5px;letter-spacing:.02em;text-decoration:none;border:1px solid transparent;border-radius:var(--curva-p);transition:.24s;cursor:pointer}
@@ -65,12 +98,12 @@ nav a:hover{color:var(--texto);background:var(--cartao)}
 .botao.cheio:hover{background:var(--marcador-forte);transform:translateY(-2px)}
 .botao.vazio{border-color:var(--linha-forte);color:var(--texto)}
 .botao.vazio:hover{border-color:var(--marcador);background:var(--marcador-fundo);transform:translateY(-2px)}
-.nav-cta{background:var(--marcador)!important;color:#15121F!important;font-weight:500}
+.nav-cta{background:var(--marcador)!important;color:#15121F!important;font-weight:500;min-height:44px;display:inline-flex;align-items:center}
 .nav-cta:hover{background:var(--marcador-forte)!important}
 
 /* ---------- capa ---------- */
 .capa{padding:100px 0 86px;position:relative}
-.brilho{position:absolute;width:620px;height:520px;top:-160px;right:-180px;background:radial-gradient(closest-side,rgba(155,124,240,.18),transparent);pointer-events:none;z-index:0}
+.brilho{position:absolute;width:min(620px,120vw);height:520px;top:-160px;right:-80px;background:radial-gradient(closest-side,rgba(155,124,240,.18),transparent);pointer-events:none;z-index:0}
 .capa>*:not(.brilho){position:relative;z-index:1}
 .chapeu{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--marcador);background:var(--marcador-fundo);border-radius:var(--curva-p);padding:8px 18px;margin-bottom:26px}
 .capa h1{font-size:clamp(38px,5.8vw,66px);max-width:15ch}
@@ -78,7 +111,12 @@ nav a:hover{color:var(--texto);background:var(--cartao)}
 .capa .lede{margin-top:26px;font-size:19px;color:var(--texto-medio);max-width:46ch}
 .acoes{margin-top:40px;display:flex;gap:14px;flex-wrap:wrap}
 .sob{margin-top:26px;font-size:13.5px;color:var(--texto-fraco)}
-@media(max-width:800px){.capa{padding:62px 0 56px}}
+@media(max-width:800px){
+  .capa{padding:52px 0 50px}
+  /* botão ocupa a largura toda: alvo maior e polegar não erra */
+  .acoes{flex-direction:column;align-items:stretch}
+  .acoes .botao{text-align:center;padding:17px 24px}
+}
 
 /* ---------- seções ---------- */
 section{padding:82px 0}
@@ -143,7 +181,7 @@ section{padding:82px 0}
 .caso p{font-size:15px;color:var(--texto-medio);flex:1}
 .caso .tags{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 18px}
 .caso .tag{font-size:12px;color:var(--texto-fraco);border:1px solid var(--linha);border-radius:var(--curva-p);padding:5px 13px}
-.caso .link{font-size:14px;color:var(--marcador);text-decoration:none;border-bottom:1px solid transparent;align-self:flex-start}
+.caso .link{font-size:14px;color:var(--marcador);text-decoration:none;border-bottom:1px solid transparent;align-self:flex-start;display:inline-flex;align-items:center;min-height:44px}
 .caso .link:hover{border-color:var(--marcador)}
 .caso.vago{border-style:dashed;justify-content:center;text-align:center;color:var(--texto-fraco);min-height:210px}
 @media(max-width:800px){.trabalhos{grid-template-columns:1fr}}
@@ -164,13 +202,14 @@ section{padding:82px 0}
 .contato{background:var(--fundo-2);border:1px solid var(--linha);border-radius:var(--curva-m);padding:22px 24px}
 .contato dt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-fraco);margin-bottom:8px}
 .contato dd{font-size:15.5px}
-.contato a{color:var(--texto);text-decoration:none;border-bottom:1px solid var(--linha-forte)}
+.contato a{color:var(--texto);text-decoration:none;border-bottom:1px solid var(--linha-forte);display:inline-flex;align-items:center;min-height:44px}
 .contato a:hover{color:var(--marcador-forte);border-color:var(--marcador)}
 @media(max-width:800px){.fecho .envelope{padding:36px 24px}.contatos{grid-template-columns:1fr}}
 
 footer{padding:38px 0;font-size:13px;color:var(--texto-fraco);border-top:1px solid var(--linha);margin-top:70px}
 .rodape{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
-footer a{color:var(--texto-medio);text-decoration:none}
+footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.rodape{align-items:center}
 
 /* ---------- whatsapp fixo ---------- */
 .zap{position:fixed;right:24px;bottom:24px;z-index:60;width:58px;height:58px;display:grid;place-items:center;background:var(--marcador);color:#15121F;border-radius:var(--curva-p);box-shadow:0 10px 30px rgba(0,0,0,.45);transition:.25s}
@@ -209,7 +248,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </div>
 
-<!-- 01 -->
+<!-- ═══════════════ 01 · MÉTODO ═══════════════ -->
 <section id="metodo" class="faixa">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">01</span><h2>O <em>método</em></h2></div>
@@ -237,7 +276,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </section>
 
-<!-- 02 -->
+<!-- ═══════════════ 02 · O QUE ENTREGO ═══════════════ -->
 <section id="entregas">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">02</span><h2>O que <em>entrego</em></h2></div>
@@ -254,7 +293,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </section>
 
-<!-- 03 -->
+<!-- ═══════════════ 03 · COMO FUNCIONA ═══════════════ -->
 <section id="processo" class="faixa">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">03</span><h2>Como <em>funciona</em></h2></div>
@@ -268,7 +307,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </section>
 
-<!-- 04 -->
+<!-- ═══════════════ 04 · PLANOS · sem valores, ver .condicoes ═══════════════ -->
 <section id="planos">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">04</span><h2>Planos</h2></div>
@@ -337,7 +376,8 @@ footer a{color:var(--texto-medio);text-decoration:none}
 </section>
 
 <!-- 05 -->
-<!-- Ao publicar um novo caso, troque o cartão .vago por um .caso com o mesmo formato.
+<!-- ═══════════════ 05 · TRABALHOS ═══════════════
+     Ao publicar um novo caso, copie um <article class="caso"> inteiro. por um .caso com o mesmo formato.
      Nunca use imagem de paciente sem autorização escrita da profissional. -->
 <section id="trabalhos" class="faixa">
   <div class="envelope">
@@ -364,7 +404,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </section>
 
-<!-- 06 -->
+<!-- ═══════════════ 06 · CERNE ═══════════════ -->
 <section id="cerne">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">06</span><h2>Cerne, o sistema de <em>gestão</em></h2></div>
@@ -390,16 +430,18 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </section>
 
-<!-- 07 -->
+<!-- ═══════════════ 07 · CONTATO ═══════════════ -->
 <section id="contato" class="fecho">
   <div class="envelope">
     <div class="secao-topo"><span class="secao-num">07</span><h2>Começar</h2></div>
     <p class="secao-sub">O primeiro passo não é uma reunião de vendas. É a anamnese — dez minutos que definem todo o resto.</p>
     <div class="acoes">
       <a class="botao cheio" href="/briefing/">Preencher a anamnese de marca</a>
+      <!-- CONTATO: WhatsApp -->
       <a class="botao vazio" href="https://wa.me/5521974778612" target="_blank" rel="noopener">Falar no WhatsApp</a>
     </div>
 
+    <!-- CONTATO: os três dados visíveis -->
     <dl class="contatos">
       <div class="contato"><dt>WhatsApp</dt><dd><a href="https://wa.me/5521974778612" target="_blank" rel="noopener">(21) 97477-8612</a></dd></div>
       <div class="contato"><dt>E-mail</dt><dd><a href="mailto:fmscode89@gmail.com">fmscode89@gmail.com</a></dd></div>
@@ -415,6 +457,7 @@ footer a{color:var(--texto-medio);text-decoration:none}
   </div>
 </footer>
 
+<!-- CONTATO: botão flutuante -->
 <a class="zap" href="https://wa.me/5521974778612" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.89-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42-.08-.12-.28-.2-.57-.34"/>
