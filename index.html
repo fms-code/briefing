@@ -19,7 +19,9 @@
   5. CORES E FORMAS ... bloco :root no topo do CSS. Mudar --marcador troca o
                         acento da página inteira. As --curva-* controlam o
                         arredondamento de tudo.
-  6. TEXTOS ........... cada seção tem um comentário ═══ NN · NOME ═══ no HTML.
+  6. QUEM SOU ......... seção 07. Troque a foto e reescreva os trechos com
+                        class="preencher" (aparecem destacados em violeta).
+  7. TEXTOS ........... cada seção tem um comentário ═══ NN · NOME ═══ no HTML.
 
   Nada aqui depende de JavaScript: a página funciona com script desligado.
 -->
@@ -196,6 +198,20 @@ section{padding:82px 0}
 .cerne-lista li::before{content:'';position:absolute;left:0;top:.78em;width:7px;height:1px;background:var(--marcador)}
 @media(max-width:900px){.cerne-cartao{grid-template-columns:1fr;padding:38px 26px;gap:28px}}
 
+/* ---------- quem sou ---------- */
+.quem{display:grid;grid-template-columns:.82fr 1.18fr;gap:46px;align-items:center}
+.quem-retrato{border-radius:var(--curva-g);overflow:hidden;aspect-ratio:4/5;background:var(--cartao)}
+.quem-retrato img{width:100%;height:100%;object-fit:cover}
+.quem-retrato.vazio{display:grid;place-items:center;text-align:center;border:1px dashed var(--linha-forte);color:var(--texto-fraco);font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:22px}
+.quem h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:18px}
+.quem h3 em{font-style:italic;color:var(--marcador-forte)}
+.quem p{color:var(--texto-medio);margin-bottom:15px}
+.quem .assinatura{margin-top:26px;font-family:var(--serif);font-size:20px;color:var(--texto)}
+.quem .assinatura small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-fraco);margin-top:8px}
+/* trechos que só o Fabiano pode escrever — apague o destaque ao preencher */
+.preencher{background:var(--marcador-fundo);border-bottom:1px solid var(--marcador);padding:1px 6px}
+@media(max-width:900px){.quem{grid-template-columns:1fr;gap:28px}.quem-retrato{max-width:300px}}
+
 /* ---------- fecho ---------- */
 .fecho .envelope{background:var(--cartao);border:1px solid var(--linha);border-radius:var(--curva-g);padding:56px 48px;max-width:1040px}
 .contatos{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -229,6 +245,7 @@ footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align
       <a href="#planos">Planos</a>
       <a href="#trabalhos">Trabalhos</a>
       <a href="#cerne">Cerne</a>
+      <a href="#quem">Quem sou</a>
       <a class="nav-cta" href="/briefing/">Começar</a>
     </nav>
   </div>
@@ -237,7 +254,7 @@ footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align
 <div class="envelope">
   <div class="capa">
     <div class="brilho"></div>
-    <p class="chapeu">Harmonização orofacial · Odontologia · Saúde</p>
+    <p class="chapeu">Sites para harmonização orofacial, odontologia e estética</p>
     <h1>O site que a sua formação já <em>merecia</em></h1>
     <p class="lede">O mesmo cuidado que você aplica na avaliação de um paciente, aplicado à sua presença digital.</p>
     <div class="acoes">
@@ -430,10 +447,32 @@ footer a{color:var(--texto-medio);text-decoration:none;display:inline-flex;align
   </div>
 </section>
 
-<!-- ═══════════════ 07 · CONTATO ═══════════════ -->
+<!-- ═══════════════ 07 · QUEM SOU ═══════════════
+     Troque a div.quem-retrato.vazio por <img src="sua-foto.jpg" alt="Fabiano Martins">
+     e reescreva os trechos marcados com class="preencher". -->
+<section id="quem" class="faixa">
+  <div class="envelope">
+    <div class="secao-topo"><span class="secao-num">07</span><h2>Quem <em>sou</em></h2></div>
+    <p class="secao-sub">Quem vai atender você é quem escreve o código. Não há intermediário, atendimento comercial nem equipe rotativa.</p>
+
+    <div class="quem">
+      <div class="quem-retrato vazio">Sua foto<br>— a inserir —</div>
+      <div>
+        <h3>Eu construo a presença digital de quem <em>cuida de gente</em></h3>
+        <p>Sou desenvolvedor e trabalho com consultórios de estética e saúde. Não faço site de tudo para todos: escolhi um nicho porque entender o problema de uma harmonizadora facial é diferente de entender o de uma loja, e essa diferença aparece no resultado.</p>
+        <p><span class="preencher">[Conte aqui a sua trajetória em duas ou três frases: de onde você veio, há quanto tempo desenvolve e o que te trouxe para esse nicho.]</span></p>
+        <p>Além dos sites, desenvolvi o <strong>Cerne</strong>, sistema de gestão para clínicas. Foi ele que me ensinou a rotina real de um consultório — agenda cheia, retorno para confirmar, paciente que some, dinheiro que entra em três formas diferentes. Esse conhecimento volta para cada site que eu faço.</p>
+        <p>Trabalho com poucos projetos por vez, de propósito. Você fala comigo do primeiro contato à publicação.</p>
+        <div class="assinatura">Fabiano Martins<small>Desenvolvedor · autor do sistema Cerne</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 08 · CONTATO ═══════════════ -->
 <section id="contato" class="fecho">
   <div class="envelope">
-    <div class="secao-topo"><span class="secao-num">07</span><h2>Começar</h2></div>
+    <div class="secao-topo"><span class="secao-num">08</span><h2>Começar</h2></div>
     <p class="secao-sub">O primeiro passo não é uma reunião de vendas. É a anamnese — dez minutos que definem todo o resto.</p>
     <div class="acoes">
       <a class="botao cheio" href="/briefing/">Preencher a anamnese de marca</a>
