@@ -21,11 +21,33 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=31536000"
 
-# Protótipos contêm fotos de pacientes usadas só para apresentação interna.
-# Publicá-las neste domínio republicaria imagem de terceiro sem autorização.
-# Para liberar um protótipo deliberadamente, remova este bloco.
+# O publish é a raiz do repositório, então tudo que está versionado iria ao ar.
+# Só a landing e a anamnese são públicas; o resto é material interno e fica
+# fora do CDN. Para liberar algo deliberadamente, remova a regra correspondente.
+
+# Protótipos: contêm fotos de pacientes sem autorização para republicação.
 [[redirects]]
   from = "/prototipos/*"
+  to = "/index.html"
+  status = 404
+  force = true
+
+# Roteiro de call: dados da cliente e estratégia comercial.
+[[redirects]]
+  from = "/roteiro-*"
+  to = "/index.html"
+  status = 404
+  force = true
+
+# Proposta e contrato: documentos comerciais, enviados individualmente.
+[[redirects]]
+  from = "/proposta/*"
+  to = "/index.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/contratos/*"
   to = "/index.html"
   status = 404
   force = true
