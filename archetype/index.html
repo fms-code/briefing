@@ -454,8 +454,18 @@ function art(id){
 const NOVO=()=>({name:"",email:"",whatsapp:"",instagram:"",ans:Array(ITEMS.length).fill(null),i:0,view:"intro",detail:null,sent:null});
 let st=NOVO();
 const SK="arquetipos-v4";
-try{const s=JSON.parse(localStorage.getItem(SK)||"null"); if(s&&Array.isArray(s.ans)&&s.ans.length===ITEMS.length) st=Object.assign(st,s,{detail:null});}catch(e){}
-function save(){try{localStorage.setItem(SK,JSON.stringify({name:st.name,email:st.email,whatsapp:st.whatsapp,instagram:st.instagram,ans:st.ans,i:st.i,sent:st.sent,view:st.view==="detail"?(completo()?"result":"intro"):st.view}))}catch(e){}}
+/* Modo leitura: ?r=<36 respostas separadas por ponto>&n=<nome> reabre um resultado já
+   registrado (link do e-mail e do painel). Não lê nem grava o teste salvo neste
+   navegador, não reenvia o formulário e não conta nas métricas. */
+const LEITURA=(()=>{try{
+  const p=new URLSearchParams(location.search), r=p.get("r"); if(!r) return null;
+  const ans=r.split(/[.,]/).map((v,i)=>{const it=ITEMS[i]; if(!it) return undefined; const x=it.type==="l"?Number(v):v; return optVals(it).includes(x)?x:undefined});
+  if(ans.length!==ITEMS.length||ans.some(v=>v===undefined)) return null;
+  return {ans,name:(p.get("n")||"").trim().slice(0,40)};
+}catch(e){return null}})();
+if(LEITURA) st=Object.assign(NOVO(),{ans:LEITURA.ans,name:LEITURA.name,view:"result"});
+else try{const s=JSON.parse(localStorage.getItem(SK)||"null"); if(s&&Array.isArray(s.ans)&&s.ans.length===ITEMS.length) st=Object.assign(st,s,{detail:null});}catch(e){}
+function save(){if(LEITURA)return;try{localStorage.setItem(SK,JSON.stringify({name:st.name,email:st.email,whatsapp:st.whatsapp,instagram:st.instagram,ans:st.ans,i:st.i,sent:st.sent,view:st.view==="detail"?(completo()?"result":"intro"):st.view}))}catch(e){}}
 const $=s=>document.querySelector(s);
 const app=$("#app");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -509,6 +519,7 @@ function painel(){
 
 /* ---------- ENVIO (Netlify Forms) ---------- */
 function enviar(R){
+  if(LEITURA) return;
   const chave=[st.ans.join(""),st.email,st.whatsapp,st.name,st.instagram].join("|");
   if(st.sent===chave) return;
   const sc=R.rows;
@@ -694,7 +705,7 @@ function profile(id,opts={}){
 
 function result(){
   if(!completo()){st.view="intro";return intro()}
-  if(!contatoOk()){st.view="dados";return dados()}
+  if(!LEITURA&&!contatoOk()){st.view="dados";return dados()}
   const R=scores(), sc=R.rows, top=sc[0], who=st.name?esc(st.name):"Você";
   enviar(R);
   const why = R.nit==="Alta" ? "O dominante apareceu com folga e de forma coerente nas frases e nas situações."
@@ -729,6 +740,10 @@ function result(){
   </div>`;
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openDetail(b.dataset.id));
   $("#other").onclick=()=>{st=NOVO();save();render();topo()};
+  if(LEITURA){ /* quem abriu o link faz o próprio teste do zero */
+    $("#other").textContent="Fazer o meu teste"; $("#other").onclick=()=>{location.href=location.pathname};
+    $("#redo").hidden=true;
+  }
   $("#redo").onclick=()=>{st.ans=Array(ITEMS.length).fill(null);st.i=0;st.view="quiz";save();render();topo()};
   $("#copy").onclick=()=>{
     const txt=`${st.name||"Resultado"}: arquétipo dominante ${A[top.id].nome} (${top.pct}%). Apoio: ${A[sc[1].id].nome} (${sc[1].pct}%) e ${A[sc[2].id].nome} (${sc[2].pct}%).\n${A[top.id].resumo}`;
@@ -768,6 +783,7 @@ function method(){
 /* Métricas: início, avanço nas perguntas (de 25 em 25%), dados de contato e resultado. */
 function rastrear(tipo,etapa){try{window.rastro&&window.rastro(tipo,etapa)}catch(e){}}
 function marcarEtapa(){
+  if(LEITURA) return;
   if(completo()&&st.sent) return; /* só revendo um resultado já registrado */
   const feitas=st.ans.filter(v=>v!==null).length;
   if(feitas>0) rastrear("inicio");

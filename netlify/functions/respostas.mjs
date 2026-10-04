@@ -16,6 +16,7 @@ import anamnese from '../lib/anamnese.js';
 import design from '../lib/design.js';
 import metricas from '../lib/metricas.js';
 import painelMetricas from '../lib/painel-metricas.js';
+import arquetipos from '../lib/arquetipos.js';
 
 const { SECOES, ROTULOS, legivel } = anamnese;
 
@@ -132,7 +133,8 @@ const ARQUETIPO = {
       ? `<div class="barras">${mapa.map((m) => `<div><span>${escapar(m.nome)}</span><i><b style="width:${Math.max(0, Math.min(100, m.pct))}%"></b></i><span>${m.pct}%</span></div>`).join('')}</div>`
       : '';
     return `<span class="eyebrow">Arquétipo dominante · recebido em ${escapar(dataHora(e.created_at))}</span>
-      <h2>${escapar(so(d.dominante) || '—')}${d.dominante_pct ? ' · ' + escapar(d.dominante_pct) : ''}</h2>
+      <div class="titulo-acao"><h2>${escapar(so(d.dominante) || '—')}${d.dominante_pct ? ' · ' + escapar(d.dominante_pct) : ''}</h2>
+        ${arquetipos.linkResultado(d, '/archetype/') ? `<a class="btn" href="${escapar(arquetipos.linkResultado(d, '/archetype/'))}" target="_blank" rel="noopener">Ver resultado completo ↗</a>` : ''}</div>
       <p class="sub">${escapar(so(d.nome) || 'Sem nome')}${d.nitidez ? ' · nitidez ' + escapar(String(d.nitidez).toLowerCase()) : ''}</p>
       ${contatos(d)}
       ${secao('01', 'Mapa completo', barras || dl([['Mapa', d.mapa]]))}
@@ -145,6 +147,61 @@ const ARQUETIPO = {
     return { valor: topo ? topo[0] : '—', rotulo: 'mais comum' };
   }
 };
+
+/* Visão "Distribuição" da aba Arquétipos: quem são, no agregado, as pessoas que fizeram o teste. */
+function distribuicao(envios) {
+  const { ARQUETIPOS, QUADRANTES } = arquetipos;
+  const barras = painelMetricas.barras;
+  const total = envios.length;
+  const pctDe = (n) => (total ? `${Math.round((n / total) * 100)}%` : '');
+  const conta = (f) => { const m = new Map(); for (const e of envios) { const k = f(e.data || {}); if (k) m.set(k, (m.get(k) || 0) + 1); } return m; };
+
+  const dominantes = conta((d) => so(d.dominante));
+  const porQuadrante = QUADRANTES.map((q) => ({
+    rotulo: q.nome,
+    total: ARQUETIPOS.filter((a) => a.q === q.id).reduce((n, a) => n + (dominantes.get(a.nome) || 0), 0)
+  }));
+  const maxDom = Math.max(1, ...dominantes.values());
+  const grupos = QUADRANTES.map((q) => `<div class="grupo"><span class="eyebrow">${escapar(q.nome)}</span>
+    ${barras(ARQUETIPOS.filter((a) => a.q === q.id).map((a) => ({ rotulo: a.nome, total: dominantes.get(a.nome) || 0, extra: pctDe(dominantes.get(a.nome) || 0) })), maxDom, '')}</div>`).join('');
+
+  /* média de cada arquétipo no mapa completo de todo mundo */
+  const somas = new Map(); let comMapa = 0;
+  for (const e of envios) {
+    const mapa = lerMapa(e.data?.mapa); if (!mapa.length) continue; comMapa++;
+    for (const m of mapa) somas.set(m.nome, (somas.get(m.nome) || 0) + m.pct);
+  }
+  const medias = ARQUETIPOS.map((a) => ({ rotulo: a.nome, total: comMapa ? Math.round((somas.get(a.nome) || 0) / comMapa) : 0 }))
+    .sort((a, b) => b.total - a.total).map((m) => ({ ...m, total: m.total, extra: '' }));
+
+  const combos = [...conta((d) => {
+    const apoio = so(d.apoio).split(',')[0].replace(/\s*\(.*$/, '').trim();
+    return so(d.dominante) && apoio ? `${so(d.dominante)} + ${apoio}` : '';
+  }).entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([rotulo, n]) => ({ rotulo, total: n, extra: pctDe(n) }));
+  const nitidez = conta((d) => so(d.nitidez));
+  const nit = ['Alta', 'Média', 'Baixa'].map((n) => ({ rotulo: n, total: nitidez.get(n) || 0, extra: pctDe(nitidez.get(n) || 0) }));
+
+  if (!total) return '<p class="vazio">Nenhuma resposta ainda.</p>';
+  return `<div class="dist">
+    <section class="detalhe metrica"><span class="eyebrow">Arquétipo dominante · ${total} pessoa${total === 1 ? '' : 's'}</span>
+      <h2>Quem fez o teste</h2><p class="sub">Quantas pessoas tiveram cada arquétipo como dominante, por quadrante.</p>
+      <div class="grupos">${grupos}</div></section>
+    <div class="grade-metricas">
+      <section class="detalhe metrica"><span class="eyebrow">Quadrantes</span><h2>Motivação principal</h2>
+        <p class="sub">Soma dos dominantes em cada quadrante.</p>
+        ${barras(porQuadrante.map((q) => ({ ...q, extra: pctDe(q.total) })), Math.max(1, ...porQuadrante.map((q) => q.total)), '')}</section>
+      <section class="detalhe metrica"><span class="eyebrow">Energia média</span><h2>Força de cada arquétipo</h2>
+        <p class="sub">Média da porcentagem de cada arquétipo no mapa completo de todo mundo${comMapa < total ? ` (${comMapa} com mapa)` : ''}.</p>
+        ${barras(medias.map((m) => ({ ...m, extra: '%' })), 100, 'Sem mapas completos.')}</section>
+      <section class="detalhe metrica"><span class="eyebrow">Combinações</span><h2>Dominante + 1º apoio</h2>
+        <p class="sub">As duplas que mais se repetem.</p>
+        ${barras(combos, Math.max(1, ...combos.map((c) => c.total)), 'Sem dados de apoio.')}</section>
+      <section class="detalhe metrica"><span class="eyebrow">Nitidez</span><h2>Clareza dos resultados</h2>
+        <p class="sub">Baixa nitidez = arquétipos muito próximos ou notas parecidas entre si.</p>
+        ${barras(nit, Math.max(1, ...nit.map((n) => n.total)), '')}</section>
+    </div>
+  </div>`;
+}
 
 const ANAMNESE = {
   item(e) {
@@ -294,7 +351,15 @@ td.data{white-space:nowrap;color:var(--tinta-media)}
 .st{font-weight:600;white-space:nowrap}.st.ok{color:var(--ok)}.st.falha{color:#B3261E}
 @media (prefers-color-scheme:dark){.st.falha{color:#F2B8B5}}
 .nota{color:var(--tinta-fraca);font-size:12.5px;margin-top:18px}
-@media (max-width:760px){.numeros.quatro{grid-template-columns:repeat(2,1fr)}.grade-metricas,.tres{grid-template-columns:1fr}.tres{gap:4px}}`;
+.titulo-acao{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.titulo-acao .btn{padding:7px 12px;font-size:13px}
+.visoes{display:inline-flex;border:1px solid var(--linha);background:var(--cartao);margin-bottom:14px}
+.visoes a{padding:7px 14px;font-size:13px;color:var(--tinta-media);text-decoration:none}
+.visoes a.ativo{background:var(--tinta);color:var(--cartao)}
+.grupos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;margin-top:8px}
+.grupo{padding-top:10px}.grupo .hbar{margin-top:4px}
+.dist .grade-metricas{margin-bottom:16px}
+@media (max-width:760px){.grupos{grid-template-columns:1fr}.numeros.quatro{grid-template-columns:repeat(2,1fr)}.grade-metricas,.tres{grid-template-columns:1fr}.tres{gap:4px}}`;
 
 function casca(abas, atual, conteudo, aviso) {
   const nav = abas.map((a) => `<a href="?form=${encodeURIComponent(a.form)}" class="${a.form === atual ? 'ativa' : ''}">${escapar(a.titulo)}<span class="n">${a.total}</span></a>`).join('')
@@ -345,7 +410,7 @@ function casca(abas, atual, conteudo, aviso) {
 </body></html>`;
 }
 
-function conteudoRespostas(atual, envios) {
+function conteudoRespostas(atual, envios, visao) {
   const modelo = MODELOS[atual] || GENERICO;
   const seteDias = Date.now() - 7 * 24 * 3600 * 1000;
   const recentes = envios.filter((e) => new Date(e.created_at).getTime() >= seteDias).length;
@@ -365,7 +430,11 @@ function conteudoRespostas(atual, envios) {
  <div class="num"><b>${recentes}</b><span>últimos 7 dias</span></div>
  <div class="num"><b>${escapar(destaque.valor)}</b><span>${escapar(destaque.rotulo)}</span></div>
 </div>
-${envios.length ? `<div class="ferramentas">
+${atual === 'arquetipo' ? `<nav class="visoes" aria-label="Visão">
+ <a href="?form=arquetipo" class="${visao === 'distribuicao' ? '' : 'ativo'}">Pessoas</a>
+ <a href="?form=arquetipo&visao=distribuicao" class="${visao === 'distribuicao' ? 'ativo' : ''}">Distribuição</a>
+</nav>` : ''}
+${atual === 'arquetipo' && visao === 'distribuicao' ? distribuicao(envios) : envios.length ? `<div class="ferramentas">
  <input class="busca" id="busca" type="search" placeholder="Buscar nome, e-mail, WhatsApp${atual === 'anamnese' ? ', cidade' : ''}" aria-label="Buscar respostas">
  <a class="btn" href="?form=${encodeURIComponent(atual)}&formato=csv">Baixar CSV</a>
 </div>
@@ -461,7 +530,7 @@ export default async (req, context) => {
         headers: { ...semCache, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="respostas-${atual}.csv"` }
       });
     }
-    return html(atual, conteudoRespostas(atual, envios));
+    return html(atual, conteudoRespostas(atual, envios, url.searchParams.get('visao')));
   } catch (e) {
     console.error('Falha no painel:', e.message);
     return new Response('Não foi possível carregar as respostas agora.', { status: 502 });

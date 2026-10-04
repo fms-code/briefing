@@ -6,6 +6,11 @@
  * página são ignorados.
  */
 (function () {
+  /* Resultado reaberto pelo link (?r=…) não é visita nova ao teste. */
+  if (/[?&]r=/.test(location.search) && /\/archetype\//.test(location.pathname)) {
+    window.rastro = function () {};
+    return;
+  }
   var sessao;
   try {
     sessao = sessionStorage.getItem('rastro-sessao');

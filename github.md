@@ -48,6 +48,16 @@ Em cada resposta:
   (`netlify/lib/design.js`) com paleta em hex, procedimentos, fotos, estrutura sugerida
   e as regras de SEO local do `CLAUDE.md`, pronto para colar no Claude Design.
 
+Na aba **Mapa de Arquétipos**:
+- **Ver resultado completo ↗** (ao lado do título) abre `/archetype/?r=<respostas>&n=<primeiro nome>`
+  em modo leitura: a página recalcula e mostra a mesma tela final que a pessoa viu, sem ler
+  ou gravar o teste salvo no navegador, sem reenviar e sem contar nas métricas. É o mesmo
+  link do botão "Rever o resultado completo" do e-mail, que assim abre em qualquer aparelho.
+  O link não leva e-mail nem WhatsApp. (`netlify/lib/arquetipos.js`)
+- **Pessoas · Distribuição**: a visão Distribuição mostra os dominantes por quadrante,
+  a soma por quadrante, a energia média de cada arquétipo, as duplas dominante + 1º apoio
+  mais comuns e a nitidez dos resultados.
+
 ## Métricas
 `rastro.js` (carregado em `/`, `/briefing/` e `/archetype/`) manda eventos para
 `/api/evento` (`netlify/functions/evento.mjs`): visita, início do formulário, etapa,

@@ -102,7 +102,8 @@ function agregar(eventos, dias, agora = Date.now()) {
 /* ---------- HTML ---------- */
 
 function barras(itens, max, vazio) {
-  if (!itens.some((i) => i.total > 0)) return `<p class="sub">${vazio}</p>`;
+  /* vazio === '' mostra as barras zeradas mesmo assim (ex.: os 12 arquétipos) */
+  if (vazio && !itens.some((i) => i.total > 0)) return `<p class="sub">${vazio}</p>`;
   return `<div class="hbar">${itens.map((i) => `<div><span>${escapar(i.rotulo)}</span><i><b style="width:${max ? Math.round((i.total / max) * 100) : 0}%"></b></i><span>${i.total}${i.extra ? ` <em>${escapar(i.extra)}</em>` : ''}</span></div>`).join('')}</div>`;
 }
 
@@ -179,4 +180,4 @@ function htmlMetricas(m, dias, inicioColeta) {
   <p class="nota">Contagem própria, sem cookies e sem dados pessoais: cada aba aberta conta como um visitante. ${inicioColeta ? `Coleta desde ${escapar(inicioColeta)}.` : ''}</p>`;
 }
 
-module.exports = { agregar, htmlMetricas };
+module.exports = { agregar, htmlMetricas, barras };

@@ -7,6 +7,7 @@
 const { connectLambda, getStore } = require('@netlify/blobs');
 const { SECOES, ROTULOS, legivel } = require('../lib/anamnese.js');
 const metricas = require('../lib/metricas.js');
+const { linkResultado } = require('../lib/arquetipos.js');
 
 /* Resultado de cada e-mail vai para a aba Métricas do painel. Falha aqui nunca bloqueia o envio. */
 async function registrarEmail(form, para, ok, status, erro) {
@@ -219,7 +220,7 @@ function montarHtmlRespondente(dados) {
         ${linha('Mapa completo', dados.mapa)}
       </table>
       <p style="margin:28px 0 0;">
-        <a href="https://fabianomartins.app.br/archetype/" style="display:inline-block;background:#16161A;color:#FFFFFF;text-decoration:none;padding:12px 20px;font-size:14px;">Rever o resultado completo</a>
+        <a href="${escapar(linkResultado(dados) || 'https://fabianomartins.app.br/archetype/')}" style="display:inline-block;background:#16161A;color:#FFFFFF;text-decoration:none;padding:12px 20px;font-size:14px;">Rever o resultado completo</a>
       </p>
       <p style="margin:30px 0 0;padding-top:16px;border-top:1px solid #D8D8D4;color:#8E8E96;font-size:12px;">
         Você recebeu este e-mail porque fez o Mapa de Arquétipos em fabianomartins.app.br. Responda esta mensagem se quiser conversar sobre o resultado.
@@ -236,6 +237,6 @@ function montarTextoRespondente(dados) {
     dados.nitidez ? `Nitidez do resultado: ${dados.nitidez}` : '',
     dados.mapa ? `Mapa completo: ${dados.mapa}` : '',
     '',
-    'Rever o resultado completo: https://fabianomartins.app.br/archetype/'
+    'Rever o resultado completo: ' + (linkResultado(dados) || 'https://fabianomartins.app.br/archetype/')
   ].filter((l, i) => l !== '' || i === 4).join('\n');
 }
