@@ -525,9 +525,12 @@ function enviar(R){
     respostas:st.ans.join(",")
   });
   fetch("/archetype/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:dados.toString()})
-    .then(r=>{if(!r.ok) throw new Error("HTTP "+r.status); st.sent=chave; save();})
+    .then(r=>{if(!r.ok) throw new Error("HTTP "+r.status); st.sent=chave; save(); avisoCopia();})
     .catch(e=>console.error("Falha ao registrar resultado:",e));
 }
+
+/* Confirma na tela para qual endereço a cópia do resultado foi enviada. */
+function avisoCopia(){const el=$("#copiaEmail"); if(el&&st.sent&&st.email) el.textContent=`Enviamos uma cópia do resultado para ${st.email}. Se não chegar em alguns minutos, confira o spam.`;}
 
 /* ---------- TELAS ---------- */
 function intro(){
@@ -717,6 +720,7 @@ function result(){
       <button class="link" id="redo">Refazer</button>
     </div>
     <div class="toast" id="toast"></div>
+    <p class="note" id="copiaEmail" aria-live="polite"></p>
     <textarea class="copia" id="sumtxt" readonly hidden></textarea>
    </div>
    ${gallery("Explorar os outros arquétipos")}
@@ -731,6 +735,7 @@ function result(){
     const fb=()=>{const t=$("#sumtxt");t.hidden=false;t.value=txt;t.select();$("#toast").textContent="Selecione e copie o texto abaixo."};
     try{navigator.clipboard.writeText(txt).then(done,fb)}catch(e){fb()}
   };
+  avisoCopia();
   bindGallery();
 }
 
