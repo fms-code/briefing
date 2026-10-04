@@ -20,7 +20,10 @@ handoff de design; function `submission-created` passa a tratar os formulários
 Resend, escolhendo o modelo pelo `form_name`:
 
 - `anamnese` → "Anamnese — {nome} · {especialidade}"
-- `arquetipo` → "Arquétipo — {nome} · {dominante}"
+- `arquetipo` → "Arquétipo — {nome} · {dominante}" para `BRIEFING_TO` **e** "Seu arquétipo: {dominante}"
+  para o e-mail que a pessoa digitou no formulário (só se o endereço for válido)
 - qualquer outro → ignorado (registrado no log)
 
 Variáveis de ambiente: `RESEND_API_KEY`, `BRIEFING_TO`, `BRIEFING_FROM`.
+`BRIEFING_FROM` precisa ser de um domínio verificado no Resend com envio habilitado;
+caso contrário o Resend só entrega para o dono da conta.

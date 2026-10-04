@@ -154,8 +154,24 @@ exports.handler = async (event) => {
       html: montarHtmlArquetipo(dados, quando),
       text: CAMPOS_ARQ.filter(([c]) => dados[c]).map(([c, r]) => `${r}: ${dados[c]}`).join('\n')
     };
-    if (dados.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(dados.email)) corpoArq.reply_to = dados.email;
-    return enviar(apiKey, corpoArq, 'Arquétipo registrado: ' + (dados.dominante || '?'));
+    const emailValido = dados.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(dados.email).trim());
+    if (emailValido) corpoArq.reply_to = String(dados.email).trim();
+    const interno = await enviar(apiKey, corpoArq, 'Arquétipo registrado: ' + (dados.dominante || '?'));
+
+    /* Cópia do resultado para quem respondeu, no e-mail que digitou no formulário. */
+    if (emailValido) {
+      await enviar(apiKey, {
+        from: remetente,
+        to: [String(dados.email).trim()],
+        reply_to: destino,
+        subject: `Seu arquétipo: ${dados.dominante || 'resultado'}`,
+        html: montarHtmlRespondente(dados),
+        text: montarTextoRespondente(dados)
+      }, 'Resultado enviado ao respondente');
+    } else {
+      console.log('Respondente sem e-mail válido; cópia não enviada.');
+    }
+    return interno;
   }
 
   if (formulario && formulario !== 'anamnese') {
@@ -226,4 +242,45 @@ function montarHtmlArquetipo(dados, quando) {
       <p style="margin:30px 0 0;padding-top:16px;border-top:1px solid #D8D8D4;color:#8E8E96;font-size:12px;">Enviado pelo Mapa de Arquétipos em fabianomartins.app.br/archetype</p>
     </div>
   </div>`;
+}
+
+const primeiroNome = (nome) => String(nome || '').trim().split(/\s+/)[0] || '';
+
+function montarHtmlRespondente(dados) {
+  const nome = primeiroNome(dados.nome);
+  const linha = (rotulo, valor) => String(valor ?? '').trim() === '' ? '' : `<tr>
+      <td style="padding:10px 16px 10px 0;vertical-align:top;width:34%;color:#5A5A62;font-size:13px;">${rotulo}</td>
+      <td style="padding:10px 0;vertical-align:top;color:#16161A;font-size:15px;line-height:1.55;">${escapar(valor)}</td>
+    </tr>`;
+
+  return `<div style="background:#EDEDEB;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+    <div style="max-width:640px;margin:0 auto;background:#FFFFFF;padding:38px 34px;border:1px solid #D8D8D4;">
+      <p style="margin:0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5B3FA8;letter-spacing:.08em;">MAPA DE ARQUÉTIPOS</p>
+      <h1 style="margin:0 0 18px;font-family:Georgia,serif;font-weight:400;font-size:28px;color:#16161A;">${nome ? escapar(nome) + ', seu' : 'Seu'} arquétipo dominante é ${escapar(dados.dominante || '—')}${dados.dominante_pct ? ' · ' + escapar(dados.dominante_pct) : ''}</h1>
+      <p style="margin:0 0 26px;color:#3A3A42;font-size:15px;line-height:1.6;">Obrigado por responder. Este é o registro do seu resultado.</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">
+        ${linha('Arquétipos de apoio', dados.apoio)}
+        ${linha('Nitidez do resultado', dados.nitidez)}
+        ${linha('Mapa completo', dados.mapa)}
+      </table>
+      <p style="margin:28px 0 0;">
+        <a href="https://fabianomartins.app.br/archetype/" style="display:inline-block;background:#16161A;color:#FFFFFF;text-decoration:none;padding:12px 20px;font-size:14px;">Rever o resultado completo</a>
+      </p>
+      <p style="margin:30px 0 0;padding-top:16px;border-top:1px solid #D8D8D4;color:#8E8E96;font-size:12px;">
+        Você recebeu este e-mail porque fez o Mapa de Arquétipos em fabianomartins.app.br. Responda esta mensagem se quiser conversar sobre o resultado.
+      </p>
+    </div>
+  </div>`;
+}
+
+function montarTextoRespondente(dados) {
+  const nome = primeiroNome(dados.nome);
+  return [
+    `${nome ? nome + ', seu' : 'Seu'} arquétipo dominante é ${dados.dominante || '—'}${dados.dominante_pct ? ' (' + dados.dominante_pct + ')' : ''}.`,
+    dados.apoio ? `Arquétipos de apoio: ${dados.apoio}` : '',
+    dados.nitidez ? `Nitidez do resultado: ${dados.nitidez}` : '',
+    dados.mapa ? `Mapa completo: ${dados.mapa}` : '',
+    '',
+    'Rever o resultado completo: https://fabianomartins.app.br/archetype/'
+  ].filter((l, i) => l !== '' || i === 4).join('\n');
 }
