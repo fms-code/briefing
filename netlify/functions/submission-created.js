@@ -4,7 +4,18 @@
  * ter gravado o envio — se o e-mail falhar, o dado continua no painel.
  */
 
+const { connectLambda, getStore } = require('@netlify/blobs');
 const { SECOES, ROTULOS, legivel } = require('../lib/anamnese.js');
+const metricas = require('../lib/metricas.js');
+
+/* Resultado de cada e-mail vai para a aba Métricas do painel. Falha aqui nunca bloqueia o envio. */
+async function registrarEmail(form, para, ok, status, erro) {
+  try {
+    await metricas.registrar(getStore('metricas'), { tipo: 'email', form, para, ok: ok ? 'sim' : 'nao', status, erro });
+  } catch (e) {
+    console.error('Métrica de e-mail não registrada:', e.message);
+  }
+}
 
 const escapar = (t) => String(t)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -53,6 +64,7 @@ function montarTexto(dados) {
 }
 
 exports.handler = async (event) => {
+  try { connectLambda(event); } catch (e) { console.error('Blobs indisponível:', e.message); }
   const apiKey = process.env.RESEND_API_KEY;
   const destino = process.env.BRIEFING_TO;
   const remetente = process.env.BRIEFING_FROM;
@@ -61,6 +73,7 @@ exports.handler = async (event) => {
     const faltando = [['RESEND_API_KEY', apiKey], ['BRIEFING_TO', destino], ['BRIEFING_FROM', remetente]]
       .filter(([, v]) => !v).map(([k]) => k);
     console.error('Faltam variáveis de ambiente:', faltando.join(', '), '| contexto:', process.env.CONTEXT || '?');
+    await registrarEmail('?', 'interno', false, 500, 'Faltam variáveis: ' + faltando.join(', '));
     return { statusCode: 500, body: 'configuração incompleta' };
   }
 
@@ -87,7 +100,7 @@ exports.handler = async (event) => {
     };
     const emailValido = dados.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(dados.email).trim());
     if (emailValido) corpoArq.reply_to = String(dados.email).trim();
-    const interno = await enviar(apiKey, corpoArq, 'Arquétipo registrado: ' + (dados.dominante || '?'));
+    const interno = await enviar(apiKey, corpoArq, 'Arquétipo registrado: ' + (dados.dominante || '?'), ['arquetipo', 'interno']);
 
     /* Cópia do resultado para quem respondeu, no e-mail que digitou no formulário. */
     if (emailValido) {
@@ -98,7 +111,7 @@ exports.handler = async (event) => {
         subject: `Seu arquétipo: ${dados.dominante || 'resultado'}`,
         html: montarHtmlRespondente(dados),
         text: montarTextoRespondente(dados)
-      }, 'Resultado enviado ao respondente');
+      }, 'Resultado enviado ao respondente', ['arquetipo', 'respondente']);
     } else {
       console.log('Respondente sem e-mail válido; cópia não enviada.');
     }
@@ -124,23 +137,34 @@ exports.handler = async (event) => {
     corpo.reply_to = dados.email;
   }
 
-  return enviar(apiKey, corpo, 'Briefing enviado: ' + identificacao);
+  return enviar(apiKey, corpo, 'Briefing enviado: ' + identificacao, ['anamnese', 'interno']);
 };
 
-async function enviar(apiKey, corpo, logOk) {
-  const resposta = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(corpo)
-  });
+async function enviar(apiKey, corpo, logOk, [form, para] = ['?', '?']) {
+  let resposta;
+  try {
+    resposta = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(corpo)
+    });
+  } catch (e) {
+    console.error('Resend inacessível:', e.message);
+    await registrarEmail(form, para, false, 0, e.message);
+    return { statusCode: 502, body: 'falha no envio' };
+  }
 
   if (!resposta.ok) {
     const detalhe = await resposta.text();
     console.error('Resend recusou o envio:', resposta.status, detalhe);
+    let motivo = detalhe;
+    try { motivo = JSON.parse(detalhe).message || detalhe; } catch (e) {}
+    await registrarEmail(form, para, false, resposta.status, motivo);
     return { statusCode: 502, body: 'falha no envio' };
   }
 
   console.log(logOk);
+  await registrarEmail(form, para, true, resposta.status, '');
   return { statusCode: 200, body: 'ok' };
 }
 

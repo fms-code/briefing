@@ -951,9 +951,11 @@ input[type=text],input[type=email],input[type=tel]{line-height:1.4}
   </main>
 </div>
 
+<script src="/rastro.js"></script>
 <script>
 (function(){
   const form = document.getElementById('ficha');
+  const rastro = (tipo, etapa) => { try { window.rastro && window.rastro(tipo, etapa); } catch (e) {} };
   const barra = document.getElementById('barra');
   const pct = document.getElementById('pct');
   const pctMobile = document.getElementById('pctMobile');
@@ -972,6 +974,15 @@ input[type=text],input[type=email],input[type=tel]{line-height:1.4}
     pct.textContent = p+'%';
     pctMobile.textContent = p+'%';
   }
+
+  /* métricas: início do preenchimento e seção mais avançada que ela tocou */
+  const marcarEtapa = ev => {
+    const secao = ev.target.closest && ev.target.closest('section[id]');
+    rastro('inicio');
+    if(secao) rastro('etapa', 'secao-0' + secao.id.replace(/\D/g,''));
+  };
+  form.addEventListener('input', marcarEtapa);
+  form.addEventListener('change', marcarEtapa);
 
   form.addEventListener('input', calcular);
   form.addEventListener('change', calcular);
@@ -1122,12 +1133,14 @@ input[type=text],input[type=email],input[type=tel]{line-height:1.4}
     })
     .then(resposta=>{
       if(!resposta.ok) throw new Error('HTTP '+resposta.status);
+      rastro('envio');
       form.querySelectorAll('section').forEach(s=>s.style.display='none');
       document.getElementById('confirmacao').classList.add('visivel');
       window.scrollTo({top:0,behavior:'smooth'});
     })
     .catch(e=>{
       console.error('Falha no envio:', e);
+      rastro('erro_envio', String(e && e.message || e));
       botao.disabled = false;
       botao.textContent = 'Enviar ficha';
       erro.textContent = 'O envio não completou. Verifique a conexão e tente de novo, ou me chame no WhatsApp que eu pego os dados por lá.';

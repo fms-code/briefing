@@ -227,6 +227,7 @@ textarea.copia{width:100%;min-height:120px;border:1px solid var(--linha);backgro
   </main>
 </div>
 
+<script src="/rastro.js"></script>
 <script>
 (function(){
 const QUADS = {
@@ -525,8 +526,8 @@ function enviar(R){
     respostas:st.ans.join(",")
   });
   fetch("/archetype/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:dados.toString()})
-    .then(r=>{if(!r.ok) throw new Error("HTTP "+r.status); st.sent=chave; save(); avisoCopia();})
-    .catch(e=>console.error("Falha ao registrar resultado:",e));
+    .then(r=>{if(!r.ok) throw new Error("HTTP "+r.status); st.sent=chave; save(); avisoCopia(); rastrear("envio");})
+    .catch(e=>{console.error("Falha ao registrar resultado:",e); rastrear("erro_envio",String(e&&e.message||e));});
 }
 
 /* Confirma na tela para qual endereço a cópia do resultado foi enviada. */
@@ -764,11 +765,24 @@ function method(){
   </div>`;
 }
 
+/* Métricas: início, avanço nas perguntas (de 25 em 25%), dados de contato e resultado. */
+function rastrear(tipo,etapa){try{window.rastro&&window.rastro(tipo,etapa)}catch(e){}}
+function marcarEtapa(){
+  if(completo()&&st.sent) return; /* só revendo um resultado já registrado */
+  const feitas=st.ans.filter(v=>v!==null).length;
+  if(feitas>0) rastrear("inicio");
+  const quarto=Math.floor(feitas/ITEMS.length*4)*25;
+  if(quarto>0) rastrear("etapa","perguntas-"+quarto);
+  if(st.view==="dados") rastrear("etapa","dados");
+  if(st.view==="result") rastrear("etapa","resultado");
+}
+
 function render(){
   const views={intro,quiz,dados,result,detail};
   if(st.view==="detail"&&!st.detail) st.view="intro";
   (views[st.view]||intro)();
   painel();
+  marcarEtapa();
 }
 render();
 })();
