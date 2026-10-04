@@ -52,3 +52,22 @@
   to = "/index.html"
   status = 404
   force = true
+
+# Dependências das functions (Netlify Blobs) ficam na raiz, que também é o publish.
+[[redirects]]
+  from = "/node_modules/*"
+  to = "/index.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package.json"
+  to = "/index.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package-lock.json"
+  to = "/index.html"
+  status = 404
+  force = true

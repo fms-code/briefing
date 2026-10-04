@@ -39,4 +39,32 @@ Protegido por senha (Basic Auth, qualquer usuário).
 Variáveis de ambiente: `PAINEL_SENHA` e `NETLIFY_TOKEN` (personal access token do Netlify).
 
 Rótulos e seções da anamnese ficam em `netlify/lib/anamnese.js`, compartilhado entre
-o e-mail e o painel.
+o e-mail, o painel e o briefing do Claude Design.
+
+Em cada resposta:
+- **Excluir resposta**: apaga o envio no Netlify Forms (pede confirmação; o POST só é
+  aceito vindo do próprio painel).
+- **Anamnese › Claude Design**: "Copiar briefing" / "Baixar .md" geram um Markdown
+  (`netlify/lib/design.js`) com paleta em hex, procedimentos, fotos, estrutura sugerida
+  e as regras de SEO local do `CLAUDE.md`, pronto para colar no Claude Design.
+
+Na aba **Mapa de Arquétipos**:
+- **Ver resultado completo ↗** (ao lado do título) abre `/archetype/?r=<respostas>&n=<primeiro nome>`
+  em modo leitura: a página recalcula e mostra a mesma tela final que a pessoa viu, sem ler
+  ou gravar o teste salvo no navegador, sem reenviar e sem contar nas métricas. É o mesmo
+  link do botão "Rever o resultado completo" do e-mail, que assim abre em qualquer aparelho.
+  O link não leva e-mail nem WhatsApp. (`netlify/lib/arquetipos.js`)
+- **Pessoas · Distribuição**: a visão Distribuição mostra os dominantes por quadrante,
+  a soma por quadrante, a energia média de cada arquétipo, as duplas dominante + 1º apoio
+  mais comuns e a nitidez dos resultados.
+
+## Métricas
+`rastro.js` (carregado em `/`, `/briefing/` e `/archetype/`) manda eventos para
+`/api/evento` (`netlify/functions/evento.mjs`): visita, início do formulário, etapa,
+envio e erro de envio. Sem cookies e sem dados pessoais: o id é aleatório por aba
+(`sessionStorage`). A `submission-created` registra o resultado de cada e-mail.
+
+Tudo fica no Netlify Blobs (store `metricas`, `netlify/lib/metricas.js`), com o evento
+codificado na chave. A aba **Métricas** do painel (`?aba=metricas&dias=7|30|90`)
+mostra visitantes por dia, páginas, origem, dispositivo, funil de cada formulário,
+onde quem começou parou (sem envio 30 min após o último evento) e o log de e-mails.

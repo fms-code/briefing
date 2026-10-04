@@ -1,0 +1,8 @@
+{
+  "name": "fms-briefing",
+  "private": true,
+  "description": "Functions do site fabianomartins.app.br (formulários, e-mail e painel).",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3"
+  }
+}
