@@ -129,7 +129,9 @@ exports.handler = async (event) => {
   const remetente = process.env.BRIEFING_FROM;
 
   if (!apiKey || !destino || !remetente) {
-    console.error('Faltam variáveis de ambiente: RESEND_API_KEY, BRIEFING_TO ou BRIEFING_FROM');
+    const faltando = [['RESEND_API_KEY', apiKey], ['BRIEFING_TO', destino], ['BRIEFING_FROM', remetente]]
+      .filter(([, v]) => !v).map(([k]) => k);
+    console.error('Faltam variáveis de ambiente:', faltando.join(', '), '| contexto:', process.env.CONTEXT || '?');
     return { statusCode: 500, body: 'configuração incompleta' };
   }
 
