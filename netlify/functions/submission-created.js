@@ -133,15 +133,35 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: 'configuração incompleta' };
   }
 
-  let dados;
+  let dados, formulario;
   try {
-    dados = (JSON.parse(event.body || '{}').payload || {}).data || {};
+    const payload = JSON.parse(event.body || '{}').payload || {};
+    dados = payload.data || {};
+    formulario = payload.form_name || dados['form-name'] || '';
   } catch (e) {
     console.error('Payload inválido:', e.message);
     return { statusCode: 400, body: 'payload inválido' };
   }
 
   const quando = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+  /* /archetype — resultado do Mapa de Arquétipos */
+  if (formulario === 'arquetipo') {
+    const corpoArq = {
+      from: remetente,
+      to: [destino],
+      subject: `Arquétipo — ${dados.nome || 'sem nome'} · ${dados.dominante || '?'}`,
+      html: montarHtmlArquetipo(dados, quando),
+      text: CAMPOS_ARQ.filter(([c]) => dados[c]).map(([c, r]) => `${r}: ${dados[c]}`).join('\n')
+    };
+    if (dados.email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(dados.email)) corpoArq.reply_to = dados.email;
+    return enviar(apiKey, corpoArq, 'Arquétipo registrado: ' + (dados.dominante || '?'));
+  }
+
+  if (formulario && formulario !== 'anamnese') {
+    console.log('Formulário sem e-mail configurado:', formulario);
+    return { statusCode: 200, body: 'ignorado' };
+  }
   const identificacao = [dados.nome, dados.especialidade].filter(Boolean).join(' · ') || 'sem identificação';
 
   const corpo = {
@@ -157,6 +177,10 @@ exports.handler = async (event) => {
     corpo.reply_to = dados.email;
   }
 
+  return enviar(apiKey, corpo, 'Briefing enviado: ' + identificacao);
+};
+
+async function enviar(apiKey, corpo, logOk) {
   const resposta = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
@@ -169,6 +193,37 @@ exports.handler = async (event) => {
     return { statusCode: 502, body: 'falha no envio' };
   }
 
-  console.log('Briefing enviado:', identificacao);
+  console.log(logOk);
   return { statusCode: 200, body: 'ok' };
-};
+}
+
+const CAMPOS_ARQ = [
+  ['nome', 'Nome'],
+  ['email', 'E-mail'],
+  ['whatsapp', 'WhatsApp'],
+  ['instagram', 'Instagram'],
+  ['dominante', 'Arquétipo dominante'],
+  ['dominante_pct', 'Aderência'],
+  ['apoio', 'Arquétipos de apoio'],
+  ['nitidez', 'Nitidez do resultado'],
+  ['mapa', 'Mapa completo'],
+  ['respostas', 'Respostas brutas']
+];
+
+function montarHtmlArquetipo(dados, quando) {
+  const linhas = CAMPOS_ARQ
+    .filter(([c]) => String(dados[c] ?? '').trim() !== '')
+    .map(([c, rotulo]) => `<tr>
+      <td style="padding:10px 16px 10px 0;vertical-align:top;width:34%;color:#5A5A62;font-size:13px;">${rotulo}</td>
+      <td style="padding:10px 0;vertical-align:top;color:#16161A;font-size:15px;line-height:1.55;">${escapar(dados[c])}</td>
+    </tr>`).join('');
+
+  return `<div style="background:#EDEDEB;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+    <div style="max-width:640px;margin:0 auto;background:#FFFFFF;padding:38px 34px;border:1px solid #D8D8D4;">
+      <h1 style="margin:0 0 4px;font-family:Georgia,serif;font-weight:400;font-size:26px;color:#16161A;">Novo resultado de arquétipo</h1>
+      <p style="margin:0 0 30px;color:#8E8E96;font-size:13px;">${escapar(quando)}</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">${linhas}</table>
+      <p style="margin:30px 0 0;padding-top:16px;border-top:1px solid #D8D8D4;color:#8E8E96;font-size:12px;">Enviado pelo Mapa de Arquétipos em fabianomartins.app.br/archetype</p>
+    </div>
+  </div>`;
+}

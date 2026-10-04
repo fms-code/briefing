@@ -46,3 +46,9 @@
   to = "/index.html"
   status = 404
   force = true
+
+[[redirects]]
+  from = "/github.md"
+  to = "/index.html"
+  status = 404
+  force = true

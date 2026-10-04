@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa de Arquétipos</title>
+<meta name="description" content="Descubra seu arquétipo dominante entre os 12 de Carol S. Pearson e Margaret Mark. 36 toques, cerca de 5 minutos.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://fabianomartins.app.br/archetype/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://fabianomartins.app.br/archetype/">
+<meta property="og:title" content="Mapa de Arquétipos">
+<meta property="og:description" content="Descubra seu arquétipo dominante entre os 12 de Carol S. Pearson e Margaret Mark.">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* mesmos tokens da Anamnese de Marca (/briefing) */
+  --porcelana:#EDEDEB; --papel:#F7F7F6; --cartao:#FFFFFF; --linha:#D8D8D4;
+  --tinta:#16161A; --tinta-media:#5A5A62; --tinta-fraca:#8E8E96;
+  --marcador:#5B3FA8; --marcador-claro:#EDE7FA;
+  --serif:'Bodoni Moda',Georgia,serif;
+  --sans:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  /* quatro motivações — tons tirados do fototipo da marca */
+  --q-ind:#1F4A4E; --q-ind-soft:#DDE7E6;
+  --q-mas:#8A3A2E; --q-mas-soft:#F0E1DC;
+  --q-per:#9A4F6A; --q-per-soft:#F2E3E8;
+  --q-est:#5B6440; --q-est-soft:#E6E8DC;
+  /* aliases usados pelas ilustrações */
+  --bg:var(--papel); --paper:var(--cartao); --ink:var(--tinta); --muted:var(--tinta-media); --line:var(--linha);
+  --gold:#B99050; --skin:#E6CBB3; --fig:#3A3A42;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--porcelana);color:var(--tinta);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+a{color:var(--marcador)} a:hover{color:var(--tinta)}
+
+/* ---------- ESTRUTURA ---------- */
+.folha{display:grid;grid-template-columns:300px 1fr;max-width:1440px;margin:0 auto;min-height:100vh}
+.prontuario{position:sticky;top:0;height:100vh;padding:56px 40px;border-right:1px solid var(--linha);display:flex;flex-direction:column;background:var(--porcelana)}
+.marca{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-fraca);margin-bottom:32px}
+.titulo{font-family:var(--serif);font-size:38px;font-weight:500;line-height:1.05;letter-spacing:-.01em;margin-bottom:14px}
+.titulo em{font-style:italic;color:var(--marcador)}
+.nota{font-size:13px;line-height:1.65;color:var(--tinta-media);font-weight:300;margin-bottom:36px;max-width:30ch}
+.indice{list-style:none;border-top:1px solid var(--linha);padding-top:20px;flex:1;overflow-y:auto}
+.indice li{display:flex;gap:12px;align-items:baseline;padding:7px 0;font-size:13px;color:var(--tinta-media);transition:color .25s ease}
+.indice li .num{font-family:var(--mono);font-size:10px;color:var(--tinta-fraca)}
+.indice li.ativo{color:var(--tinta);font-weight:600}
+.indice li.ativo .num{color:var(--marcador)}
+.progresso{border-top:1px solid var(--linha);padding-top:22px;margin-top:20px}
+.progresso-topo{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.progresso-rotulo{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-fraca)}
+.progresso-valor{font-family:var(--serif);font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.trilho{height:2px;background:var(--linha);overflow:hidden}
+.preenchido{height:100%;width:0%;background:var(--marcador);transition:width .5s cubic-bezier(.22,1,.36,1)}
+.corpo{padding:56px 72px 120px;background:var(--papel);max-width:820px;min-width:0}
+.cabecalho-mobile,.barra-mobile{display:none}
+
+/* ---------- TIPOGRAFIA ---------- */
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;line-height:1.1;text-wrap:balance}
+h1{font-size:clamp(34px,5vw,46px)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-fraca)}
+.lede{color:var(--tinta-media);font-weight:300;max-width:58ch;font-size:15px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:40px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
+
+/* ---------- BOTÕES ---------- */
+.btn{background:var(--tinta);color:var(--papel);font-size:14px;font-weight:600;letter-spacing:.01em;padding:16px 34px;transition:background .25s ease,border-color .25s ease,color .25s ease;border:1px solid var(--tinta)}
+.btn:hover{background:var(--marcador);border-color:var(--marcador)}
+.btn.ghost{background:transparent;color:var(--tinta);border-color:var(--linha)}
+.btn.ghost:hover{border-color:var(--tinta);background:transparent}
+.btn:disabled{opacity:.4;cursor:default}
+.link{font-size:13.5px;color:var(--tinta-fraca);text-decoration:underline;text-underline-offset:3px;padding:8px 2px}
+.link:hover{color:var(--tinta)}
+.btn:focus-visible,.link:focus-visible,.opt:focus-visible,.chip:focus-visible,.mini:focus-visible,.bar button:focus-visible{outline:2px solid var(--marcador);outline-offset:3px}
+
+/* ---------- CAMPO ---------- */
+label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.ajuda{display:block;font-size:12.5px;color:var(--tinta-fraca);font-weight:300;line-height:1.55;margin-bottom:11px}
+.tracado{position:relative;line-height:0;max-width:380px}
+.tracado input{display:block;width:100%;border:none;border-bottom:1px solid var(--linha);background:transparent;padding:9px 2px;font-family:var(--sans);font-size:15px;line-height:1.4;color:var(--tinta)}
+.tracado input::placeholder{color:#BEBEC4;font-weight:300}
+.tracado input:focus{outline:none;border-bottom-color:transparent}
+.tracado::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--marcador);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.tracado:focus-within::after{transform:scaleX(1)}
+.tracado.invalido input{border-bottom-color:#B3261E}
+.tracado.invalido::after{background:#B3261E;transform:scaleX(1)}
+.obrigatorio{color:var(--marcador);font-weight:400}
+.aviso{display:none;font-size:12px;line-height:1.5;color:#B3261E;margin-top:7px}
+.aviso.visivel{display:block}
+.dupla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px}
+.dupla .tracado{max-width:none}
+.sigilo{font-size:12px;color:var(--tinta-fraca);font-weight:300;padding-left:15px;border-left:1px solid var(--linha);max-width:50ch}
+
+/* ---------- INTRO ---------- */
+.quad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.quad > div{background:var(--cartao);padding:18px 20px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.quad b{font-size:14px;font-weight:600;display:flex;align-items:center;gap:9px}
+.quad span{color:var(--tinta-fraca);font-size:12.5px;font-weight:300}
+.quad span.membros{color:var(--tinta-media);font-weight:400}
+
+/* ---------- QUIZ ---------- */
+.qmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--tinta-fraca);font-variant-numeric:tabular-nums}
+.qmeta .n{color:var(--marcador)}
+.statement{font-family:var(--serif);font-weight:500;font-size:clamp(26px,4vw,34px);line-height:1.2;letter-spacing:-.01em;min-height:3.6em;text-wrap:balance}
+.statement.sc{font-size:clamp(23px,3.4vw,28px);min-height:0}
+.opts{border:1px solid var(--linha);background:var(--cartao)}
+.opt{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:16px 20px;border-bottom:1px solid var(--linha);font-size:14.5px;transition:background .2s ease}
+.opt:last-child{border-bottom:none}
+.opt:hover{background:#FAFAF9}
+.opt .n{flex:none;width:26px;height:26px;border:1px solid var(--tinta-fraca);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--tinta-media);transition:all .2s ease}
+.opt.sel{background:var(--marcador-claro)}
+.opt.sel .n{background:var(--marcador);border-color:var(--marcador);color:#fff}
+.atalho{font-size:12px;color:var(--tinta-fraca);font-weight:300}
+
+/* ---------- RESULTADO ---------- */
+.hero-res{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;align-items:center}
+.art{width:100%;max-width:240px;aspect-ratio:1/1}
+.art svg{width:100%;height:100%;display:block}
+.nome-arq{font-size:clamp(44px,7vw,64px);line-height:1}
+.motto{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--tinta-media)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--hue)}
+.resumo{font-size:17px;max-width:58ch}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.facts > div{background:var(--cartao);padding:16px 20px;min-width:0}
+.facts dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-fraca);margin-bottom:4px}
+.facts dd{font-size:14.5px}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.duo > div{background:var(--cartao);padding:20px;min-width:0}
+.duo h3{font-size:22px}
+.duo ul{margin:12px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--tinta-media)}
+.luz-h{color:var(--q-ind)} .sombra-h{color:var(--q-mas)}
+.secao{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--linha);padding-top:30px}
+.secao-topo{display:flex;align-items:baseline;gap:16px}
+.secao-num{font-family:var(--mono);font-size:11px;color:var(--marcador);letter-spacing:.06em}
+.secao-topo h3{font-size:24px}
+.secao p{max-width:60ch;font-size:15px}
+.secao .corpo-txt{margin-left:34px}
+.note{font-size:13px;color:var(--tinta-fraca);font-weight:300}
+.callout{font-size:13.5px;color:var(--tinta-media);line-height:1.6;padding-left:15px;border-left:2px solid var(--marcador);max-width:58ch}
+.callout b{color:var(--tinta);font-weight:600}
+.bars{display:flex;flex-direction:column;gap:22px}
+.bgroup{display:flex;flex-direction:column;gap:8px}
+.bgroup .eyebrow{display:flex;align-items:center;gap:8px}
+.bar{display:grid;grid-template-columns:124px minmax(0,1fr) 42px;gap:12px;align-items:center;font-size:14px}
+.bar .track{height:2px;background:var(--linha)}
+.bar .fill{height:100%;transition:width .6s cubic-bezier(.22,1,.36,1)}
+.bar .pct{text-align:right;font-family:var(--mono);font-size:11px;color:var(--tinta-fraca);font-variant-numeric:tabular-nums}
+.bar button{text-align:left;font-weight:500}
+.bar button:hover{color:var(--marcador)}
+.secondary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--linha);border:1px solid var(--linha)}
+.mini{display:flex;gap:14px;align-items:center;padding:14px 16px;background:var(--cartao);text-align:left;min-width:0;transition:background .2s ease}
+.mini:hover{background:#FAFAF9}
+.mini .art{width:64px;flex:none}
+.mini b{font-family:var(--serif);font-weight:500;font-size:21px;display:block;line-height:1.1}
+.mini span{font-size:12.5px;color:var(--tinta-fraca);font-weight:300}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border:1px solid var(--linha);border-radius:999px;font-size:13.5px;color:var(--tinta-media);background:var(--cartao);transition:all .22s ease}
+.chip:hover{border-color:var(--tinta-fraca);color:var(--tinta)}
+.toast{font-size:13px;color:var(--marcador);min-height:1.4em}
+textarea.copia{width:100%;min-height:120px;border:1px solid var(--linha);background:var(--cartao);padding:12px;font:14px/1.6 var(--sans);color:var(--tinta)}
+
+/* ---------- RESPONSIVO ---------- */
+@media(max-width:940px){
+  .folha{grid-template-columns:1fr}
+  .prontuario{display:none}
+  .cabecalho-mobile{display:block;padding:40px 26px 30px;border-bottom:1px solid var(--linha);background:var(--porcelana)}
+  .cabecalho-mobile .marca{margin-bottom:18px}
+  .cabecalho-mobile .titulo{font-size:32px;margin-bottom:12px}
+  .cabecalho-mobile .nota{margin-bottom:0;max-width:none}
+  .barra-mobile{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;background:var(--porcelana);border-bottom:1px solid var(--linha);padding:11px 26px}
+  .barra-mobile .progresso-valor{font-size:17px}
+  .corpo{padding:0 0 90px;max-width:none}
+  #app{padding:36px 26px 0}
+}
+@media(max-width:560px){
+  .hero-res{grid-template-columns:1fr;justify-items:start;gap:20px}
+  .hero-res .art{max-width:170px}
+  .duo,.secondary,.facts,.quad,.dupla{grid-template-columns:1fr}
+  .bar{grid-template-columns:100px minmax(0,1fr) 38px}
+  .secao .corpo-txt{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- Detectado pelo Netlify no deploy. O envio real é feito via fetch no fim do teste. -->
+<form name="arquetipo" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="arquetipo">
+  <input name="bot-field"><input name="nome"><input name="email"><input name="whatsapp"><input name="instagram"><input name="dominante"><input name="dominante_pct">
+  <input name="apoio"><input name="nitidez"><textarea name="mapa"></textarea><textarea name="respostas"></textarea>
+</form>
+
+<div class="folha">
+  <aside class="prontuario">
+    <div class="marca">Autoconhecimento · 2026</div>
+    <p class="titulo">Mapa de<br><em>arquétipos</em></p>
+    <p class="nota">Doze padrões de comportamento, quatro motivações de base. Responda pelo seu jeito natural de agir hoje.</p>
+    <ul class="indice" id="indice"></ul>
+    <div class="progresso">
+      <div class="progresso-topo">
+        <span class="progresso-rotulo">Respondido</span>
+        <span class="progresso-valor" id="pct">0%</span>
+      </div>
+      <div class="trilho"><div class="preenchido" id="barra"></div></div>
+    </div>
+  </aside>
+
+  <main class="corpo">
+    <div class="cabecalho-mobile">
+      <div class="marca">Autoconhecimento · 2026</div>
+      <p class="titulo">Mapa de <em>arquétipos</em></p>
+      <p class="nota">Doze padrões de comportamento, quatro motivações de base.</p>
+    </div>
+    <div class="barra-mobile">
+      <span class="progresso-rotulo">Respondido</span>
+      <span class="progresso-valor" id="pctMobile">0%</span>
+    </div>
+    <div id="app" aria-live="polite"></div>
+  </main>
+</div>
+
+<script>
+(function(){
+const QUADS = {
+  ind:{nome:"Independência e realização",desc:"Busca de sentido, liberdade e verdade",hue:"--q-ind",soft:"--q-ind-soft"},
+  mas:{nome:"Maestria e risco",desc:"Impacto, transformação e conquista",hue:"--q-mas",soft:"--q-mas-soft"},
+  per:{nome:"Pertencimento e prazer",desc:"Conexão, afeto e alegria com os outros",hue:"--q-per",soft:"--q-per-soft"},
+  est:{nome:"Estabilidade e controle",desc:"Estrutura, cuidado e construção",hue:"--q-est",soft:"--q-est-soft"}
+};
+
+const A = {
+ inocente:{nome:"Inocente",q:"ind",lema:"A vida pode ser simples e boa.",
+  resumo:"Enxerga o lado bom das coisas e procura uma vida honesta, leve e sem complicação. As pessoas confiam nele porque percebem pureza de intenção.",
+  desejo:"Viver em paz e ser feliz",medo:"Errar e ser punido por isso; decepcionar-se",estrategia:"Fazer o certo, do jeito mais simples possível",dom:"Fé, otimismo e confiança",
+  luz:["Otimismo que contagia o ambiente","Confia nas pessoas e é fácil de confiar","Integridade e coerência entre fala e ação","Recomeça com facilidade depois de uma queda"],
+  sombra:["Ingenuidade diante de riscos reais","Tende a negar problemas até que fiquem grandes","Espera que alguém resolva por ele","Foge de conflitos necessários"],
+  pessoal:"Cria ambientes acolhedores e enxerga potencial nos outros. O crescimento vem quando aprende a encarar o problema de frente sem perder a esperança, separando confiança de descuido.",
+  profissional:"Rende bem onde confiança e clareza importam: atendimento, educação, saúde preventiva, produtos naturais e bem-estar. Precisa de alguém com olhar mais cético por perto para revisar contratos, riscos e números.",
+  carreiras:"Educação infantil, atendimento ao cliente, nutrição, bem-estar, ONGs",
+  relacionar:"Seja transparente e evite jogos. Crítica dura sem cuidado o desmonta; mostre o problema já acompanhado de um caminho.",
+  marca:"Comunicação limpa, promessas simples, nada de exagero. Exemplos clássicos citados na literatura: Dove e Coca-Cola."},
+ explorador:{nome:"Explorador",q:"ind",lema:"Não me prenda.",
+  resumo:"Quer descobrir quem é ao experimentar o mundo. Rotina demais o sufoca; novidade, caminho próprio e liberdade o movem.",
+  desejo:"Liberdade para descobrir e viver uma vida autêntica",medo:"Ficar preso, conformar-se, sentir um vazio interior",estrategia:"Viajar, buscar, experimentar coisas novas",dom:"Autonomia, ambição e fidelidade a si mesmo",
+  luz:["Curiosidade que abre caminhos novos","Independência e iniciativa","Coragem para mudar quando algo não serve mais","Autenticidade"],
+  sombra:["Inquietação crônica, nada parece suficiente","Dificuldade de assumir compromissos longos","Foge quando a coisa fica pesada","Pode se isolar"],
+  pessoal:"Traz movimento e novidade para quem está perto. Amadurece quando percebe que liberdade também se constrói dentro de compromissos escolhidos, e não só fugindo deles.",
+  profissional:"Funciona bem com autonomia, variedade e espaço para testar: empreendedorismo, vendas externas, pesquisa de campo, inovação, turismo. Rende pouco sob microgerenciamento.",
+  carreiras:"Empreendedor, consultor, pesquisador de campo, fotógrafo, área comercial",
+  relacionar:"Dê espaço e autonomia, combine resultados em vez de controlar o processo. Rotina imposta sem explicação o afasta.",
+  marca:"Mensagens sobre descoberta, liberdade e caminho próprio. Exemplos clássicos: Jeep e The North Face."},
+ sabio:{nome:"Sábio",q:"ind",lema:"A verdade liberta.",
+  resumo:"Precisa entender antes de agir. Busca conhecimento, compara fontes e valoriza a análise objetiva acima da opinião.",
+  desejo:"Compreender o mundo e encontrar a verdade",medo:"Ser enganado, ignorância",estrategia:"Buscar informação, refletir, estudar",dom:"Sabedoria e inteligência",
+  luz:["Capacidade analítica e senso crítico","Objetividade nas decisões","Aprendizado contínuo","Conselheiro confiável"],
+  sombra:["Paralisia por análise","Pode parecer frio ou distante","Arrogância intelectual","Fica no pensamento e demora para agir"],
+  pessoal:"É quem os outros procuram para pensar junto. Cresce quando aceita decidir com informação suficiente, não completa, e quando valoriza também o que se sente, não só o que se prova.",
+  profissional:"Brilha em funções de diagnóstico, estratégia e ensino: pesquisa, dados, consultoria, medicina, tecnologia, jurídico. Precisa de tempo para pensar e de parceiros que puxem para a execução.",
+  carreiras:"Professor, analista, pesquisador, médico, consultor estratégico",
+  relacionar:"Traga dados, fontes e argumentos. Respeite o tempo dele para pensar e evite pedir decisões no impulso.",
+  marca:"Autoridade pelo conhecimento, conteúdo educativo, transparência técnica. Exemplos clássicos: Google e TED."},
+ heroi:{nome:"Herói",q:"mas",lema:"Onde há vontade, há caminho.",
+  resumo:"Movido por desafios. Quer provar seu valor com ações corajosas e se sente vivo quando supera o que parecia impossível.",
+  desejo:"Provar seu valor com coragem e competência",medo:"Fraqueza, vulnerabilidade, desistir",estrategia:"Ficar forte, preparado e competente",dom:"Coragem e determinação",
+  luz:["Determinação e disciplina","Protege quem é mais frágil","Supera obstáculos e inspira pelo exemplo","Alta capacidade de entrega"],
+  sombra:["Arrogância e necessidade de vencer sempre","Precisa de um inimigo para se motivar","Tendência ao esgotamento","Dificuldade em pedir ajuda ou mostrar fragilidade"],
+  pessoal:"É a pessoa que resolve. O amadurecimento vem quando entende que vulnerabilidade não é derrota, e que nem toda situação da vida precisa ser uma batalha.",
+  profissional:"Rende sob metas claras e pressão: liderança em crise, área comercial, esporte, saúde de urgência, projetos de virada. Precisa aprender a dosar ritmo para não queimar a si e a equipe.",
+  carreiras:"Gestor de alta performance, atleta, socorrista, vendas, militar",
+  relacionar:"Dê desafios reais e reconheça conquistas. Comparações e competições o motivam; descaso com o esforço dele, não.",
+  marca:"Superação, desempenho, prova de resultado. Exemplos clássicos: Nike e FedEx."},
+ foradalei:{nome:"Fora da Lei",q:"mas",lema:"O que não funciona precisa ser quebrado.",
+  resumo:"Também chamado de Rebelde. Questiona regras sem sentido e quer romper com o jeito antigo de fazer as coisas, mesmo que desagrade.",
+  desejo:"Revolução, mudar o que está errado",medo:"Ser impotente ou irrelevante",estrategia:"Desestabilizar, provocar, romper",dom:"Liberdade radical e ousadia",
+  luz:["Coragem de questionar o óbvio","Inovação disruptiva","Autenticidade sem filtro","Defende quem está à margem"],
+  sombra:["Destrói sem colocar nada no lugar","Impulsividade","Antagonismo gratuito","Autossabotagem"],
+  pessoal:"Não aceita o que está errado só porque sempre foi assim. Amadurece quando direciona a rebeldia para uma causa e aprende a construir depois de derrubar.",
+  profissional:"Útil onde é preciso mudar o sistema: startups, reestruturações, inovação, ativismo, comunicação provocativa. Sofre em culturas burocráticas sem espaço para questionar.",
+  carreiras:"Fundador de startup, criativo publicitário, ativista, consultor de mudança",
+  relacionar:"Explique o porquê das regras e dê causas reais para ele defender. Autoridade imposta só gera resistência.",
+  marca:"Posicionamento contra o padrão do mercado, linguagem direta. Exemplo clássico: Harley-Davidson."},
+ mago:{nome:"Mago",q:"mas",lema:"Faço as coisas acontecerem.",
+  resumo:"Acredita em transformação. Gosta de entender como as coisas funcionam por dentro para mudar realidades, e encanta quando consegue.",
+  desejo:"Transformar a realidade, realizar visões",medo:"Causar consequências negativas sem querer",estrategia:"Desenvolver uma visão e vivê-la",dom:"Encontrar soluções em que todos ganham",
+  luz:["Visão de futuro","Capacidade real de transformar","Carisma e poder de influência","Conecta ideias que ninguém tinha ligado"],
+  sombra:["Manipulação","Promete além do possível","Desconexão da realidade prática","Controle disfarçado de ajuda"],
+  pessoal:"Faz os outros acreditarem que a mudança é possível. Cresce quando ancora a visão em passos concretos e usa a influência com transparência.",
+  profissional:"Forte em funções de transformação: tecnologia, terapias, inovação, liderança visionária, estética e qualquer área em que o resultado parece mágico ao cliente. Precisa de um bom executor ao lado.",
+  carreiras:"Líder de inovação, terapeuta, profissional de estética, tecnologia, palestrante",
+  relacionar:"Engaje pela visão e pelo propósito da mudança. Detalhe operacional demais sem contexto o desanima.",
+  marca:"Transformação e experiência que surpreende. Exemplo clássico: Disney."},
+ caracomum:{nome:"Cara Comum",q:"per",lema:"Somos todos iguais.",
+  resumo:"Também chamado de Pessoa Comum. Valoriza pertencer, ser acessível e real. Desconfia de pose e de quem se acha superior.",
+  desejo:"Pertencer, fazer parte",medo:"Ser excluído ou deixado de lado",estrategia:"Desenvolver virtudes simples, misturar-se",dom:"Realismo, empatia e falta de pretensão",
+  luz:["Acessível e fácil de lidar","Leal ao grupo","Prático e realista","Excelente em equipe"],
+  sombra:["Anula-se para caber no grupo","Medo de se destacar","Aceita o mediano","Pode virar cínico"],
+  pessoal:"É quem faz todo mundo se sentir em casa. Amadurece quando percebe que pode se destacar sem deixar de pertencer.",
+  profissional:"Rende em ambientes colaborativos e próximos das pessoas: varejo, atendimento, RH, cooperativas, gestão de comunidade. Ótimo para construir cultura de time.",
+  carreiras:"RH, atendimento, gestão de comunidade, varejo, serviços públicos",
+  relacionar:"Seja simples e direto, sem pose. Inclua nas decisões; exclusão o fere mais do que crítica.",
+  marca:"Proximidade, preço justo, linguagem do dia a dia. Exemplo clássico: IKEA."},
+ amante:{nome:"Amante",q:"per",lema:"Só tenho olhos para você.",
+  resumo:"Vive pela conexão, pela beleza e pela intensidade das experiências. Relações e sensações dão sentido à vida.",
+  desejo:"Intimidade e experiências marcantes",medo:"Ficar sozinho, não ser desejado ou amado",estrategia:"Tornar-se mais atraente, física e emocionalmente",dom:"Paixão, gratidão e apreciação",
+  luz:["Sensibilidade estética","Calor humano","Compromisso profundo com quem ama","Cria experiências memoráveis"],
+  sombra:["Depende da aprovação dos outros","Ciúme e possessividade","Perde a própria identidade nas relações","Superficialidade com a aparência"],
+  pessoal:"Faz as pessoas se sentirem especiais. Cresce quando aprende a amar sem se perder, sustentando a própria identidade dentro das relações.",
+  profissional:"Natural em áreas de beleza, experiência e relação: estética, moda, gastronomia, hotelaria, design de experiência, vendas consultivas de alto padrão.",
+  carreiras:"Profissional de estética, designer, chef, consultor de luxo, hotelaria",
+  relacionar:"Demonstre apreço de forma pessoal e cuide do ambiente. Frieza e impessoalidade o afastam.",
+  marca:"Beleza, sensorialidade, exclusividade. Comum em marcas de estética e luxo. Exemplo clássico: Chanel."},
+ bobo:{nome:"Bobo da Corte",q:"per",lema:"A vida é curta demais para ser chata.",
+  resumo:"Também chamado de Comediante. Vive o momento, usa o humor para aliviar, aproximar e às vezes dizer verdades que ninguém diria.",
+  desejo:"Viver o presente com alegria",medo:"Tédio, ser entediante",estrategia:"Brincar, fazer rir, ser leve",dom:"Alegria e leveza",
+  luz:["Torna qualquer ambiente mais leve","Criatividade espontânea","Quebra hierarquias e aproxima pessoas","Resiliência pelo humor"],
+  sombra:["Usa a piada para fugir do que é sério","Irresponsabilidade","Pode desrespeitar sem perceber","Dificuldade em ser levado a sério"],
+  pessoal:"É a pessoa que todos querem por perto em momentos difíceis. Amadurece quando permite que o humor conviva com profundidade, sem usá-lo como escudo.",
+  profissional:"Rende em comunicação, criação de conteúdo, entretenimento, vendas e cultura organizacional. Precisa de estrutura mínima para entregar no prazo.",
+  carreiras:"Criador de conteúdo, publicitário, apresentador, vendedor, facilitador",
+  relacionar:"Dê espaço para leveza, mas combine com clareza o que é inegociável. Ambientes rígidos demais o apagam.",
+  marca:"Humor, irreverência, conteúdo que se compartilha. Exemplos clássicos: M&M's e Old Spice."},
+ cuidador:{nome:"Cuidador",q:"est",lema:"Cuidar do outro como de si mesmo.",
+  resumo:"Percebe rápido quem precisa de ajuda e se realiza protegendo, acolhendo e servindo.",
+  desejo:"Proteger e cuidar das pessoas",medo:"Egoísmo e ingratidão",estrategia:"Fazer pelos outros",dom:"Compaixão e generosidade",
+  luz:["Empatia profunda","Protege e acolhe","Generosidade","Gera confiança imediata"],
+  sombra:["Martírio, se sacrifica além do saudável","Controla por meio do cuidado","Esgotamento","Dificuldade em dizer não"],
+  pessoal:"É o porto seguro de muita gente. Cresce quando inclui a si mesmo na lista de quem merece cuidado e aprende a colocar limites sem culpa.",
+  profissional:"Natural em saúde, educação, terapia, RH, sucesso do cliente e pós-venda. Precisa de processos que protejam seu tempo e energia.",
+  carreiras:"Saúde, enfermagem, psicologia, educação, sucesso do cliente",
+  relacionar:"Reconheça o cuidado que ele oferece e pergunte do que ele precisa. Ingratidão o machuca mais do que parece.",
+  marca:"Acolhimento, segurança, cuidado em cada etapa. Exemplos clássicos: Johnson & Johnson e Volvo."},
+ criador:{nome:"Criador",q:"est",lema:"Se pode ser imaginado, pode ser feito.",
+  resumo:"Precisa criar algo que tenha a sua marca. Pensa o tempo todo em como melhorar, reinventar e dar forma a ideias.",
+  desejo:"Criar algo de valor duradouro",medo:"Mediocridade, ter uma visão e não realizá-la",estrategia:"Desenvolver técnica e controle sobre a obra",dom:"Imaginação e capacidade de dar forma",
+  luz:["Originalidade","Senso estético apurado","Transforma ideia em coisa concreta","Inovação constante"],
+  sombra:["Perfeccionismo","Muitos projetos começados e poucos terminados","Dificuldade com crítica","Isolamento no próprio mundo"],
+  pessoal:"Enxerga possibilidades onde outros veem o comum. Amadurece quando aceita entregar o bom em vez de esperar o perfeito, e quando compartilha o processo.",
+  profissional:"Rende em design, desenvolvimento, arquitetura, produto, arte, gastronomia autoral. Precisa de autonomia criativa e de alguém que ajude a fechar ciclos.",
+  carreiras:"Designer, desenvolvedor, arquiteto, artista, criador de produtos",
+  relacionar:"Valorize a ideia antes de criticar a execução e dê liberdade no como. Padronização sem motivo o frustra.",
+  marca:"Autoria, design, personalização. Exemplos clássicos: Lego e Adobe."},
+ governante:{nome:"Governante",q:"est",lema:"Ordem gera liberdade.",
+  resumo:"Assume o comando com naturalidade. Organiza, estrutura e pensa em construir algo estável e duradouro.",
+  desejo:"Controle, estabilidade e prosperidade",medo:"Caos, perder o controle ou a posição",estrategia:"Exercer liderança e criar estrutura",dom:"Responsabilidade e liderança",
+  luz:["Visão sistêmica","Assume responsabilidade","Organização e método","Constrói legado"],
+  sombra:["Autoritarismo","Centraliza demais","Rigidez diante do novo","Medo de delegar"],
+  pessoal:"É quem organiza a família, o grupo e os planos. Cresce quando aprende a delegar de verdade e entende que controle total não existe.",
+  profissional:"Natural em gestão, direção, finanças, jurídico e operações. Rende em posições de decisão; precisa abrir espaço para a autonomia do time.",
+  carreiras:"Diretor, gestor, administrador, advogado, área financeira",
+  relacionar:"Seja confiável, cumpra prazos e traga soluções organizadas. Improviso e desorganização o tiram do sério.",
+  marca:"Autoridade, excelência, solidez. Exemplos clássicos: Rolex e Mercedes-Benz."}
+};
+
+const L = {
+ inocente:["Acredito que, no fim, as coisas tendem a dar certo.","Prefiro uma vida simples, honesta e sem complicação."],
+ explorador:["Rotina repetida por muito tempo me tira do sério.","Preciso de liberdade para decidir como e quando fazer as coisas."],
+ sabio:["Antes de decidir, quero entender a fundo como a coisa funciona.","Pesquiso e comparo fontes por puro prazer."],
+ heroi:["Desafios difíceis me motivam mais do que me assustam.","Quando dizem que algo é impossível, quero provar o contrário."],
+ foradalei:["Questiono regras que não fazem sentido, mesmo que todo mundo as siga.","Não me importo em desagradar quando acredito que algo precisa mudar."],
+ mago:["Acredito que uma boa visão pode mudar completamente uma realidade.","Gosto de transformar situações e fazer as coisas acontecerem de verdade."],
+ caracomum:["Eu me sinto bem em grupos onde ninguém é mais que ninguém.","Desconfio de quem se acha melhor que os outros."],
+ amante:["Beleza, estética e sensações pesam muito nas minhas escolhas.","Relações próximas e intensas são o que dá sentido à minha vida."],
+ bobo:["Uso o humor para aliviar tensões, até em momentos sérios.","Acho que a vida é curta demais para ser levada tão a sério."],
+ cuidador:["Percebo rápido quando alguém precisa de ajuda.","Muitas vezes coloco as necessidades dos outros antes das minhas."],
+ criador:["Sinto necessidade de criar coisas que tenham a minha marca.","Prefiro fazer do meu jeito a seguir um modelo pronto."],
+ governante:["Assumir o comando me deixa à vontade quando algo precisa de direção.","Gosto de organizar, estruturar e manter as coisas sob controle."]
+};
+const SC = [
+ {t:"Um projeto importante deu errado na reta final. Sua primeira reação é...",o:{inocente:"Acreditar que vai se resolver e manter o clima tranquilo",heroi:"Arregaçar as mangas e virar o jogo",caracomum:"Reunir o grupo para resolver junto, sem procurar culpados",cuidador:"Ver primeiro como as pessoas envolvidas estão"}},
+ {t:"Você ganhou um fim de semana livre, sem compromisso. O que mais atrai você?",o:{explorador:"Pegar a estrada para um lugar onde nunca fui",foradalei:"Fazer algo fora do roteiro que ninguém esperaria de mim",amante:"Uma experiência marcante com quem amo, com boa comida e um lugar bonito",criador:"Mergulhar num projeto pessoal que está na cabeça há tempos"}},
+ {t:"Numa reunião em que ninguém se entende, você costuma...",o:{sabio:"Fazer as perguntas certas e organizar os fatos",mago:"Propor uma ideia nova que muda o rumo da conversa",bobo:"Fazer um comentário que quebra a tensão",governante:"Assumir a condução e definir os próximos passos"}},
+ {t:"O que você mais gostaria que dissessem sobre você?",o:{inocente:"Que é uma pessoa do bem, de total confiança",foradalei:"Que teve coragem de mudar o que ninguém mudava",bobo:"Que a vida fica mais leve com você por perto",criador:"Que criou algo realmente original"}},
+ {t:"No trabalho, o que mais frustra você?",o:{explorador:"Rotina engessada, sem espaço para experimentar",mago:"Ver um potencial enorme sendo desperdiçado",caracomum:"Gente que se acha superior aos colegas",governante:"Desorganização e falta de comando"}},
+ {t:"Qual destes elogios mais toca você?",o:{sabio:"Você me fez enxergar isso de outro jeito",heroi:"Ninguém mais teria conseguido",amante:"Estar com você é sempre especial",cuidador:"Você cuidou de mim quando eu mais precisava"}},
+ {t:"Na hora de escolher onde morar, o que pesa mais?",o:{inocente:"Tranquilidade e um ambiente simples e seguro",mago:"Um lugar com uma energia que transforma a rotina",amante:"Beleza, conforto e estar perto de quem amo",governante:"Localização estratégica e valorização no longo prazo"}},
+ {t:"Um amigo chama você para um desafio de última hora. Você topa se...",o:{explorador:"For algo que nunca fiz",heroi:"For difícil o bastante para valer a pena",bobo:"A história for render boas risadas",cuidador:"For para ajudar alguém"}},
+ {t:"Diante de uma regra nova no trabalho, você...",o:{sabio:"Quer entender a lógica por trás antes de opinar",foradalei:"Questiona abertamente se ela não fizer sentido",caracomum:"Segue o que o grupo decidir",criador:"Pensa em como faria de um jeito melhor"}},
+ {t:"Se a sua vida virasse um filme, você gostaria que fosse...",o:{inocente:"Uma história leve, com final feliz",heroi:"Uma jornada de superação",amante:"Um romance intenso",criador:"Um filme autoral, com estética única"}},
+ {t:"Numa viagem em grupo, você é quem...",o:{explorador:"Sai para descobrir o lugar por conta própria",foradalei:"Propõe fugir do roteiro turístico óbvio",bobo:"Garante as melhores histórias e risadas",governante:"Organiza o roteiro, as reservas e os horários"}},
+ {t:"Quando alguém pede seu conselho, você costuma...",o:{sabio:"Analisar com calma e dar uma visão objetiva",mago:"Mostrar uma saída que a pessoa não estava enxergando",caracomum:"Contar como passou por algo parecido",cuidador:"Acolher primeiro e só depois aconselhar"}}
+];
+
+const KEYS = Object.keys(A);
+const ROUND = [
+ ["heroi","cuidador","sabio","bobo","governante","explorador","amante","criador","inocente","foradalei","caracomum","mago"],
+ ["criador","caracomum","mago","inocente","heroi","amante","governante","bobo","explorador","cuidador","foradalei","sabio"]
+];
+const LIK = ROUND.flatMap((r,k)=>r.map(id=>({type:"l",id,t:L[id][k]})));
+const ITEMS = [];
+SC.forEach((sc,i)=>{
+  const ids=Object.keys(sc.o), rot=i%4;
+  ITEMS.push(LIK[2*i],LIK[2*i+1],{type:"s",t:sc.t,opts:ids.slice(rot).concat(ids.slice(0,rot)).map(id=>({id,t:sc.o[id]}))});
+});
+const LABELS = ["Nada a ver comigo","Pouco","Bastante","Sou exatamente assim"];
+
+/* ilustrações em traço */
+function star(x,y,r){return `<path d="M${x} ${y-r} L${x+r*.28} ${y-r*.28} L${x+r} ${y} L${x+r*.28} ${y+r*.28} L${x} ${y+r} L${x-r*.28} ${y+r*.28} L${x-r} ${y} L${x-r*.28} ${y-r*.28} Z" fill="var(--gold)"/>`}
+function heart(x,y,s,fill){return `<path transform="translate(${x} ${y}) scale(${s})" d="M0 6 C-10 -6 -22 4 -12 14 L0 26 L12 14 C22 4 10 -6 0 6 Z" fill="${fill}" stroke="var(--ink)" stroke-width="${2/s}"/>`}
+const S = 'stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
+const ATTR = {
+ inocente:{back:`<circle cx="120" cy="100" r="60" fill="none" stroke="var(--hue)" stroke-width="3" stroke-dasharray="3 11" stroke-linecap="round"/><circle cx="120" cy="100" r="74" fill="none" stroke="var(--hue)" stroke-width="2" stroke-dasharray="2 14" opacity=".6"/>`,
+  front:`<line x1="168" y1="232" x2="168" y2="186" ${S}/><path d="M168 205 q12 -4 14 -14 q-12 2 -14 14z" fill="var(--hue)" ${S}/>${[0,72,144,216,288].map(a=>`<circle cx="${168+9*Math.cos(a*Math.PI/180)}" cy="${180+9*Math.sin(a*Math.PI/180)}" r="6" fill="var(--paper)" ${S}/>`).join('')}<circle cx="168" cy="180" r="4" fill="var(--gold)"/>`},
+ explorador:{back:`<path d="M0 205 L55 140 L88 175 L140 112 L240 210 L240 240 L0 240 Z" fill="var(--hue)" opacity=".28"/><path d="M128 126 L140 112 L152 126" fill="none" ${S}/>`,
+  front:`<path d="M96 160 L100 240 M144 160 L140 240" stroke="var(--hue)" stroke-width="7" stroke-linecap="round"/><circle cx="186" cy="62" r="18" fill="var(--paper)" ${S}/><path d="M186 48 L191 62 L186 76 L181 62 Z" fill="var(--hue)"/><circle cx="186" cy="62" r="2.5" fill="var(--ink)"/>`},
+ sabio:{back:`${star(56,58,7)}${star(190,48,5)}`,
+  front:`<circle cx="108" cy="104" r="10" fill="none" ${S}/><circle cx="132" cy="104" r="10" fill="none" ${S}/><line x1="118" y1="103" x2="122" y2="103" ${S}/><path d="M78 196 L120 206 L162 196 L162 226 L120 236 L78 226 Z" fill="var(--paper)" ${S}/><line x1="120" y1="206" x2="120" y2="236" ${S}/><path d="M88 206 L110 211 M88 214 L110 219 M130 211 L152 206 M130 219 L152 214" stroke="var(--hue)" stroke-width="2" stroke-linecap="round"/>`},
+ heroi:{back:`<path d="M74 168 L36 240 L204 240 L166 168 Z" fill="var(--hue)" ${S}/>`,
+  front:`<path d="M148 172 h44 v28 q0 24 -22 36 q-22 -12 -22 -36 z" fill="var(--paper)" ${S}/><path d="M170 184 L174 196 L186 196 L176 203 L180 215 L170 208 L160 215 L164 203 L154 196 L166 196 Z" fill="var(--gold)"/>`},
+ foradalei:{back:`<path d="M80 126 C70 52 170 52 160 126 L172 168 L68 168 Z" fill="var(--ink)" opacity=".9"/>`,
+  front:`<ellipse cx="48" cy="200" rx="12" ry="7" fill="none" stroke="var(--hue)" stroke-width="4" transform="rotate(-25 48 200)"/><ellipse cx="68" cy="190" rx="12" ry="7" fill="none" stroke="var(--hue)" stroke-width="4" transform="rotate(-25 68 190)"/><ellipse cx="186" cy="190" rx="12" ry="7" fill="none" stroke="var(--hue)" stroke-width="4" transform="rotate(25 186 190)"/><path d="M84 180 l6 -8 M90 184 l9 -3 M168 178 l-6 -8" ${S}/>`},
+ mago:{back:`${star(58,70,10)}${star(186,52,7)}${star(196,120,5)}${star(46,128,5)}`,
+  front:`<line x1="146" y1="232" x2="192" y2="166" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>${star(194,162,14)}<circle cx="194" cy="162" r="3" fill="var(--paper)"/>`},
+ caracomum:{back:``,
+  front:`<path d="M86 88 Q120 52 154 88 Z" fill="var(--hue)" ${S}/><path d="M146 86 L178 92 L150 94 Z" fill="var(--hue)" ${S}/><rect x="158" y="190" width="28" height="32" rx="4" fill="var(--paper)" ${S}/><path d="M186 198 q12 0 12 9 q0 9 -12 9" fill="none" ${S}/><path d="M166 182 q3 -5 0 -10 M176 182 q3 -5 0 -10" stroke="var(--muted)" stroke-width="2" fill="none" stroke-linecap="round"/>`},
+ amante:{back:`${heart(52,60,.7,'var(--hue)')}${heart(184,46,.5,'var(--paper)')}`,
+  front:`${heart(120,180,1,'var(--hue)')}<line x1="174" y1="236" x2="182" y2="196" ${S}/><circle cx="183" cy="190" r="10" fill="var(--hue)" ${S}/><path d="M177 190 q6 -6 12 0" fill="none" ${S}/><path d="M178 214 q-10 -2 -12 -10 q10 0 12 10z" fill="var(--q-ind)" ${S}/>`},
+ bobo:{back:``,
+  front:`<path d="M88 92 L62 46 L104 72 L120 34 L136 72 L178 46 L152 92 Z" fill="var(--hue)" ${S}/><circle cx="62" cy="46" r="7" fill="var(--gold)" ${S}/><circle cx="120" cy="34" r="7" fill="var(--gold)" ${S}/><circle cx="178" cy="46" r="7" fill="var(--gold)" ${S}/><path d="M92 160 L104 176 L120 162 L136 176 L148 160" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/>`},
+ cuidador:{back:``,
+  front:`<path d="M84 196 Q120 236 156 196" fill="var(--skin)" ${S}/><line x1="120" y1="212" x2="120" y2="180" stroke="var(--q-ind)" stroke-width="3" stroke-linecap="round"/><path d="M120 192 q-16 -2 -18 -16 q16 0 18 16z" fill="var(--hue)" ${S}/><path d="M120 186 q14 -4 16 -18 q-14 2 -16 18z" fill="var(--hue)" ${S}/>${heart(190,52,.55,'var(--hue)')}`},
+ criador:{back:``,
+  front:`<path d="M146 186 c18 -16 50 -8 48 14 c-1 12 -14 10 -18 18 c-4 9 -20 12 -30 2 c-8 -8 -12 -24 0 -34 z" fill="var(--paper)" ${S}/><circle cx="160" cy="196" r="4.5" fill="var(--hue)"/><circle cx="174" cy="190" r="4.5" fill="var(--gold)"/><circle cx="184" cy="202" r="4.5" fill="var(--q-ind)"/><circle cx="160" cy="212" r="5" fill="var(--bg)" ${S}/><line x1="70" y1="236" x2="110" y2="176" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><path d="M110 176 l6 -10 l4 3 l-5 11 z" fill="var(--hue)" ${S}/>`},
+ governante:{back:``,
+  front:`<path d="M90 74 L96 46 L108 62 L120 40 L132 62 L144 46 L150 74 Z" fill="var(--gold)" ${S}/><circle cx="120" cy="58" r="3.5" fill="var(--hue)"/><line x1="60" y1="236" x2="70" y2="168" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/><circle cx="71" cy="162" r="9" fill="var(--gold)" ${S}/><path d="M92 158 L120 172 L148 158" fill="none" stroke="var(--hue)" stroke-width="4"/>`}
+};
+let svgN=0;
+function art(id){
+  const q = QUADS[A[id].q], at = ATTR[id], n = ++svgN;
+  return `<svg viewBox="0 0 240 240" role="img" aria-label="Ilustração do arquétipo ${A[id].nome}" style="--hue:var(${q.hue});--soft:var(${q.soft})">
+  <defs><clipPath id="c${n}"><circle cx="120" cy="120" r="116"/></clipPath></defs>
+  <circle cx="120" cy="120" r="116" fill="var(--soft)"/>
+  <g clip-path="url(#c${n})">${at.back}
+   <path d="M52 240 C52 182 86 158 120 158 C154 158 188 182 188 240 Z" fill="var(--fig)" ${S}/>
+   <path d="M108 128 h24 v34 q-12 10 -24 0 z" fill="var(--skin)" ${S}/>
+   <ellipse cx="120" cy="102" rx="30" ry="35" fill="var(--skin)" ${S}/>
+   <path d="M90 100 C86 64 154 60 150 100 C144 82 104 78 90 100 Z" fill="var(--ink)"/>
+   <circle cx="109" cy="106" r="2.6" fill="var(--ink)"/><circle cx="131" cy="106" r="2.6" fill="var(--ink)"/>
+   <path d="M112 120 Q120 126 128 120" fill="none" ${S}/>
+   ${at.front}</g>
+  <circle cx="120" cy="120" r="116" fill="none" stroke="var(--line)" stroke-width="1.5"/></svg>`;
+}
+
+
+/* ---------- ESTADO ---------- */
+const NOVO=()=>({name:"",email:"",whatsapp:"",instagram:"",ans:Array(ITEMS.length).fill(null),i:0,view:"intro",detail:null,sent:null});
+let st=NOVO();
+const SK="arquetipos-v4";
+try{const s=JSON.parse(localStorage.getItem(SK)||"null"); if(s&&Array.isArray(s.ans)&&s.ans.length===ITEMS.length) st=Object.assign(st,s,{detail:null});}catch(e){}
+function save(){try{localStorage.setItem(SK,JSON.stringify({name:st.name,email:st.email,whatsapp:st.whatsapp,instagram:st.instagram,ans:st.ans,i:st.i,sent:st.sent,view:st.view==="detail"?(completo()?"result":"intro"):st.view}))}catch(e){}}
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const completo=()=>st.ans.every(v=>v!==null);
+const topo=()=>window.scrollTo({top:0});
+const REGRAS={
+  nome:v=>v.length>=2||"Informe seu nome.",
+  email:v=>/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)||"Confira o endereço — falta o @ ou o final do domínio.",
+  whatsapp:v=>/^\(\d{2}\) \d{4,5}-\d{4}$/.test(v)||"Informe DDD e número, como (21) 99999-9999.",
+  instagram:()=>true
+};
+const contatoOk=()=>["nome","email","whatsapp"].every(c=>REGRAS[c]((c==="nome"?st.name:st[c]).trim())===true);
+function mascararTelefone(v){
+  const d=v.replace(/\D/g,"").slice(0,11);
+  if(d.length<=2) return d.length?"("+d:"";
+  if(d.length<=6) return "("+d.slice(0,2)+") "+d.slice(2);
+  if(d.length<=10) return "("+d.slice(0,2)+") "+d.slice(2,6)+"-"+d.slice(6);
+  return "("+d.slice(0,2)+") "+d.slice(2,7)+"-"+d.slice(7);
+}
+
+function scores(){
+  const lk={}, pk={}; KEYS.forEach(k=>{lk[k]=0;pk[k]=0});
+  const vals=[];
+  ITEMS.forEach((it,i)=>{
+    const v=st.ans[i];
+    if(it.type==="l"){lk[it.id]+=(v??2.5);vals.push(v??2.5)}
+    else if(v) pk[v]++;
+  });
+  const rows=KEYS.map(k=>{
+    const l=(lk[k]-2)/6, p=pk[k]/4;
+    return {id:k,l,p,pct:Math.round(100*(0.5*l+0.5*p))};
+  }).sort((a,b)=>b.pct-a.pct||b.p-a.p);
+  const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+  const sd=Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
+  const topL=[...rows].sort((a,b)=>b.l-a.l).slice(0,3).map(r=>r.id);
+  const topP=[...rows].sort((a,b)=>b.p-a.p).slice(0,3).map(r=>r.id);
+  const agree=topL.includes(rows[0].id)&&topP.includes(rows[0].id);
+  const gap=rows[0].pct-rows[1].pct;
+  let nit="Média";
+  if(gap>=10&&agree&&sd>=0.6) nit="Alta"; else if(sd<0.45||(gap<5&&!agree)) nit="Baixa";
+  return {rows,nit,agree,sd,gap};
+}
+
+/* ---------- PAINEL LATERAL ---------- */
+function painel(){
+  const done=st.ans.filter(v=>v!==null).length, p=Math.round(done/ITEMS.length*100);
+  $("#barra").style.width=p+"%"; $("#pct").textContent=p+"%"; $("#pctMobile").textContent=p+"%";
+  const dom = (st.view==="result"&&completo()) ? A[scores().rows[0].id].q : (st.view==="detail"&&st.detail ? A[st.detail].q : null);
+  $("#indice").innerHTML=Object.entries(QUADS).map(([k,q],n)=>`<li class="${k===dom?"ativo":""}"><span class="num">0${n+1}</span><span>${q.nome}</span></li>`).join("");
+}
+
+/* ---------- ENVIO (Netlify Forms) ---------- */
+function enviar(R){
+  const chave=[st.ans.join(""),st.email,st.whatsapp,st.name,st.instagram].join("|");
+  if(st.sent===chave) return;
+  const sc=R.rows;
+  const dados=new URLSearchParams({
+    "form-name":"arquetipo",
+    nome:st.name||"",
+    email:st.email||"",
+    whatsapp:st.whatsapp||"",
+    instagram:st.instagram||"",
+    dominante:A[sc[0].id].nome,
+    dominante_pct:sc[0].pct+"%",
+    apoio:`${A[sc[1].id].nome} (${sc[1].pct}%), ${A[sc[2].id].nome} (${sc[2].pct}%)`,
+    nitidez:R.nit,
+    mapa:sc.map(s=>`${A[s.id].nome} ${s.pct}%`).join(" · "),
+    respostas:st.ans.join(",")
+  });
+  fetch("/archetype/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:dados.toString()})
+    .then(r=>{if(!r.ok) throw new Error("HTTP "+r.status); st.sent=chave; save();})
+    .catch(e=>console.error("Falha ao registrar resultado:",e));
+}
+
+/* ---------- TELAS ---------- */
+function intro(){
+  const answered=st.ans.filter(v=>v!==null).length;
+  app.innerHTML=`<div class="stack-lg">
+   <div class="stack">
+    <span class="eyebrow">36 toques · cerca de 5 minutos</span>
+    <h1>Qual é o seu arquétipo?</h1>
+    <p class="lede">Um teste baseado nos 12 arquétipos de Carol S. Pearson e Margaret Mark, que partem da teoria de Carl Jung. São 24 frases e 12 situações do dia a dia, só com toques, sem nada para digitar. Responda pelo seu jeito natural de agir hoje, e não por como gostaria de ser.</p>
+   </div>
+   <div>
+    <div class="row">
+      <button class="btn" id="go">${answered&&answered<ITEMS.length?"Continuar de onde parou":"Começar o teste"}</button>
+      ${answered?`<button class="link" id="reset">Recomeçar do zero</button>`:""}
+      ${answered===ITEMS.length?`<button class="link" id="seeres">Ver último resultado</button>`:""}
+    </div>
+   </div>
+   <div class="stack">
+    <span class="eyebrow">As quatro motivações de base</span>
+    <div class="quad">${Object.entries(QUADS).map(([k,q])=>`<div><b><span class="dot" style="background:var(${q.hue})"></span>${q.nome}</b><span>${q.desc}</span><span class="membros">${KEYS.filter(id=>A[id].q===k).map(id=>A[id].nome).join(", ")}</span></div>`).join("")}</div>
+   </div>
+   ${gallery("Ou leia sobre cada arquétipo")}
+   ${method()}
+  </div>`;
+  $("#go").onclick=()=>{if(completo()){st.ans.fill(null);st.i=0} st.view="quiz";save();render();topo()};
+  const r=$("#reset"); if(r) r.onclick=()=>{st.ans=Array(ITEMS.length).fill(null);st.i=0;st.view="quiz";save();render();topo()};
+  const sr=$("#seeres"); if(sr) sr.onclick=()=>{st.view=contatoOk()?"result":"dados";render();topo()};
+  bindGallery();
+}
+
+function optVals(it){return it.type==="l"?[1,2,3,4]:it.opts.map(o=>o.id)}
+function quiz(){
+  const it=ITEMS[st.i], v=st.ans[st.i];
+  const texts = it.type==="l" ? LABELS : it.opts.map(o=>o.t), vals=optVals(it);
+  app.innerHTML=`<div class="stack-lg">
+   <div class="qmeta"><span>${st.name?esc(st.name)+" · ":""}<span class="n">${String(st.i+1).padStart(2,"0")}</span> / ${ITEMS.length}</span><span>${it.type==="l"?"Frase":"Situação"}</span></div>
+   <div class="stack" style="gap:12px">
+    <span class="eyebrow">${it.type==="l"?"Quanto esta frase descreve você?":"Escolha a opção mais parecida com você"}</span>
+    <p class="statement${it.type==="s"?" sc":""}">${it.t}</p>
+   </div>
+   <div class="opts" role="radiogroup" aria-label="${it.type==="l"?"Quanto esta frase descreve você":"Escolha uma opção"}">
+    ${texts.map((t,k)=>`<button class="opt${v===vals[k]?" sel":""}" role="radio" aria-checked="${v===vals[k]}" data-k="${k}"><span class="n">${it.type==="l"?k+1:"ABCD"[k]}</span>${t}</button>`).join("")}
+   </div>
+   <div class="row" style="justify-content:space-between">
+    <button class="btn ghost" id="back" ${st.i===0?"disabled":""}>Voltar</button>
+    <button class="link" id="exit">Sair e salvar</button>
+   </div>
+   <p class="atalho">No teclado: ${it.type==="l"?"1 a 4":"A a D"} para responder, Backspace para voltar.</p>
+  </div>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(vals[+b.dataset.k]));
+  $("#back").onclick=()=>{if(st.i>0){st.i--;save();render()}};
+  $("#exit").onclick=()=>{st.view="intro";save();render();topo()};
+}
+function choose(v){
+  st.ans[st.i]=v; save();
+  const vals=optVals(ITEMS[st.i]); app.querySelectorAll(".opt").forEach((b,k)=>b.classList.toggle("sel",vals[k]===v));
+  painel();
+  setTimeout(()=>{
+    const next=st.ans.findIndex((x,i)=>x===null&&i>st.i);
+    const any=st.ans.findIndex(x=>x===null);
+    if(next>-1) st.i=next; else if(any>-1) st.i=any; else st.view="dados";
+    save();render();topo();
+  },170);
+}
+document.addEventListener("keydown",e=>{
+  if(st.view!=="quiz"||e.target.tagName==="INPUT")return;
+  const it=ITEMS[st.i];
+  if(it.type==="l"&&e.key>="1"&&e.key<="4")choose(+e.key);
+  const m="abcd".indexOf(e.key.toLowerCase());
+  if(it.type==="s"&&m>-1)choose(it.opts[m].id);
+  if(e.key==="Backspace"&&st.i>0){st.i--;save();render()}
+});
+
+function dados(){
+  if(!completo()){st.view="quiz";return quiz()}
+  const campo=(id,rot,obr,attrs,ajuda,val)=>`<div><label for="f-${id}">${rot}${obr?' <span class="obrigatorio">*</span>':""}</label>${ajuda?`<span class="ajuda">${ajuda}</span>`:""}<div class="tracado"><input type="text" id="f-${id}" name="${id}" value="${esc(val)}" ${attrs}></div><p class="aviso" id="a-${id}"></p></div>`;
+  app.innerHTML=`<div class="stack-lg">
+   <div class="stack">
+    <span class="eyebrow">Última etapa · seu mapa está pronto</span>
+    <h2 style="font-size:clamp(30px,4.4vw,40px)">Para quem vai o resultado?</h2>
+    <p class="lede">Preencha seus dados para ver o resultado. Ele fica registrado junto com as suas respostas.</p>
+   </div>
+   <form id="fdados" novalidate class="stack" style="gap:30px">
+    <div class="dupla">
+     ${campo("nome","Nome",true,'autocomplete="name" required',"",st.name)}
+     ${campo("email","E-mail",true,'type="email" inputmode="email" autocomplete="email" placeholder="seuemail@dominio.com" required',"",st.email)}
+    </div>
+    <div class="dupla">
+     ${campo("whatsapp","WhatsApp",true,'type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="(21) 99999-9999" required',"",st.whatsapp)}
+     ${campo("instagram","Instagram",false,'autocapitalize="off" spellcheck="false" placeholder="@seuperfil"',"",st.instagram)}
+    </div>
+    <div class="row">
+     <button type="submit" class="btn">Ver meu resultado</button>
+     <button type="button" class="link" id="voltarq">Voltar às perguntas</button>
+    </div>
+    <p class="sigilo">Seus dados são usados apenas para enviar e acompanhar o seu resultado e não são compartilhados com terceiros.</p>
+   </form>
+  </div>`;
+  const f=$("#fdados");
+  const chave=c=>c==="nome"?"name":c;
+  const validar=inp=>{
+    const c=inp.name, v=inp.value.trim(), ok=REGRAS[c](v), tr=inp.closest(".tracado"), av=$("#a-"+c);
+    const erro = !v ? (inp.required?"Campo obrigatório.":"") : (ok===true?"":ok);
+    tr.classList.toggle("invalido",!!erro); av.textContent=erro; av.classList.toggle("visivel",!!erro);
+    return !erro;
+  };
+  f.querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input",()=>{
+      if(inp.name==="whatsapp") inp.value=mascararTelefone(inp.value);
+      st[chave(inp.name)]=inp.value.trim(); save();
+      if(inp.closest(".tracado").classList.contains("invalido")) validar(inp);
+    });
+    inp.addEventListener("blur",()=>{
+      if(inp.name==="instagram"){const v=inp.value.trim().replace(/^@+/,"").replace(/\s+/g,"");inp.value=v?"@"+v:"";st.instagram=inp.value;save()}
+      if(inp.value.trim()) validar(inp);
+    });
+  });
+  f.onsubmit=e=>{
+    e.preventDefault();
+    const ruins=[...f.querySelectorAll("input")].filter(i=>!validar(i));
+    if(ruins.length){ruins[0].focus();return}
+    st.view="result";save();render();topo();
+  };
+  $("#voltarq").onclick=()=>{st.i=ITEMS.length-1;st.view="quiz";save();render();topo()};
+}
+
+function bloco(n,titulo,html){
+  return `<div class="secao"><div class="secao-topo"><span class="secao-num">${n}</span><h3>${titulo}</h3></div><div class="corpo-txt stack" style="gap:8px">${html}</div></div>`;
+}
+function profile(id,opts={}){
+  const a=A[id], q=QUADS[a.q];
+  return `<div class="stack-lg" style="--hue:var(${q.hue});--soft:var(${q.soft})">
+   <div class="hero-res">
+    <div class="art">${art(id)}</div>
+    <div class="stack">
+      ${opts.kicker||""}
+      <h2 class="nome-arq">${a.nome}</h2>
+      <p class="motto">${a.lema}</p>
+      <span class="tag"><span class="dot" style="background:var(--hue)"></span>${q.nome}</span>
+    </div>
+   </div>
+   <p class="resumo">${a.resumo}</p>
+   ${opts.extra||""}
+   <dl class="facts">
+    <div><dt>Desejo central</dt><dd>${a.desejo}</dd></div>
+    <div><dt>Maior medo</dt><dd>${a.medo}</dd></div>
+    <div><dt>Estratégia</dt><dd>${a.estrategia}</dd></div>
+    <div><dt>Dom</dt><dd>${a.dom}</dd></div>
+   </dl>
+   <div class="duo">
+    <div><h3 class="luz-h">Lado luz</h3><ul>${a.luz.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    <div><h3 class="sombra-h">Lado sombra</h3><ul>${a.sombra.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+   </div>
+   ${bloco("01","Vida pessoal",`<p>${a.pessoal}</p>`)}
+   ${bloco("02","Vida profissional",`<p>${a.profissional}</p><p class="note">Áreas onde costuma render: ${a.carreiras}.</p>`)}
+   ${bloco("03","Como se relacionar ou liderar",`<p>${a.relacionar}</p>`)}
+   ${bloco("04","Como arquétipo de marca",`<p>${a.marca}</p>`)}
+  </div>`;
+}
+
+function result(){
+  if(!completo()){st.view="intro";return intro()}
+  if(!contatoOk()){st.view="dados";return dados()}
+  const R=scores(), sc=R.rows, top=sc[0], who=st.name?esc(st.name):"Você";
+  enviar(R);
+  const why = R.nit==="Alta" ? "O dominante apareceu com folga e de forma coerente nas frases e nas situações."
+    : R.nit==="Média" ? `O resultado é consistente, mas o ${A[sc[1].id].nome} ficou perto. Vale ler os dois: muita gente opera com uma combinação.`
+    : (R.sd<0.45 ? "Suas notas nas frases ficaram muito parecidas entre si, o que deixa o resultado menos nítido. Refazer o teste respondendo pelo seu comportamento real, sem receio de dar notas baixas, costuma ajudar."
+      : `Os primeiros colocados ficaram muito próximos, e as frases e as situações apontaram caminhos diferentes. Leia o ${A[top.id].nome} e o ${A[sc[1].id].nome} e veja qual descreve melhor você.`);
+  const extra = `<p class="callout"><b>Nitidez do resultado: ${R.nit}.</b> ${why}</p>`;
+  app.innerHTML=`<div class="stack-lg">
+   ${profile(top.id,{kicker:`<span class="eyebrow">${who} · arquétipo dominante · ${top.pct}%</span>`,extra})}
+   <div class="secao">
+    <div class="secao-topo"><span class="secao-num">05</span><h3>Arquétipos de apoio</h3></div>
+    <p class="note">Aparecem com força no seu jeito de agir e costumam temperar o dominante.</p>
+    <div class="secondary">${sc.slice(1,3).map(s=>`<button class="mini" data-id="${s.id}"><div class="art">${art(s.id)}</div><div><b>${A[s.id].nome}</b><span>${s.pct}% · ${A[s.id].lema}</span></div></button>`).join("")}</div>
+   </div>
+   <div class="secao">
+    <div class="secao-topo"><span class="secao-num">06</span><h3>Seu mapa completo</h3></div>
+    <div class="bars">${Object.entries(QUADS).map(([k,q])=>`<div class="bgroup"><span class="eyebrow"><span class="dot" style="background:var(${q.hue})"></span>${q.nome}</span>${sc.filter(s=>A[s.id].q===k).map(s=>`<div class="bar"><button data-id="${s.id}">${A[s.id].nome}</button><div class="track"><div class="fill" style="width:${Math.max(s.pct,2)}%;background:var(${q.hue})"></div></div><span class="pct">${s.pct}%</span></div>`).join("")}</div>`).join("")}</div>
+    <p class="note">O mais baixo também diz algo: costuma ser a energia que você menos usa e que pode desenvolver quando a situação pede.</p>
+   </div>
+   <div class="secao">
+    <div class="row">
+      <button class="btn" id="copy">Copiar resumo</button>
+      <button class="btn ghost" id="other">Testar outra pessoa</button>
+      <button class="link" id="redo">Refazer</button>
+    </div>
+    <div class="toast" id="toast"></div>
+    <textarea class="copia" id="sumtxt" readonly hidden></textarea>
+   </div>
+   ${gallery("Explorar os outros arquétipos")}
+   ${method()}
+  </div>`;
+  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openDetail(b.dataset.id));
+  $("#other").onclick=()=>{st=NOVO();save();render();topo()};
+  $("#redo").onclick=()=>{st.ans=Array(ITEMS.length).fill(null);st.i=0;st.view="quiz";save();render();topo()};
+  $("#copy").onclick=()=>{
+    const txt=`${st.name||"Resultado"}: arquétipo dominante ${A[top.id].nome} (${top.pct}%). Apoio: ${A[sc[1].id].nome} (${sc[1].pct}%) e ${A[sc[2].id].nome} (${sc[2].pct}%).\n${A[top.id].resumo}`;
+    const done=()=>{$("#toast").textContent="Resumo copiado."};
+    const fb=()=>{const t=$("#sumtxt");t.hidden=false;t.value=txt;t.select();$("#toast").textContent="Selecione e copie o texto abaixo."};
+    try{navigator.clipboard.writeText(txt).then(done,fb)}catch(e){fb()}
+  };
+  bindGallery();
+}
+
+function openDetail(id){st.detail=id;st.view="detail";render();topo()}
+function detail(){
+  app.innerHTML=`<div class="stack-lg">
+    <button class="link" id="bk" style="align-self:flex-start;padding-left:0">← ${completo()?"Voltar ao resultado":"Voltar ao início"}</button>
+    ${profile(st.detail,{kicker:`<span class="eyebrow">Um dos 12 arquétipos</span>`})}
+    ${gallery("Outros arquétipos")}
+  </div>`;
+  $("#bk").onclick=()=>{st.view=completo()?"result":"intro";render();topo()};
+  bindGallery();
+}
+
+function gallery(title){
+  return `<div class="secao"><span class="eyebrow">${title}</span><div class="chips">${KEYS.map(k=>`<button class="chip" data-g="${k}"><span class="dot" style="background:var(${QUADS[A[k].q].hue})"></span>${A[k].nome}</button>`).join("")}</div></div>`;
+}
+function bindGallery(){app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>openDetail(b.dataset.g))}
+
+function method(){
+  return `<div class="secao">
+   <span class="eyebrow">Sobre o método</span>
+   <p>Carl Jung descreveu os arquétipos como padrões universais que se repetem em mitos, histórias e comportamentos humanos. Carol S. Pearson organizou esses padrões em 12 perfis práticos (livro <i>O Despertar do Herói Interior</i>) e, com Hugh Marr, criou o PMAI, o questionário mais usado sobre o tema. Margaret Mark e Pearson levaram o modelo para marcas em <i>O Herói e o Fora-da-Lei</i>, agrupando os 12 em quatro motivações.</p>
+   <p>O teste combina dois formatos. Nas frases, você diz o quanto cada uma combina com você, numa escala de quatro pontos sem meio-termo. Nas situações, escolhe uma entre quatro opções igualmente positivas, o que reduz a tendência natural de concordar com tudo o que soa bem. A nitidez só sai alta quando os dois formatos apontam para o mesmo arquétipo.</p>
+   <p class="note">Este teste segue essa estrutura, mas não é o PMAI oficial. Arquétipos descrevem tendências e mudam com a fase da vida. Não têm o mesmo nível de validação científica de modelos como o Big Five, então funcionam melhor como ferramenta de autoconhecimento, comunicação e posicionamento de marca do que como diagnóstico.</p>
+  </div>`;
+}
+
+function render(){
+  const views={intro,quiz,dados,result,detail};
+  if(st.view==="detail"&&!st.detail) st.view="intro";
+  (views[st.view]||intro)();
+  painel();
+}
+render();
+})();
+</script>
+</body>
+</html>
