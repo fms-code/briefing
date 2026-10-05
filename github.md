@@ -68,3 +68,17 @@ Tudo fica no Netlify Blobs (store `metricas`, `netlify/lib/metricas.js`), com o 
 codificado na chave. A aba **Métricas** do painel (`?aba=metricas&dias=7|30|90`)
 mostra visitantes por dia, páginas, origem, dispositivo, funil de cada formulário,
 onde quem começou parou (sem envio 30 min após o último evento) e o log de e-mails.
+
+## Notificações no Telegram
+`netlify/lib/telegram.js`. A `submission-created` manda uma mensagem por anamnese
+(nome, especialidade, cidade, prazo, WhatsApp; botões "Abrir no painel" e "WhatsApp")
+e por Mapa de Arquétipos (nome, dominante, apoio, nitidez; botões "Abrir no painel" e
+"Ver resultado"), mais um alerta a cada e-mail que falhar. Falha no Telegram nunca
+bloqueia o e-mail nem o registro.
+
+- `TELEGRAM_BOT_TOKEN` (ambiente): token do bot criado no @BotFather.
+- O chat é conectado pela aba **Notificações** do painel (`?aba=notificacoes`): ela lista
+  os chats que mandaram mensagem ao bot (getUpdates) e salva o escolhido no Netlify Blobs
+  (store `config`, chave `telegram`). `TELEGRAM_CHAT_ID` no ambiente tem prioridade.
+- O botão "Abrir no painel" usa `/respostas?form=…&id=<id do envio>`, que abre direto
+  naquela resposta.

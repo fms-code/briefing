@@ -6,8 +6,10 @@
 
 const { connectLambda, getStore } = require('@netlify/blobs');
 const { SECOES, ROTULOS, legivel } = require('../lib/anamnese.js');
+const configStore = () => getStore('config');
 const metricas = require('../lib/metricas.js');
 const { linkResultado } = require('../lib/arquetipos.js');
+const telegram = require('../lib/telegram.js');
 
 /* Resultado de cada e-mail vai para a aba Métricas do painel. Falha aqui nunca bloqueia o envio. */
 async function registrarEmail(form, para, ok, status, erro) {
@@ -16,6 +18,7 @@ async function registrarEmail(form, para, ok, status, erro) {
   } catch (e) {
     console.error('Métrica de e-mail não registrada:', e.message);
   }
+  if (!ok) await telegram.notificar(configStore(), telegram.mensagemFalhaEmail(form, para, status, erro));
 }
 
 const escapar = (t) => String(t)
@@ -66,6 +69,23 @@ function montarTexto(dados) {
 
 exports.handler = async (event) => {
   try { connectLambda(event); } catch (e) { console.error('Blobs indisponível:', e.message); }
+
+  let dados, formulario, submissaoId;
+  try {
+    const payload = JSON.parse(event.body || '{}').payload || {};
+    dados = payload.data || {};
+    formulario = payload.form_name || dados['form-name'] || '';
+    submissaoId = payload.id || '';
+  } catch (e) {
+    console.error('Payload inválido:', e.message);
+    return { statusCode: 400, body: 'payload inválido' };
+  }
+
+  /* Aviso no Telegram sai antes do e-mail: a resposta já está gravada no Netlify. */
+  if (formulario === 'arquetipo' || formulario === 'anamnese') {
+    await telegram.notificar(configStore(), telegram.mensagemResposta(formulario, dados, submissaoId, legivel, linkResultado));
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   const destino = process.env.BRIEFING_TO;
   const remetente = process.env.BRIEFING_FROM;
@@ -76,16 +96,6 @@ exports.handler = async (event) => {
     console.error('Faltam variáveis de ambiente:', faltando.join(', '), '| contexto:', process.env.CONTEXT || '?');
     await registrarEmail('?', 'interno', false, 500, 'Faltam variáveis: ' + faltando.join(', '));
     return { statusCode: 500, body: 'configuração incompleta' };
-  }
-
-  let dados, formulario;
-  try {
-    const payload = JSON.parse(event.body || '{}').payload || {};
-    dados = payload.data || {};
-    formulario = payload.form_name || dados['form-name'] || '';
-  } catch (e) {
-    console.error('Payload inválido:', e.message);
-    return { statusCode: 400, body: 'payload inválido' };
   }
 
   const quando = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
