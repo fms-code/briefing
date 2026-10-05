@@ -8,7 +8,8 @@
  *
  * ?form=arquetipo|anamnese escolhe a aba; ?formato=csv baixa a planilha;
  * ?form=anamnese&id=…&formato=design gera o briefing para o Claude Design;
- * ?aba=metricas mostra visitas, funil, abandono e e-mails; POST acao=excluir apaga um envio.
+ * ?aba=metricas mostra visitas, funil, abandono e e-mails; ?aba=notificacoes conecta o Telegram;
+ * ?form=…&id=… abre direto uma resposta; POST acao=excluir|telegram-* executa as ações.
  */
 
 import { getStore } from '@netlify/blobs';
@@ -17,6 +18,7 @@ import design from '../lib/design.js';
 import metricas from '../lib/metricas.js';
 import painelMetricas from '../lib/painel-metricas.js';
 import arquetipos from '../lib/arquetipos.js';
+import telegram from '../lib/telegram.js';
 
 const { SECOES, ROTULOS, legivel } = anamnese;
 
@@ -351,6 +353,14 @@ td.data{white-space:nowrap;color:var(--tinta-media)}
 .st{font-weight:600;white-space:nowrap}.st.ok{color:var(--ok)}.st.falha{color:#B3261E}
 @media (prefers-color-scheme:dark){.st.falha{color:#F2B8B5}}
 .nota{color:var(--tinta-fraca);font-size:12.5px;margin-top:18px}
+.detalhe p a:not(.btn),.detalhe li a:not(.btn){color:var(--marcador)}
+.row{align-items:center}
+@media (max-width:760px){.abas{flex-wrap:wrap;gap:4px 18px}.abas a{padding-bottom:8px}.abas .sep{display:none}}
+.passos{padding-left:20px;margin:10px 0 0}.passos li{margin:8px 0;line-height:1.55}ul.passos{list-style:none;padding-left:0}
+code{font:13px var(--mono);background:var(--porcelana);padding:1px 5px}
+.chats{border:1px solid var(--linha);margin-top:6px}
+.chat{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--linha)}.chat:last-child{border-bottom:0}
+.chat .sub{display:block;margin:0;font-size:12.5px}
 .titulo-acao{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .titulo-acao .btn{padding:7px 12px;font-size:13px}
 .visoes{display:inline-flex;border:1px solid var(--linha);background:var(--cartao);margin-bottom:14px}
@@ -363,7 +373,8 @@ td.data{white-space:nowrap;color:var(--tinta-media)}
 
 function casca(abas, atual, conteudo, aviso) {
   const nav = abas.map((a) => `<a href="?form=${encodeURIComponent(a.form)}" class="${a.form === atual ? 'ativa' : ''}">${escapar(a.titulo)}<span class="n">${a.total}</span></a>`).join('')
-    + `<span class="sep" aria-hidden="true"></span><a href="?aba=metricas" class="${atual === 'metricas' ? 'ativa' : ''}">Métricas</a>`;
+    + `<span class="sep" aria-hidden="true"></span><a href="?aba=metricas" class="${atual === 'metricas' ? 'ativa' : ''}">Métricas</a>`
+    + `<a href="?aba=notificacoes" class="${atual === 'notificacoes' ? 'ativa' : ''}">Notificações</a>`;
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Respostas</title>
@@ -410,20 +421,21 @@ function casca(abas, atual, conteudo, aviso) {
 </body></html>`;
 }
 
-function conteudoRespostas(atual, envios, visao) {
+function conteudoRespostas(atual, envios, visao, idPedido) {
+  const sel = Math.max(0, envios.findIndex((e) => e.id === idPedido));
   const modelo = MODELOS[atual] || GENERICO;
   const seteDias = Date.now() - 7 * 24 * 3600 * 1000;
   const recentes = envios.filter((e) => new Date(e.created_at).getTime() >= seteDias).length;
   const destaque = modelo.numeros(envios);
   const itens = envios.map((e, i) => {
     const it = modelo.item(e);
-    return `<a class="item${i === 0 ? ' sel' : ''}" href="#r-${i}" data-alvo="r-${i}" data-busca="${escapar(it.busca.toLowerCase())}">
+    return `<a class="item${i === sel ? ' sel' : ''}" href="#r-${i}" data-alvo="r-${i}" data-busca="${escapar(it.busca.toLowerCase())}">
       <div class="l1"><span>${escapar(it.titulo)}</span><span class="quando">${escapar(curta(e.created_at))}</span></div>
       ${it.linha2 ? `<div class="l2">${escapar(it.linha2)}</div>` : ''}
       ${it.tag ? `<span class="tag">${escapar(it.tag)}</span>` : ''}
     </a>`;
   }).join('');
-  const detalhes = envios.map((e, i) => `<article class="detalhe" id="r-${i}"${i === 0 ? '' : ' hidden'}>${modelo.detalhe(e)}${ferramentas(e, atual)}</article>`).join('');
+  const detalhes = envios.map((e, i) => `<article class="detalhe" id="r-${i}"${i === sel ? '' : ' hidden'}>${modelo.detalhe(e)}${ferramentas(e, atual)}</article>`).join('');
 
   return `<div class="numeros">
  <div class="num"><b>${envios.length}</b><span>total</span></div>
@@ -444,7 +456,13 @@ ${atual === 'arquetipo' && visao === 'distribuicao' ? distribuicao(envios) : env
 /* ---------- Handler ---------- */
 
 const semCache = { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' };
-const AVISOS = { excluido: 'Resposta excluída.', 'erro-exclusao': 'Não foi possível excluir agora. Tente de novo.' };
+const AVISOS = {
+  excluido: 'Resposta excluída.', 'erro-exclusao': 'Não foi possível excluir agora. Tente de novo.',
+  'telegram-conectado': 'Telegram conectado. Mandei uma mensagem de boas-vindas no chat.',
+  'telegram-teste': 'Mensagem de teste enviada. Confira o Telegram.',
+  'telegram-desconectado': 'Telegram desconectado. As notificações pararam.',
+  'telegram-erro': 'O Telegram recusou o pedido. Confira se você tocou em Iniciar no bot e tente de novo.'
+};
 
 /* Só aceita POST vindo do próprio painel: o navegador reenviaria a senha numa requisição forjada por outro site. */
 function mesmaOrigem(req) {
@@ -454,9 +472,113 @@ function mesmaOrigem(req) {
   return !!origem && origem === new URL(req.url).origin;
 }
 
-async function excluir(req, token) {
+const voltar = (req, search) => {
+  const volta = new URL(req.url);
+  return new Response(null, { status: 303, headers: { Location: volta.pathname + search, ...semCache } });
+};
+
+async function acao(req, token) {
   if (!mesmaOrigem(req)) return new Response('Origem não permitida.', { status: 403 });
   const dados = await req.formData();
+  const qual = String(dados.get('acao') || '');
+  if (qual.startsWith('telegram-')) return acaoTelegram(req, qual, dados);
+  return excluir(req, token, dados);
+}
+
+async function acaoTelegram(req, qual, dados) {
+  const tokenBot = Netlify.env.get('TELEGRAM_BOT_TOKEN');
+  const store = getStore('config');
+  const fim = (aviso) => voltar(req, `?aba=notificacoes&aviso=${aviso}`);
+  if (!tokenBot) return fim('telegram-erro');
+  try {
+    if (qual === 'telegram-conectar') {
+      const id = String(dados.get('chat') || '');
+      if (!/^-?\d{1,20}$/.test(id)) return new Response('Pedido inválido.', { status: 400 });
+      const nome = String(dados.get('nome') || '').slice(0, 80);
+      await telegram.enviar(tokenBot, id, '✅ <b>Conectado ao painel de respostas</b>\nA partir de agora, cada anamnese e cada Mapa de Arquétipos chega aqui, junto com alertas de e-mail que falharem.');
+      await store.setJSON('telegram', { id, nome, desde: new Date().toISOString() });
+      return fim('telegram-conectado');
+    }
+    if (qual === 'telegram-teste') {
+      const chat = await telegram.chatSalvo(store);
+      if (!chat) return fim('telegram-erro');
+      const exemplo = telegram.mensagemResposta('anamnese', { nome: 'Teste do painel', especialidade: 'Harmonização orofacial', cidade: 'Niterói, RJ', prazo: 'quinzena' }, '', anamnese.legivel);
+      await telegram.enviar(tokenBot, chat.id, '🧪 <i>Mensagem de teste</i>\n\n' + exemplo.texto, [['Abrir o painel', 'https://fabianomartins.app.br/respostas']]);
+      return fim('telegram-teste');
+    }
+    if (qual === 'telegram-desconectar') {
+      await store.delete('telegram');
+      return fim('telegram-desconectado');
+    }
+  } catch (e) {
+    console.error('Ação do Telegram falhou:', e.message);
+    return fim('telegram-erro');
+  }
+  return new Response('Pedido inválido.', { status: 400 });
+}
+
+/* Chats que já falaram com o bot (getUpdates guarda as últimas 24 h). */
+async function chatsRecentes(tokenBot) {
+  const updates = await telegram.api(tokenBot, 'getUpdates', { limit: 100, allowed_updates: ['message', 'my_chat_member', 'channel_post'] });
+  const chats = new Map();
+  for (const u of updates) {
+    const c = (u.message || u.my_chat_member || u.channel_post || {}).chat;
+    if (c) chats.set(String(c.id), { id: String(c.id), nome: c.title || [c.first_name, c.last_name].filter(Boolean).join(' ') || c.username || String(c.id), tipo: c.type });
+  }
+  return [...chats.values()];
+}
+
+async function conteudoNotificacoes() {
+  const tokenBot = Netlify.env.get('TELEGRAM_BOT_TOKEN');
+  const lista = `<ul class="passos">
+    <li>🟣 Cada <b>anamnese</b>: nome, especialidade, cidade, prazo e WhatsApp, com botões para abrir no painel e chamar no WhatsApp.</li>
+    <li>🔮 Cada <b>Mapa de Arquétipos</b>: nome, dominante, apoio e nitidez, com botões para o painel e para o resultado completo.</li>
+    <li>⚠️ Todo <b>e-mail que falhar</b>, com o motivo.</li></ul>`;
+  const form = (acaoNome, rotulo, extra = '', classe = 'btn escuro') => `<form method="post" style="display:inline"><input type="hidden" name="acao" value="${acaoNome}">${extra}<button type="submit" class="${classe}">${rotulo}</button></form>`;
+
+  if (!tokenBot) {
+    return `<section class="detalhe metrica"><span class="eyebrow">Telegram · não configurado</span><h2>Receba cada resposta no Telegram</h2>
+      ${lista}
+      <h3>Como ligar (uns 5 minutos)</h3>
+      <ol class="passos">
+        <li>No Telegram, abra <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, mande <code>/newbot</code>, escolha um nome (ex.: <i>Respostas Fabiano</i>) e um usuário terminado em <code>bot</code>. Ele responde com um <b>token</b>.</li>
+        <li>No Netlify: Project configuration › Environment variables › <b>Add a variable</b>: chave <code>TELEGRAM_BOT_TOKEN</code>, valor = o token, escopo Functions.</li>
+        <li>Deploys › Trigger deploy › Deploy site (a variável só vale no próximo deploy).</li>
+        <li>Volte nesta aba: ela vai mostrar o próximo passo.</li>
+      </ol></section>`;
+  }
+
+  try {
+    const [bot, chat] = await Promise.all([telegram.api(tokenBot, 'getMe'), telegram.chatSalvo(getStore('config'))]);
+    const linkBot = `https://t.me/${encodeURIComponent(bot.username)}`;
+    if (chat) {
+      const desde = chat.desde ? ` desde ${escapar(new Date(chat.desde).toLocaleDateString('pt-BR', fuso))}` : '';
+      return `<section class="detalhe metrica"><span class="eyebrow">Telegram · <span class="st ok">✓ ativo</span></span>
+        <h2>Notificações ligadas</h2>
+        <p class="sub">Bot <a href="${linkBot}" target="_blank" rel="noopener">@${escapar(bot.username)}</a> enviando para <b>${escapar(chat.nome || chat.id)}</b>${desde}.</p>
+        ${lista}
+        <div class="row">${form('telegram-teste', 'Enviar mensagem de teste')}${process.env.TELEGRAM_CHAT_ID ? '' : form('telegram-desconectar', 'Desconectar', '', 'link-perigo')}</div>
+      </section>`;
+    }
+    const chats = await chatsRecentes(tokenBot);
+    const opcoes = chats.map((c) => `<div class="chat"><div><b>${escapar(c.nome)}</b><span class="sub">${c.tipo === 'private' ? 'conversa privada' : escapar(c.tipo)}</span></div>
+      ${form('telegram-conectar', 'Conectar este chat', `<input type="hidden" name="chat" value="${escapar(c.id)}"><input type="hidden" name="nome" value="${escapar(c.nome)}">`)}</div>`).join('');
+    return `<section class="detalhe metrica"><span class="eyebrow">Telegram · falta conectar</span><h2>Conecte o seu Telegram</h2>
+      <ol class="passos">
+        <li>Abra o bot <a href="${linkBot}" target="_blank" rel="noopener"><b>@${escapar(bot.username)}</b></a> no Telegram e toque em <b>Iniciar</b> (ou mande qualquer mensagem). Para um grupo, adicione o bot ao grupo e mande uma mensagem lá.</li>
+        <li>Recarregue esta página e toque em <b>Conectar este chat</b>.</li>
+      </ol>
+      <div class="row"><a class="btn escuro" href="${linkBot}" target="_blank" rel="noopener">Abrir o bot</a><a class="btn" href="?aba=notificacoes">Recarregar</a></div>
+      ${opcoes ? `<h3>Chats que falaram com o bot</h3><div class="chats">${opcoes}</div>` : '<p class="sub" style="margin-top:16px">Nenhuma mensagem para o bot nas últimas 24 horas ainda.</p>'}
+      ${lista}</section>`;
+  } catch (e) {
+    console.error('Telegram indisponível:', e.message);
+    return `<section class="detalhe metrica"><span class="eyebrow">Telegram · erro</span><h2>Não consegui falar com o Telegram</h2>
+      <p class="sub">${escapar(e.message)}. Confira se o <code>TELEGRAM_BOT_TOKEN</code> no Netlify é exatamente o que o @BotFather enviou e faça um novo deploy.</p></section>`;
+  }
+}
+
+async function excluir(req, token, dados) {
   const id = String(dados.get('id') || '');
   const form = String(dados.get('form') || '');
   if (dados.get('acao') !== 'excluir' || !/^[a-f0-9]{24}$/i.test(id)) return new Response('Pedido inválido.', { status: 400 });
@@ -489,7 +611,7 @@ export default async (req, context) => {
   }
 
   try {
-    if (req.method === 'POST') return await excluir(req, token);
+    if (req.method === 'POST') return await acao(req, token);
 
     const url = new URL(req.url);
     const forms = await api(`/sites/${context.site.id}/forms`, token);
@@ -499,6 +621,8 @@ export default async (req, context) => {
     ];
     const aviso = AVISOS[url.searchParams.get('aviso')] || '';
     const html = (atual, conteudo) => new Response(casca(abas, atual, conteudo, aviso), { headers: { ...semCache, 'Content-Type': 'text/html; charset=utf-8' } });
+
+    if (url.searchParams.get('aba') === 'notificacoes') return html('notificacoes', await conteudoNotificacoes());
 
     if (url.searchParams.get('aba') === 'metricas') {
       const dias = [7, 30, 90].includes(Number(url.searchParams.get('dias'))) ? Number(url.searchParams.get('dias')) : 30;
@@ -530,7 +654,7 @@ export default async (req, context) => {
         headers: { ...semCache, 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="respostas-${atual}.csv"` }
       });
     }
-    return html(atual, conteudoRespostas(atual, envios, url.searchParams.get('visao')));
+    return html(atual, conteudoRespostas(atual, envios, url.searchParams.get('visao'), url.searchParams.get('id')));
   } catch (e) {
     console.error('Falha no painel:', e.message);
     return new Response('Não foi possível carregar as respostas agora.', { status: 502 });
